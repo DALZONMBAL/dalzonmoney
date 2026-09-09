@@ -2,2052 +2,2534 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#0b0b0d">
-<title>DALZON — Wallet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>DALZON Wallet</title>
+
+<meta name="description" content="DALZON Wallet - plateforme de gestion de comptes et de soldes CDF et USD.">
+<meta name="theme-color" content="#0b0f14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 
 <style>
 :root{
-  --bg:#f4f5f7;
-  --card:#ffffff;
-  --text:#111216;
-  --muted:#777b85;
-  --line:#e5e6e9;
-  --primary:#111216;
-  --soft:#f0f1f3;
-  --success:#16834b;
-  --danger:#d33d3d;
-  --shadow:0 18px 45px rgba(0,0,0,.09);
+    --bg:#f5f7fa;
+    --surface:#ffffff;
+    --surface2:#eef1f5;
+    --text:#101418;
+    --muted:#737b86;
+    --border:#e3e7ec;
+    --accent:#111827;
+    --accent2:#2563eb;
+    --success:#15803d;
+    --danger:#dc2626;
+    --shadow:0 15px 40px rgba(0,0,0,.08);
+    --radius:24px;
 }
 
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
 }
 
 body.dark{
-  --bg:#090a0c;
-  --card:#15171b;
-  --text:#f7f7f8;
-  --muted:#91949c;
-  --line:#292c32;
-  --primary:#f5f5f5;
-  --soft:#22252a;
-  --shadow:0 18px 45px rgba(0,0,0,.35);
+    --bg:#090c10;
+    --surface:#11161c;
+    --surface2:#181e25;
+    --text:#f5f7fa;
+    --muted:#98a1ad;
+    --border:#252c35;
+    --accent:#f5f7fa;
+    --accent2:#60a5fa;
+    --shadow:0 20px 50px rgba(0,0,0,.3);
 }
 
-button,
-input{
-  font:inherit;
+/* =========================
+   ICONES SVG
+========================= */
+
+.icon{
+    width:21px;
+    height:21px;
+    display:block;
+    flex:none;
 }
 
-button{
-  cursor:pointer;
+.icon-lg{
+    width:25px;
+    height:25px;
 }
 
-.app{
-  width:100%;
-  max-width:500px;
-  min-height:100vh;
-  margin:auto;
-  padding-bottom:100px;
+svg{
+    stroke:currentColor;
+    stroke-width:1.8;
+    stroke-linecap:round;
+    stroke-linejoin:round;
 }
 
-/* HEADER */
+/* =========================
+   AUTH
+========================= */
 
-header{
-  position:sticky;
-  top:0;
-  z-index:50;
-  height:70px;
-  padding:0 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:rgba(255,255,255,.82);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--line);
+.auth-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+    background:
+        radial-gradient(circle at 15% 15%,rgba(37,99,235,.13),transparent 32%),
+        radial-gradient(circle at 85% 85%,rgba(0,0,0,.08),transparent 32%),
+        var(--bg);
 }
 
-.dark header{
-  background:rgba(9,10,12,.82);
+.auth-card{
+    width:100%;
+    max-width:430px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:28px;
+    box-shadow:var(--shadow);
+    animation:appear .5s ease;
 }
 
 .brand{
-  font-size:21px;
-  font-weight:900;
-  letter-spacing:-1px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:28px;
 }
 
-.brand span{
-  font-weight:400;
+.brand-mark{
+    width:48px;
+    height:48px;
+    border-radius:16px;
+    background:var(--accent);
+    color:var(--bg);
+    display:grid;
+    place-items:center;
+}
+
+.brand-mark svg{
+    width:25px;
+    height:25px;
+}
+
+.brand-name{
+    font-weight:800;
+    font-size:19px;
+    letter-spacing:.8px;
+}
+
+.brand-sub{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:2px;
+}
+
+.auth-title{
+    font-size:29px;
+    font-weight:800;
+    letter-spacing:-1px;
+    margin-bottom:8px;
+}
+
+.auth-description{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+    margin-bottom:24px;
+}
+
+.field{
+    margin-bottom:15px;
+}
+
+.field label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.field input{
+    width:100%;
+    border:1px solid var(--border);
+    background:var(--surface2);
+    color:var(--text);
+    padding:14px 15px;
+    border-radius:15px;
+    outline:none;
+    font-size:14px;
+    transition:.2s;
+}
+
+.field input:focus{
+    border-color:var(--accent2);
+    box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+.primary-btn{
+    width:100%;
+    border:none;
+    background:var(--accent);
+    color:var(--bg);
+    padding:15px;
+    border-radius:16px;
+    font-size:14px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.primary-btn:active{
+    transform:scale(.98);
+}
+
+.auth-switch{
+    text-align:center;
+    margin-top:18px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.auth-switch button{
+    border:none;
+    background:none;
+    color:var(--accent2);
+    font-weight:800;
+    cursor:pointer;
+}
+
+.auth-error{
+    display:none;
+    margin-bottom:15px;
+    padding:12px;
+    border-radius:13px;
+    background:rgba(220,38,38,.09);
+    color:var(--danger);
+    font-size:13px;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app{
+    display:none;
+    min-height:100vh;
+    padding-bottom:95px;
+}
+
+.app-header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    height:72px;
+    padding:0 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:rgba(245,247,250,.86);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--border);
+}
+
+body.dark .app-header{
+    background:rgba(9,12,16,.86);
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.header-title{
+    font-size:17px;
+    font-weight:800;
+}
+
+.header-id{
+    color:var(--muted);
+    font-size:10px;
+    margin-top:2px;
 }
 
 .header-actions{
-  display:flex;
-  gap:8px;
+    display:flex;
+    gap:7px;
 }
 
-.circle{
-  width:42px;
-  height:42px;
-  border:1px solid var(--line);
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:var(--card);
-  color:var(--text);
+.circle-btn{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--text);
+    display:grid;
+    place-items:center;
+    cursor:pointer;
 }
 
-/* PAGES */
+/* =========================
+   CONTENT
+========================= */
 
-main{
-  padding:22px 18px;
+.content{
+    width:100%;
+    max-width:720px;
+    margin:auto;
+    padding:20px 16px;
 }
 
 .page{
-  display:none;
-  animation:pageIn .28s ease;
+    display:none;
+    animation:pageIn .3s ease;
 }
 
 .page.active{
-  display:block;
+    display:block;
 }
 
-@keyframes pageIn{
-  from{
-    opacity:0;
-    transform:translateY(8px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+.section-title{
+    font-size:20px;
+    font-weight:800;
+    letter-spacing:-.5px;
+    margin-bottom:15px;
 }
 
-.title{
-  margin-bottom:22px;
+/* =========================
+   BALANCES
+========================= */
+
+.balance-card{
+    background:var(--accent);
+    color:var(--bg);
+    border-radius:28px;
+    padding:23px;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
 }
 
-.title small{
-  color:var(--muted);
+.balance-card::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.09);
+    right:-55px;
+    top:-65px;
 }
 
-.title h1{
-  margin-top:4px;
-  font-size:29px;
-  letter-spacing:-1px;
+.balance-label{
+    font-size:12px;
+    opacity:.65;
 }
 
-/* BANK CARD */
-
-.bank-card{
-  position:relative;
-  overflow:hidden;
-  min-height:225px;
-  padding:24px;
-  border-radius:28px;
-  color:white;
-  background:
-    radial-gradient(circle at 88% 18%,rgba(255,255,255,.18),transparent 25%),
-    radial-gradient(circle at 15% 90%,rgba(255,255,255,.08),transparent 25%),
-    linear-gradient(135deg,#111214,#292b30 55%,#08090b);
-  box-shadow:0 25px 50px rgba(0,0,0,.24);
+.balance-total{
+    font-size:31px;
+    font-weight:800;
+    letter-spacing:-1px;
+    margin:6px 0 22px;
 }
 
-.bank-card::after{
-  content:"";
-  position:absolute;
-  width:210px;
-  height:210px;
-  right:-95px;
-  bottom:-115px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:50%;
+.balance-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
 }
 
-.card-header{
-  position:relative;
-  z-index:2;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+.currency-box{
+    padding:13px;
+    border-radius:17px;
+    background:rgba(255,255,255,.08);
 }
 
-.card-logo{
-  font-size:19px;
-  font-weight:900;
-  letter-spacing:1px;
+.currency-label{
+    font-size:10px;
+    opacity:.6;
+    margin-bottom:4px;
 }
 
-.card-type{
-  font-size:11px;
-  letter-spacing:2px;
-  opacity:.7;
+.currency-value{
+    font-size:16px;
+    font-weight:800;
 }
 
-.chip{
-  position:relative;
-  z-index:2;
-  width:47px;
-  height:35px;
-  margin-top:30px;
-  border-radius:8px;
-  background:
-    linear-gradient(90deg,transparent 47%,rgba(0,0,0,.25) 48%,transparent 52%),
-    linear-gradient(0deg,transparent 47%,rgba(0,0,0,.25) 48%,transparent 52%),
-    linear-gradient(135deg,#eee,#888);
-}
-
-.card-number{
-  position:relative;
-  z-index:2;
-  margin-top:17px;
-  font-family:monospace;
-  font-size:19px;
-  letter-spacing:3px;
-}
-
-.card-footer{
-  position:relative;
-  z-index:2;
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  margin-top:18px;
-}
-
-.card-label{
-  font-size:8px;
-  opacity:.55;
-  text-transform:uppercase;
-  letter-spacing:1px;
-}
-
-.card-holder{
-  margin-top:3px;
-  font-size:12px;
-  font-weight:700;
-  text-transform:uppercase;
-}
-
-.expiry{
-  margin-top:3px;
-  font-size:11px;
-}
-
-.network{
-  font-size:15px;
-  font-weight:800;
-}
-
-/* BALANCE */
-
-.balance{
-  margin-top:20px;
-  padding:21px;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:23px;
-  box-shadow:var(--shadow);
-}
-
-.balance small{
-  color:var(--muted);
-}
-
-.balance strong{
-  display:block;
-  font-size:32px;
-  margin-top:5px;
-  letter-spacing:-1px;
-}
-
-.balance .currency{
-  color:var(--muted);
-  font-size:13px;
-}
-
-/* ACTIONS */
+/* =========================
+   QUICK ACTIONS
+========================= */
 
 .actions{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin:18px 0 25px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:24px;
 }
 
 .action{
-  border:1px solid var(--line);
-  border-radius:19px;
-  padding:15px 8px;
-  background:var(--card);
-  color:var(--text);
-  transition:.2s;
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:20px;
+    min-height:92px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    color:var(--text);
+    cursor:pointer;
+    transition:.2s;
 }
 
 .action:active{
-  transform:scale(.96);
+    transform:scale(.97);
 }
 
-.action svg{
-  width:23px;
-  height:23px;
-  margin-bottom:7px;
+.action-icon{
+    width:39px;
+    height:39px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:var(--surface2);
 }
 
 .action span{
-  display:block;
-  font-size:12px;
-  font-weight:700;
+    font-size:11px;
+    font-weight:700;
 }
 
-/* TRANSACTIONS */
+/* =========================
+   TRANSACTIONS
+========================= */
 
-.section-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.section-head h2{
-  font-size:18px;
-}
-
-.section-head button{
-  border:0;
-  background:none;
-  color:var(--muted);
-  font-size:12px;
+.list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
 }
 
 .transaction{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:15px 0;
-  border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:18px;
 }
 
-.tx-icon{
-  width:43px;
-  height:43px;
-  flex:none;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  background:var(--soft);
+.transaction-icon{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:var(--surface2);
+    display:grid;
+    place-items:center;
 }
 
-.tx-icon svg{
-  width:20px;
-  height:20px;
+.transaction-info{
+    flex:1;
+    min-width:0;
 }
 
-.tx-info{
-  flex:1;
-  min-width:0;
+.transaction-title{
+    font-size:13px;
+    font-weight:750;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
-.tx-info strong{
-  display:block;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+.transaction-date{
+    color:var(--muted);
+    font-size:10px;
+    margin-top:3px;
 }
 
-.tx-info small{
-  color:var(--muted);
+.transaction-amount{
+    font-size:13px;
+    font-weight:800;
 }
 
-.tx-value{
-  font-weight:800;
-  white-space:nowrap;
+.amount-positive{
+    color:var(--success);
 }
 
-.plus{
-  color:var(--success);
+.amount-negative{
+    color:var(--danger);
 }
 
-.minus{
-  color:var(--danger);
+.empty{
+    text-align:center;
+    padding:35px 15px;
+    color:var(--muted);
+    font-size:13px;
 }
 
-/* FORM */
+/* =========================
+   CARD
+========================= */
 
-.form-card{
-  padding:21px;
-  border-radius:23px;
-  background:var(--card);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
+.dalzon-card{
+    min-height:215px;
+    border-radius:27px;
+    padding:24px;
+    color:white;
+    background:
+        linear-gradient(135deg,#10151c,#28313c);
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 20px 45px rgba(0,0,0,.22);
+    margin-bottom:22px;
 }
 
-.form-card h2{
-  margin-bottom:6px;
+.dalzon-card::before{
+    content:"";
+    position:absolute;
+    width:240px;
+    height:240px;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:50%;
+    right:-90px;
+    top:-80px;
 }
 
-.form-card p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
+.dalzon-card::after{
+    content:"";
+    position:absolute;
+    width:160px;
+    height:160px;
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:50%;
+    left:-80px;
+    bottom:-100px;
 }
 
-label{
-  display:block;
-  margin:17px 0 7px;
-  font-size:12px;
-  color:var(--muted);
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-input{
-  width:100%;
-  height:50px;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:0 14px;
-  outline:none;
-  color:var(--text);
-  background:var(--bg);
+.card-brand{
+    font-size:19px;
+    font-weight:900;
+    letter-spacing:2px;
 }
 
-input:focus{
-  border-color:#777;
+.card-type{
+    font-size:9px;
+    letter-spacing:2px;
+    opacity:.6;
 }
 
-.primary{
-  width:100%;
-  height:51px;
-  margin-top:18px;
-  border:0;
-  border-radius:15px;
-  background:var(--primary);
-  color:var(--bg);
-  font-weight:800;
+.card-number{
+    font-size:20px;
+    letter-spacing:2px;
+    margin-top:45px;
+    font-weight:600;
 }
 
-.secondary{
-  width:100%;
-  height:51px;
-  margin-top:10px;
-  border:1px solid var(--line);
-  border-radius:15px;
-  background:var(--card);
-  color:var(--text);
-  font-weight:700;
+.card-bottom{
+    display:flex;
+    justify-content:space-between;
+    margin-top:25px;
 }
 
-/* SEARCH */
-
-.search{
-  position:relative;
-  margin-bottom:15px;
+.card-small{
+    font-size:8px;
+    opacity:.55;
+    margin-bottom:3px;
 }
 
-.search svg{
-  position:absolute;
-  left:14px;
-  top:15px;
-  width:19px;
-  color:var(--muted);
+.card-value{
+    font-size:11px;
+    font-weight:700;
 }
 
-.search input{
-  padding-left:44px;
+/* =========================
+   PROFILE
+========================= */
+
+.profile-card{
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:24px;
+    padding:20px;
+    margin-bottom:15px;
 }
 
-/* CARD CONTROLS */
-
-.card-control{
-  margin-top:20px;
+.profile-head{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    margin-bottom:20px;
 }
 
-.control{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:16px 0;
-  border-bottom:1px solid var(--line);
+.profile-avatar{
+    width:54px;
+    height:54px;
+    border-radius:17px;
+    background:var(--accent);
+    color:var(--bg);
+    display:grid;
+    place-items:center;
+    font-size:19px;
+    font-weight:800;
 }
 
-.control-left{
-  display:flex;
-  gap:12px;
-  align-items:center;
+.profile-name{
+    font-size:16px;
+    font-weight:800;
 }
 
-.control-icon{
-  width:40px;
-  height:40px;
-  border-radius:13px;
-  background:var(--soft);
-  display:grid;
-  place-items:center;
+.profile-email{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:3px;
 }
 
-.control-icon svg{
-  width:19px;
+.profile-row{
+    display:flex;
+    justify-content:space-between;
+    padding:13px 0;
+    border-top:1px solid var(--border);
+    font-size:13px;
 }
 
-.control-info strong{
-  display:block;
-  font-size:14px;
+.profile-row span:first-child{
+    color:var(--muted);
 }
 
-.control-info small{
-  color:var(--muted);
+/* =========================
+   ADMIN
+========================= */
+
+.admin-card{
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:24px;
+    padding:18px;
+    margin-bottom:15px;
 }
 
-/* TOGGLE */
-
-.toggle{
-  width:48px;
-  height:28px;
-  border:0;
-  padding:3px;
-  border-radius:20px;
-  background:#777;
+.admin-user{
+    padding:14px 0;
+    border-bottom:1px solid var(--border);
 }
 
-.toggle i{
-  display:block;
-  width:22px;
-  height:22px;
-  border-radius:50%;
-  background:white;
-  transition:.2s;
+.admin-user:last-child{
+    border-bottom:none;
 }
 
-.toggle.on{
-  background:#111;
+.admin-user-head{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
 }
 
-.toggle.on i{
-  transform:translateX(20px);
+.admin-user-name{
+    font-size:14px;
+    font-weight:800;
 }
 
-/* BOTTOM NAV */
-
-nav{
-  position:fixed;
-  z-index:60;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(500px,100%);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  padding:10px 8px 12px;
-  background:rgba(255,255,255,.88);
-  backdrop-filter:blur(22px);
-  border-top:1px solid var(--line);
+.admin-user-id{
+    color:var(--muted);
+    font-size:10px;
+    margin-top:3px;
 }
 
-.dark nav{
-  background:rgba(15,16,19,.9);
+.admin-balances{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+    font-size:11px;
 }
 
-nav button{
-  border:0;
-  background:none;
-  color:var(--muted);
-  padding:6px 2px;
+.status{
+    font-size:9px;
+    padding:5px 8px;
+    border-radius:8px;
+    background:rgba(21,128,61,.1);
+    color:var(--success);
+    height:max-content;
 }
 
-nav button.active{
-  color:var(--text);
-  font-weight:800;
+.status.blocked{
+    background:rgba(220,38,38,.1);
+    color:var(--danger);
 }
 
-nav svg{
-  width:21px;
-  height:21px;
-  display:block;
-  margin:auto auto 3px;
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:30;
+    height:78px;
+    display:flex;
+    justify-content:center;
+    background:rgba(245,247,250,.92);
+    backdrop-filter:blur(18px);
+    border-top:1px solid var(--border);
 }
 
-/* MODAL */
-
-.modal{
-  position:fixed;
-  z-index:100;
-  inset:0;
-  display:none;
-  align-items:flex-end;
-  background:rgba(0,0,0,.58);
+body.dark .bottom-nav{
+    background:rgba(9,12,16,.92);
 }
 
-.modal.show{
-  display:flex;
+.nav-inner{
+    width:100%;
+    max-width:620px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
 }
 
-.modal-box{
-  width:min(500px,100%);
-  padding:25px 20px 30px;
-  border-radius:28px 28px 0 0;
-  background:var(--card);
-  color:var(--text);
-  animation:up .25s ease;
+.nav-btn{
+    border:none;
+    background:none;
+    color:var(--muted);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    cursor:pointer;
 }
 
-@keyframes up{
-  from{transform:translateY(100%)}
-  to{transform:translateY(0)}
+.nav-btn span{
+    font-size:9px;
+    font-weight:700;
 }
 
-.modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:10px;
+.nav-btn.active{
+    color:var(--text);
 }
 
-.modal-head h2{
-  font-size:20px;
+.nav-btn.active .nav-icon{
+    background:var(--surface2);
 }
 
-.close{
-  width:38px;
-  height:38px;
-  border:0;
-  border-radius:50%;
-  background:var(--soft);
-  color:var(--text);
+.nav-icon{
+    width:38px;
+    height:32px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
 }
 
-.modal-text{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
-}
-
-.modal-form{
-  margin-top:15px;
-}
-
-.hidden{
-  display:none!important;
-}
-
-/* TOAST */
+/* =========================
+   TOAST
+========================= */
 
 .toast{
-  position:fixed;
-  z-index:150;
-  left:50%;
-  bottom:92px;
-  transform:translate(-50%,20px);
-  width:calc(100% - 35px);
-  max-width:450px;
-  padding:14px 16px;
-  border-radius:15px;
-  background:#17181b;
-  color:white;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
-  font-size:13px;
-  box-shadow:0 15px 35px rgba(0,0,0,.25);
+    position:fixed;
+    left:50%;
+    bottom:92px;
+    transform:translate(-50%,20px);
+    background:#111827;
+    color:white;
+    padding:12px 17px;
+    border-radius:13px;
+    font-size:12px;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:100;
+    white-space:nowrap;
 }
 
 .toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
+    opacity:1;
+    transform:translate(-50%,0);
 }
 
-/* LOGIN */
+/* =========================
+   ANIMATIONS
+========================= */
 
-.login-screen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
+@keyframes appear{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
 }
 
-.login-box{
-  width:min(430px,100%);
+@keyframes pageIn{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
 }
 
-.login-logo{
-  font-size:31px;
-  font-weight:900;
-  margin-bottom:6px;
-}
+@media(max-width:360px){
 
-.login-sub{
-  color:var(--muted);
-  margin-bottom:25px;
-}
+    .auth-card{
+        padding:22px;
+    }
 
-@media(max-width:370px){
-  .card-number{
-    font-size:16px;
-    letter-spacing:2px;
-  }
+    .balance-total{
+        font-size:27px;
+    }
 
-  .bank-card{
-    min-height:210px;
-    padding:20px;
-  }
+    .card-number{
+        font-size:17px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div id="loginScreen" class="login-screen">
-  <div class="login-box">
+<!-- ==================================================
+     AUTHENTIFICATION
+================================================== -->
 
-    <div class="login-logo">DALZON</div>
-    <p class="login-sub">Votre portefeuille numérique</p>
+<section class="auth-screen" id="authScreen">
 
-    <div class="form-card">
+    <div class="auth-card">
 
-      <h2 id="authTitle">Créer un compte</h2>
-      <p id="authDescription">
-        Créez votre compte pour accéder à votre portefeuille.
-      </p>
+        <div class="brand">
 
-      <div id="registerFields">
+            <div class="brand-mark">
+                <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="5" width="18" height="14" rx="3"/>
+                    <path d="M3 10h18"/>
+                    <path d="M7 15h3"/>
+                </svg>
+            </div>
 
-        <label>Nom complet</label>
-        <input id="registerName" type="text" placeholder="Ex. Salomon M'BAL">
+            <div>
+                <div class="brand-name">DALZON</div>
+                <div class="brand-sub">Wallet</div>
+            </div>
 
-      </div>
+        </div>
 
-      <label>Adresse e-mail</label>
-      <input id="authEmail" type="email" placeholder="exemple@email.com">
+        <h1 class="auth-title" id="authTitle">
+            Connexion
+        </h1>
 
-      <label>Mot de passe</label>
-      <input id="authPassword" type="password" placeholder="••••••••">
+        <p class="auth-description" id="authDescription">
+            Accédez à votre espace DALZON.
+        </p>
 
-      <button class="primary" onclick="authenticate()" id="authButton">
-        Créer mon compte
-      </button>
+        <div
+            class="auth-error"
+            id="authError">
+        </div>
 
-      <button class="secondary" onclick="switchAuth()" id="switchButton">
-        J'ai déjà un compte
-      </button>
+        <div
+            class="field"
+            id="nameField"
+            style="display:none">
+
+            <label>Nom complet</label>
+
+            <input
+                type="text"
+                id="nameInput"
+                placeholder="Votre nom">
+        </div>
+
+        <div class="field">
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                id="emailInput"
+                placeholder="exemple@email.com"
+                autocomplete="email">
+        </div>
+
+        <div class="field">
+
+            <label>Mot de passe</label>
+
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Votre mot de passe"
+                autocomplete="current-password">
+        </div>
+
+        <button
+            class="primary-btn"
+            id="authButton"
+            onclick="submitAuth()">
+
+            Se connecter
+
+        </button>
+
+        <div class="auth-switch">
+
+            <span id="switchText">
+                Vous n'avez pas encore de compte ?
+            </span>
+
+            <button
+                onclick="toggleAuthMode()"
+                id="switchButton">
+
+                Créer un compte
+
+            </button>
+
+        </div>
 
     </div>
 
-  </div>
+</section>
+
+
+<!-- ==================================================
+     APPLICATION
+================================================== -->
+
+<div class="app" id="app">
+
+    <header class="app-header">
+
+        <div class="header-left">
+
+            <div class="brand-mark" style="width:42px;height:42px;border-radius:13px">
+
+                <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="5" width="18" height="14" rx="3"/>
+                    <path d="M3 10h18"/>
+                    <path d="M7 15h3"/>
+                </svg>
+
+            </div>
+
+            <div>
+
+                <div
+                    class="header-title"
+                    id="headerName">
+                    DALZON
+                </div>
+
+                <div
+                    class="header-id"
+                    id="headerId">
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button
+                class="circle-btn"
+                onclick="toggleTheme()"
+                aria-label="Changer le thème">
+
+                <svg
+                    class="icon"
+                    viewBox="0 0 24 24"
+                    fill="none">
+
+                    <circle cx="12" cy="12" r="4"/>
+
+                    <path d="M12 2v2"/>
+                    <path d="M12 20v2"/>
+                    <path d="m4.93 4.93 1.41 1.41"/>
+                    <path d="m17.66 17.66 1.41 1.41"/>
+                    <path d="M2 12h2"/>
+                    <path d="M20 12h2"/>
+                    <path d="m6.34 17.66-1.41 1.41"/>
+                    <path d="m19.07 4.93-1.41 1.41"/>
+
+                </svg>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="content">
+
+        <!-- =========================
+             ACCUEIL
+        ========================== -->
+
+        <section
+            class="page active"
+            id="homePage">
+
+            <div class="section-title">
+                Vue d'ensemble
+            </div>
+
+            <div class="balance-card">
+
+                <div class="balance-label">
+                    Solde total
+                </div>
+
+                <div
+                    class="balance-total"
+                    id="totalBalance">
+                    —
+                </div>
+
+                <div class="balance-grid">
+
+                    <div class="currency-box">
+
+                        <div class="currency-label">
+                            CDF
+                        </div>
+
+                        <div
+                            class="currency-value"
+                            id="cdfBalance">
+                            0 CDF
+                        </div>
+
+                    </div>
+
+                    <div class="currency-box">
+
+                        <div class="currency-label">
+                            USD
+                        </div>
+
+                        <div
+                            class="currency-value"
+                            id="usdBalance">
+                            $0.00
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="action"
+                    onclick="openTransfer()">
+
+                    <div class="action-icon">
+
+                        <svg
+                            class="icon"
+                            viewBox="0 0 24 24"
+                            fill="none">
+
+                            <path d="M5 12h14"/>
+                            <path d="m13 6 6 6-6 6"/>
+
+                        </svg>
+
+                    </div>
+
+                    <span>Envoyer</span>
+
+                </button>
+
+
+                <button
+                    class="action"
+                    onclick="openReceive()">
+
+                    <div class="action-icon">
+
+                        <svg
+                            class="icon"
+                            viewBox="0 0 24 24"
+                            fill="none">
+
+                            <path d="M12 5v14"/>
+                            <path d="m18 13-6 6-6-6"/>
+
+                        </svg>
+
+                    </div>
+
+                    <span>Recevoir</span>
+
+                </button>
+
+
+                <button
+                    class="action"
+                    onclick="openPayment()">
+
+                    <div class="action-icon">
+
+                        <svg
+                            class="icon"
+                            viewBox="0 0 24 24"
+                            fill="none">
+
+                            <rect
+                                x="3"
+                                y="5"
+                                width="18"
+                                height="14"
+                                rx="3"/>
+
+                            <path d="M3 10h18"/>
+
+                        </svg>
+
+                    </div>
+
+                    <span>Paiement</span>
+
+                </button>
+
+            </div>
+
+
+            <div class="section-title">
+                Activité récente
+            </div>
+
+            <div
+                class="list"
+                id="homeTransactions">
+
+                <div class="empty">
+                    Aucune opération pour le moment.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ACTIVITÉ
+        ========================== -->
+
+        <section
+            class="page"
+            id="activityPage">
+
+            <div class="section-title">
+                Activité
+            </div>
+
+            <div
+                class="list"
+                id="transactionsList">
+
+                <div class="empty">
+                    Aucune opération.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CARTE
+        ========================== -->
+
+        <section
+            class="page"
+            id="cardPage">
+
+            <div class="section-title">
+                Ma carte
+            </div>
+
+            <div class="dalzon-card">
+
+                <div class="card-top">
+
+                    <div class="card-brand">
+                        DALZON
+                    </div>
+
+                    <div class="card-type">
+                        CARD
+                    </div>
+
+                </div>
+
+                <div
+                    class="card-number"
+                    id="cardNumber">
+                    DLZ •••• •••• ••••
+                </div>
+
+                <div class="card-bottom">
+
+                    <div>
+
+                        <div class="card-small">
+                            TITULAIRE
+                        </div>
+
+                        <div
+                            class="card-value"
+                            id="cardHolder">
+                            —
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="card-small">
+                            EXP
+                        </div>
+
+                        <div
+                            class="card-value"
+                            id="cardExpiry">
+                            --/--
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="profile-card">
+
+                <div class="profile-row">
+
+                    <span>Type</span>
+
+                    <strong>
+                        DALZON CARD
+                    </strong>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span>Statut</span>
+
+                    <strong>
+                        Active
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PROFIL
+        ========================== -->
+
+        <section
+            class="page"
+            id="profilePage">
+
+            <div class="section-title">
+                Profil
+            </div>
+
+            <div class="profile-card">
+
+                <div class="profile-head">
+
+                    <div
+                        class="profile-avatar"
+                        id="profileAvatar">
+                        D
+                    </div>
+
+                    <div>
+
+                        <div
+                            class="profile-name"
+                            id="profileName">
+                            —
+                        </div>
+
+                        <div
+                            class="profile-email"
+                            id="profileEmail">
+                            —
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span>Identifiant</span>
+
+                    <strong id="profileId">
+                        —
+                    </strong>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span>Statut</span>
+
+                    <strong id="profileStatus">
+                        —
+                    </strong>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span>Type de compte</span>
+
+                    <strong id="profileRole">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="profile-card"
+                id="adminEntry"
+                style="display:none">
+
+                <button
+                    class="primary-btn"
+                    onclick="openAdmin()">
+
+                    Administration
+
+                </button>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <button
+                    class="primary-btn"
+                    onclick="logout()">
+
+                    Se déconnecter
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ADMINISTRATION
+        ========================== -->
+
+        <section
+            class="page"
+            id="adminPage">
+
+            <div class="section-title">
+                Administration
+            </div>
+
+            <div class="admin-card">
+
+                <div class="section-title"
+                     style="font-size:15px">
+
+                    Utilisateurs
+
+                </div>
+
+                <div
+                    id="adminUsers">
+
+                    <div class="empty">
+                        Chargement...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
+
+    <nav class="bottom-nav">
+
+        <div class="nav-inner">
+
+            <button
+                class="nav-btn active"
+                onclick="navigate('homePage',this)">
+
+                <div class="nav-icon">
+
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none">
+
+                        <path d="m3 10 9-7 9 7"/>
+                        <path d="M5 9v11h14V9"/>
+                        <path d="M9 20v-6h6v6"/>
+
+                    </svg>
+
+                </div>
+
+                <span>Accueil</span>
+
+            </button>
+
+
+            <button
+                class="nav-btn"
+                onclick="navigate('activityPage',this)">
+
+                <div class="nav-icon">
+
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none">
+
+                        <path d="M4 19V5"/>
+                        <path d="M4 19h16"/>
+                        <path d="m7 15 4-4 3 2 5-6"/>
+
+                    </svg>
+
+                </div>
+
+                <span>Activité</span>
+
+            </button>
+
+
+            <button
+                class="nav-btn"
+                onclick="navigate('cardPage',this)">
+
+                <div class="nav-icon">
+
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none">
+
+                        <rect
+                            x="3"
+                            y="5"
+                            width="18"
+                            height="14"
+                            rx="3"/>
+
+                        <path d="M3 10h18"/>
+                        <path d="M7 15h4"/>
+
+                    </svg>
+
+                </div>
+
+                <span>Carte</span>
+
+            </button>
+
+
+            <button
+                class="nav-btn"
+                onclick="navigate('profilePage',this)">
+
+                <div class="nav-icon">
+
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none">
+
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="4"/>
+
+                        <path
+                            d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+
+                    </svg>
+
+                </div>
+
+                <span>Profil</span>
+
+            </button>
+
+        </div>
+
+    </nav>
+
 </div>
 
 
-<div id="app" class="app hidden">
-
-<header>
-
-  <div class="brand">
-    DALZON<span> WALLET</span>
-  </div>
-
-  <div class="header-actions">
-
-    <button class="circle" onclick="toggleTheme()" aria-label="Thème">
-
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <circle cx="12" cy="12" r="4"/>
-        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-      </svg>
-
-    </button>
-
-  </div>
-
-</header>
-
-
-<main>
-
-<!-- HOME -->
-
-<section id="home" class="page active">
-
-  <div class="title">
-    <small>Bienvenue</small>
-    <h1 id="welcomeName">Utilisateur</h1>
-  </div>
-
-
-  <div class="bank-card">
-
-    <div class="card-header">
-
-      <div class="card-logo">DALZON</div>
-
-      <div class="card-type">CARD</div>
-
-    </div>
-
-
-    <div class="chip"></div>
-
-
-    <div class="card-number" id="cardNumber">
-      0000 0000 0000 0000
-    </div>
-
-
-    <div class="card-footer">
-
-      <div>
-
-        <div class="card-label">Titulaire</div>
-
-        <div class="card-holder" id="cardHolder">
-          DALZON USER
-        </div>
-
-      </div>
-
-
-      <div>
-
-        <div class="card-label">Expire</div>
-
-        <div class="expiry" id="cardExpiry">
-          12/30
-        </div>
-
-      </div>
-
-
-      <div class="network">
-        CARD
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="balance">
-
-    <small>Solde disponible</small>
-
-    <strong id="balanceValue">
-      25 000
-    </strong>
-
-    <span class="currency">DLZ</span>
-
-  </div>
-
-
-  <div class="actions">
-
-    <button class="action" onclick="openTransfer('send')">
-
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M5 19 19 5"/>
-        <path d="M8 5h11v11"/>
-      </svg>
-
-      <span>Envoyer</span>
-
-    </button>
-
-
-    <button class="action" onclick="openTransfer('receive')">
-
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M19 5 5 19"/>
-        <path d="M16 19H5V8"/>
-      </svg>
-
-      <span>Recevoir</span>
-
-    </button>
-
-
-    <button class="action" onclick="openPayment()">
-
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="3" y="5" width="18" height="14" rx="2"/>
-        <path d="M3 10h18"/>
-      </svg>
-
-      <span>Payer</span>
-
-    </button>
-
-  </div>
-
-
-  <div class="section-head">
-
-    <h2>Activité récente</h2>
-
-    <button onclick="goTo('history')">
-      Voir tout
-    </button>
-
-  </div>
-
-
-  <div id="recentTransactions"></div>
-
-</section>
-
-
-<!-- CARD -->
-
-<section id="card" class="page">
-
-  <div class="title">
-
-    <small>Gestion</small>
-
-    <h1>Ma carte</h1>
-
-  </div>
-
-
-  <div class="bank-card">
-
-    <div class="card-header">
-
-      <div class="card-logo">DALZON</div>
-
-      <div class="card-type">CARD</div>
-
-    </div>
-
-    <div class="chip"></div>
-
-    <div class="card-number" id="cardNumber2">
-      0000 0000 0000 0000
-    </div>
-
-    <div class="card-footer">
-
-      <div>
-        <div class="card-label">Titulaire</div>
-        <div class="card-holder" id="cardHolder2">DALZON USER</div>
-      </div>
-
-      <div>
-        <div class="card-label">Expire</div>
-        <div class="expiry" id="cardExpiry2">12/30</div>
-      </div>
-
-      <div class="network">CARD</div>
-
-    </div>
-
-  </div>
-
-
-  <div class="form-card card-control">
-
-    <div class="control">
-
-      <div class="control-left">
-
-        <div class="control-icon">
-
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <rect x="3" y="5" width="18" height="14" rx="2"/>
-            <path d="M3 10h18"/>
-          </svg>
-
-        </div>
-
-        <div class="control-info">
-
-          <strong>Paiements</strong>
-          <small>Autoriser les paiements</small>
-
-        </div>
-
-      </div>
-
-      <button class="toggle on" id="paymentToggle" onclick="toggleCardFeature(this)">
-        <i></i>
-      </button>
-
-    </div>
-
-
-    <div class="control">
-
-      <div class="control-left">
-
-        <div class="control-icon">
-
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M12 3 5 6v5c0 4.5 3 7.5 7 10 4-2.5 7-5.5 7-10V6l-7-3Z"/>
-            <path d="m9 12 2 2 4-4"/>
-          </svg>
-
-        </div>
-
-        <div class="control-info">
-
-          <strong>Carte active</strong>
-          <small id="cardStatus">Votre carte est active</small>
-
-        </div>
-
-      </div>
-
-      <button class="toggle on" id="cardToggle" onclick="toggleCardLock(this)">
-        <i></i>
-      </button>
-
-    </div>
-
-
-    <button class="primary" onclick="openPayment()">
-      Effectuer un paiement
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- HISTORY -->
-
-<section id="history" class="page">
-
-  <div class="title">
-
-    <small>Portefeuille</small>
-
-    <h1>Transactions</h1>
-
-  </div>
-
-
-  <div class="search">
-
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <circle cx="11" cy="11" r="7"/>
-      <path d="m20 20-4-4"/>
-    </svg>
-
-    <input
-      id="searchInput"
-      type="search"
-      placeholder="Rechercher une transaction..."
-      oninput="renderTransactions()"
-    >
-
-  </div>
-
-
-  <div id="allTransactions"></div>
-
-</section>
-
-
-<!-- PROFILE -->
-
-<section id="profile" class="page">
-
-  <div class="title">
-
-    <small>Compte</small>
-
-    <h1>Profil</h1>
-
-  </div>
-
-
-  <div class="form-card">
-
-    <label>Nom complet</label>
-
-    <input id="profileName" readonly>
-
-
-    <label>E-mail</label>
-
-    <input id="profileEmail" readonly>
-
-
-    <label>Identifiant</label>
-
-    <input id="profileId" readonly>
-
-
-    <button class="primary" onclick="logout()">
-      Se déconnecter
-    </button>
-
-  </div>
-
-</section>
-
-</main>
-
-
-<nav>
-
-  <button class="active" onclick="goTo('home',this)">
-
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/>
-      <path d="M9 21v-7h6v7"/>
-    </svg>
-
-    Accueil
-
-  </button>
-
-
-  <button onclick="goTo('card',this)">
-
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <rect x="3" y="5" width="18" height="14" rx="2"/>
-      <path d="M3 10h18"/>
-    </svg>
-
-    Carte
-
-  </button>
-
-
-  <button onclick="goTo('history',this)">
-
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <path d="M4 12h16"/>
-      <path d="m13 7 5 5-5 5"/>
-    </svg>
-
-    Activité
-
-  </button>
-
-
-  <button onclick="goTo('profile',this)">
-
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <circle cx="12" cy="8" r="4"/>
-      <path d="M4 21c.8-4 3.4-6 8-6s7.2 2 8 6"/>
-    </svg>
-
-    Profil
-
-  </button>
-
-</nav>
-
+<div
+    class="toast"
+    id="toast">
 </div>
-
-
-<!-- MODAL -->
-
-<div class="modal" id="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-
-      <h2 id="modalTitle">DALZON</h2>
-
-      <button class="close" onclick="closeModal()">×</button>
-
-    </div>
-
-    <div id="modalContent"></div>
-
-  </div>
-
-</div>
-
-
-<div class="toast" id="toast"></div>
 
 
 <script>
-
 /* =====================================================
-   DALZON WALLET — JAVASCRIPT
+   CONFIGURATION
 ===================================================== */
 
-const STORAGE_KEY = "dalzon_wallet_account_v1";
+/*
+   Quand le frontend et le backend seront hébergés
+   séparément, remplace cette valeur par l'adresse
+   publique du serveur backend.
 
-let authMode = "register";
+   Exemple :
+   https://api.ton-domaine.com
 
-let account = JSON.parse(
-  localStorage.getItem(STORAGE_KEY) || "null"
-);
+   Pour le moment :
+*/
 
-
-/* -------------------------
-   UTILITAIRES
-------------------------- */
-
-const $ = id => document.getElementById(id);
-
-function save(){
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(account)
-  );
-
-}
-
-function randomDigits(length){
-
-  let result="";
-
-  for(let i=0;i<length;i++){
-    result += Math.floor(Math.random()*10);
-  }
-
-  return result;
-
-}
-
-function generateCardNumber(){
-
-  return "5284 " +
-         randomDigits(4) + " " +
-         randomDigits(4) + " " +
-         randomDigits(4);
-
-}
-
-function generateExpiry(){
-
-  const year =
-    new Date().getFullYear() + 4;
-
-  const month =
-    String(
-      Math.floor(Math.random()*12)+1
-    ).padStart(2,"0");
-
-  return month + "/" + String(year).slice(-2);
-
-}
-
-function generateId(){
-
-  return "DLZ-" +
-    randomDigits(4) +
-    "-" +
-    randomDigits(4);
-
-}
-
-function formatNumber(number){
-
-  return new Intl.NumberFormat("fr-FR")
-    .format(number);
-
-}
+const API_BASE = "";
 
 
-/* -------------------------
-   AUTHENTIFICATION
-------------------------- */
+/* =====================================================
+   VARIABLES
+===================================================== */
 
-function switchAuth(){
+let currentUser = null;
+let authMode = "login";
+let authToken = null;
 
-  authMode =
-    authMode === "register"
-    ? "login"
-    : "register";
 
-  if(authMode === "register"){
+/* =====================================================
+   AUTH MODE
+===================================================== */
 
-    $("authTitle").textContent =
-      "Créer un compte";
+function toggleAuthMode(){
 
-    $("authDescription").textContent =
-      "Créez votre compte pour accéder à votre portefeuille.";
+    authMode =
+        authMode === "login"
+            ? "register"
+            : "login";
 
-    $("registerFields").classList.remove("hidden");
+    const nameField =
+        document.getElementById("nameField");
 
-    $("authButton").textContent =
-      "Créer mon compte";
+    const title =
+        document.getElementById("authTitle");
 
-    $("switchButton").textContent =
-      "J'ai déjà un compte";
+    const description =
+        document.getElementById("authDescription");
 
-  }else{
+    const button =
+        document.getElementById("authButton");
 
-    $("authTitle").textContent =
-      "Connexion";
+    const switchText =
+        document.getElementById("switchText");
 
-    $("authDescription").textContent =
-      "Connectez-vous à votre portefeuille.";
+    const switchButton =
+        document.getElementById("switchButton");
 
-    $("registerFields").classList.add("hidden");
+    hideAuthError();
 
-    $("authButton").textContent =
-      "Se connecter";
+    if(authMode === "register"){
 
-    $("switchButton").textContent =
-      "Créer un nouveau compte";
+        nameField.style.display =
+            "block";
 
-  }
+        title.textContent =
+            "Créer un compte";
 
+        description.textContent =
+            "Créez votre espace personnel DALZON.";
+
+        button.textContent =
+            "Créer mon compte";
+
+        switchText.textContent =
+            "Vous avez déjà un compte ?";
+
+        switchButton.textContent =
+            "Se connecter";
+
+    }else{
+
+        nameField.style.display =
+            "none";
+
+        title.textContent =
+            "Connexion";
+
+        description.textContent =
+            "Accédez à votre espace DALZON.";
+
+        button.textContent =
+            "Se connecter";
+
+        switchText.textContent =
+            "Vous n'avez pas encore de compte ?";
+
+        switchButton.textContent =
+            "Créer un compte";
+    }
 }
 
 
-function authenticate(){
+/* =====================================================
+   AUTH
+===================================================== */
 
-  const email =
-    $("authEmail").value.trim();
+async function submitAuth(){
 
-  const password =
-    $("authPassword").value;
-
-  if(!email || !password){
-
-    toast("Veuillez remplir tous les champs.");
-
-    return;
-
-  }
-
-
-  if(authMode === "register"){
+    hideAuthError();
 
     const name =
-      $("registerName").value.trim();
+        document
+            .getElementById("nameInput")
+            .value
+            .trim();
 
-    if(!name){
+    const email =
+        document
+            .getElementById("emailInput")
+            .value
+            .trim();
 
-      toast("Veuillez entrer votre nom.");
+    const password =
+        document
+            .getElementById("passwordInput")
+            .value;
 
-      return;
+    if(authMode === "register" && !name){
 
+        showAuthError(
+            "Veuillez entrer votre nom."
+        );
+
+        return;
     }
 
+    if(!email || !password){
 
-    account = {
+        showAuthError(
+            "Veuillez remplir tous les champs."
+        );
 
-      id:generateId(),
+        return;
+    }
 
-      name:name,
+    const endpoint =
+        authMode === "register"
+            ? "/api/auth/register"
+            : "/api/auth/login";
 
-      email:email,
+    const body =
+        authMode === "register"
+            ? {
+                name,
+                email,
+                password
+            }
+            : {
+                email,
+                password
+            };
 
-      password:password,
+    const button =
+        document.getElementById(
+            "authButton"
+        );
 
-      balance:25000,
+    const oldText =
+        button.textContent;
 
-      card:{
-        number:generateCardNumber(),
-        expiry:generateExpiry(),
-        locked:false,
-        payments:true
-      },
+    button.disabled = true;
+    button.textContent =
+        "Connexion...";
 
-      transactions:[
+    try{
 
-        {
-          id:Date.now(),
-          type:"credit",
-          title:"Solde initial",
-          date:new Date().toLocaleDateString("fr-FR"),
-          amount:25000
+        const response =
+            await fetch(
+                API_BASE + endpoint,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(body)
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Une erreur est survenue."
+            );
         }
 
-      ]
+        /*
+          Le token sert uniquement à
+          authentifier les requêtes.
+        */
 
-    };
+        authToken =
+            data.token;
+
+        currentUser =
+            data.user;
+
+        showApp();
+
+    }catch(error){
+
+        showAuthError(
+            error.message ||
+            "Impossible de contacter le serveur."
+        );
+
+    }finally{
+
+        button.disabled = false;
+        button.textContent =
+            oldText;
+    }
+}
 
 
-    save();
+/* =====================================================
+   APPLICATION
+===================================================== */
 
-    openApp();
+function showApp(){
 
-    toast("Compte créé avec succès.");
+    document
+        .getElementById("authScreen")
+        .style.display = "none";
 
-  }else{
+    document
+        .getElementById("app")
+        .style.display = "block";
 
-    if(
-      !account ||
-      account.email !== email ||
-      account.password !== password
-    ){
+    renderUser(currentUser);
 
-      toast("Identifiants incorrects.");
+    navigate(
+        "homePage",
+        document.querySelector(
+            ".nav-btn"
+        )
+    );
+}
 
-      return;
 
+/* =====================================================
+   AFFICHAGE UTILISATEUR
+===================================================== */
+
+function renderUser(user){
+
+    if(!user) return;
+
+    document.getElementById(
+        "headerName"
+    ).textContent =
+        user.name;
+
+    document.getElementById(
+        "headerId"
+    ).textContent =
+        user.id;
+
+
+    const cdf =
+        Number(
+            user.wallet?.CDF || 0
+        );
+
+    const usd =
+        Number(
+            user.wallet?.USD || 0
+        );
+
+
+    document.getElementById(
+        "cdfBalance"
+    ).textContent =
+        formatCDF(cdf);
+
+    document.getElementById(
+        "usdBalance"
+    ).textContent =
+        formatUSD(usd);
+
+
+    /*
+       On affiche séparément CDF/USD.
+       Il n'y a volontairement pas de
+       conversion automatique entre les deux
+       devises.
+    */
+
+    document.getElementById(
+        "totalBalance"
+    ).textContent =
+        formatUSD(usd);
+
+
+    /* CARTE */
+
+    if(user.card){
+
+        document.getElementById(
+            "cardNumber"
+        ).textContent =
+            user.card.number;
+
+        document.getElementById(
+            "cardExpiry"
+        ).textContent =
+            user.card.expiry;
     }
 
-    openApp();
-
-  }
-
-}
-
-
-/* -------------------------
-   APPLICATION
-------------------------- */
-
-function openApp(){
-
-  $("loginScreen").classList.add("hidden");
-
-  $("app").classList.remove("hidden");
-
-  updateUI();
-
-}
+    document.getElementById(
+        "cardHolder"
+    ).textContent =
+        user.name
+            .toUpperCase();
 
 
-function updateUI(){
+    /* PROFIL */
 
-  if(!account) return;
+    document.getElementById(
+        "profileName"
+    ).textContent =
+        user.name;
 
-  $("welcomeName").textContent =
-    account.name;
+    document.getElementById(
+        "profileEmail"
+    ).textContent =
+        user.email;
 
-  $("cardHolder").textContent =
-    account.name;
+    document.getElementById(
+        "profileId"
+    ).textContent =
+        user.id;
 
-  $("cardHolder2").textContent =
-    account.name;
+    document.getElementById(
+        "profileStatus"
+    ).textContent =
+        user.status === "active"
+            ? "Actif"
+            : "Bloqué";
 
-  $("cardNumber").textContent =
-    account.card.number;
-
-  $("cardNumber2").textContent =
-    account.card.number;
-
-  $("cardExpiry").textContent =
-    account.card.expiry;
-
-  $("cardExpiry2").textContent =
-    account.card.expiry;
-
-  $("balanceValue").textContent =
-    formatNumber(account.balance);
-
-  $("profileName").value =
-    account.name;
-
-  $("profileEmail").value =
-    account.email;
-
-  $("profileId").value =
-    account.id;
-
-  renderTransactions();
-
-}
+    document.getElementById(
+        "profileRole"
+    ).textContent =
+        user.role === "admin"
+            ? "Administrateur"
+            : "Utilisateur";
 
 
-/* -------------------------
-   NAVIGATION
-------------------------- */
+    const firstLetter =
+        user.name
+            .trim()
+            .charAt(0)
+            .toUpperCase();
 
-function goTo(page,button){
+    document.getElementById(
+        "profileAvatar"
+    ).textContent =
+        firstLetter || "D";
 
-  document
-    .querySelectorAll(".page")
-    .forEach(p =>
-      p.classList.remove("active")
+
+    /* ADMIN */
+
+    if(user.role === "admin"){
+
+        document.getElementById(
+            "adminEntry"
+        ).style.display =
+            "block";
+
+    }else{
+
+        document.getElementById(
+            "adminEntry"
+        ).style.display =
+            "none";
+    }
+
+
+    renderTransactions(
+        user.transactions || []
     );
-
-  $(page).classList.add("active");
-
-  document
-    .querySelectorAll("nav button")
-    .forEach(b =>
-      b.classList.remove("active")
-    );
-
-  if(button){
-
-    button.classList.add("active");
-
-  }else{
-
-    const buttons =
-      document.querySelectorAll("nav button");
-
-    const index = {
-      home:0,
-      card:1,
-      history:2,
-      profile:3
-    }[page];
-
-    if(index !== undefined)
-      buttons[index].classList.add("active");
-
-  }
-
 }
 
 
-/* -------------------------
+/* =====================================================
    TRANSACTIONS
-------------------------- */
+===================================================== */
 
-function iconFor(type){
+function renderTransactions(
+    transactions
+){
 
-  if(type === "credit"){
+    const containers = [
+        document.getElementById(
+            "homeTransactions"
+        ),
+        document.getElementById(
+            "transactionsList"
+        )
+    ];
 
-    return `
-      <svg viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="1.8">
-        <path d="M5 19 19 5"/>
-        <path d="M8 5h11v11"/>
-      </svg>
-    `;
+    containers.forEach(container => {
 
-  }
+        if(!container) return;
 
-  if(type === "payment"){
+        container.innerHTML = "";
 
-    return `
-      <svg viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="1.8">
-        <rect x="3" y="5" width="18" height="14" rx="2"/>
-        <path d="M3 10h18"/>
-      </svg>
-    `;
+        if(!transactions.length){
 
-  }
+            container.innerHTML = `
+                <div class="empty">
+                    Aucune opération pour le moment.
+                </div>
+            `;
 
-  return `
-    <svg viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="1.8">
-      <path d="M19 5 5 19"/>
-      <path d="M16 19H5V8"/>
-    </svg>
-  `;
+            return;
+        }
 
+        transactions.forEach(transaction => {
+
+            const positive =
+                transaction.type === "credit";
+
+            const amount =
+                transaction.currency === "USD"
+                    ? formatUSD(
+                        transaction.amount
+                    )
+                    : formatCDF(
+                        transaction.amount
+                    );
+
+            const sign =
+                positive
+                    ? "+"
+                    : "-";
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+            element.className =
+                "transaction";
+
+            element.innerHTML = `
+
+                <div class="transaction-icon">
+
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none">
+
+                        ${
+                            positive
+                            ? `
+                                <path d="M12 19V5"/>
+                                <path d="m6 11 6-6 6 6"/>
+                              `
+                            : `
+                                <path d="M12 5v14"/>
+                                <path d="m18 13-6 6-6-6"/>
+                              `
+                        }
+
+                    </svg>
+
+                </div>
+
+                <div class="transaction-info">
+
+                    <div class="transaction-title">
+                        ${escapeHTML(
+                            transaction.description
+                            || "Opération"
+                        )}
+                    </div>
+
+                    <div class="transaction-date">
+                        ${formatDate(
+                            transaction.created_at
+                        )}
+                    </div>
+
+                </div>
+
+                <div class="
+                    transaction-amount
+                    ${
+                        positive
+                            ? "amount-positive"
+                            : "amount-negative"
+                    }
+                ">
+                    ${sign}${amount}
+                </div>
+            `;
+
+            container.appendChild(
+                element
+            );
+        });
+    });
 }
 
 
-function transactionHTML(tx){
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
-  const positive =
-    tx.type === "credit";
+function navigate(
+    pageId,
+    button
+){
 
-  return `
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
 
-    <div class="transaction">
+            page.classList.remove(
+                "active"
+            );
+        });
 
-      <div class="tx-icon">
-        ${iconFor(tx.type)}
-      </div>
+    const page =
+        document.getElementById(
+            pageId
+        );
 
-      <div class="tx-info">
+    if(page){
 
-        <strong>
-          ${escapeHTML(tx.title)}
-        </strong>
+        page.classList.add(
+            "active"
+        );
+    }
 
-        <small>
-          ${tx.date}
-        </small>
 
-      </div>
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(btn => {
 
-      <div class="tx-value ${
-        positive ? "plus":"minus"
-      }">
+            btn.classList.remove(
+                "active"
+            );
+        });
 
-        ${positive ? "+" : "-"}
-        ${formatNumber(tx.amount)} DLZ
+    if(button){
 
-      </div>
+        button.classList.add(
+            "active"
+        );
+    }
 
-    </div>
-
-  `;
-
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 }
 
 
-function renderTransactions(){
+/* =====================================================
+   ADMIN
+===================================================== */
 
-  if(!account) return;
+async function openAdmin(){
 
-  const search =
-    ($("searchInput")?.value || "")
-    .toLowerCase()
-    .trim();
+    if(
+        !currentUser ||
+        currentUser.role !== "admin"
+    ){
+
+        showToast(
+            "Accès administrateur refusé."
+        );
+
+        return;
+    }
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
+
+            page.classList.remove(
+                "active"
+            );
+        });
+
+    document
+        .getElementById("adminPage")
+        .classList.add("active");
+
+    await loadAdminUsers();
+}
 
 
-  const list =
-    account.transactions
-      .filter(tx =>
-        tx.title
-          .toLowerCase()
-          .includes(search)
-      );
+async function loadAdminUsers(){
 
+    const container =
+        document.getElementById(
+            "adminUsers"
+        );
 
-  const html =
-    list.length
-    ? list.map(transactionHTML).join("")
-    : `<div class="transaction">
-        <div class="tx-info">
-          <strong>Aucune transaction</strong>
-          <small>Essayez une autre recherche.</small>
+    container.innerHTML = `
+        <div class="empty">
+            Chargement...
         </div>
-      </div>`;
-
-
-  $("recentTransactions").innerHTML =
-    account.transactions
-      .slice(0,5)
-      .map(transactionHTML)
-      .join("");
-
-
-  $("allTransactions").innerHTML =
-    html;
-
-}
-
-
-/* -------------------------
-   TRANSFERT
-------------------------- */
-
-function openTransfer(mode){
-
-  if(mode === "send"){
-
-    $("modalTitle").textContent =
-      "Envoyer";
-
-    $("modalContent").innerHTML = `
-
-      <p class="modal-text">
-        Envoyez des DLZ à un autre identifiant.
-      </p>
-
-      <div class="modal-form">
-
-        <label>Identifiant du destinataire</label>
-
-        <input
-          id="recipient"
-          placeholder="DLZ-0000-0000"
-        >
-
-        <label>Montant</label>
-
-        <input
-          id="sendAmount"
-          type="number"
-          min="1"
-          placeholder="Montant en DLZ"
-        >
-
-        <button
-          class="primary"
-          onclick="sendMoney()">
-          Confirmer l'envoi
-        </button>
-
-      </div>
-
     `;
 
-  }else{
+    try{
 
-    $("modalTitle").textContent =
-      "Recevoir";
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/admin/users",
+                {
+                    headers:{
+                        Authorization:
+                            "Bearer " +
+                            authToken
+                    }
+                }
+            );
 
-    $("modalContent").innerHTML = `
+        const data =
+            await response.json();
 
-      <p class="modal-text">
-        Partagez votre identifiant pour recevoir des DLZ.
-      </p>
+        if(!response.ok){
 
-      <div class="form-card"
-        style="margin-top:15px;text-align:center">
+            throw new Error(
+                data.message ||
+                "Erreur."
+            );
+        }
 
-        <strong style="font-size:22px">
-          ${account.id}
-        </strong>
+        container.innerHTML = "";
 
-      </div>
+        if(!data.users.length){
 
-      <button
-        class="primary"
-        onclick="copyId()">
-        Copier l'identifiant
-      </button>
+            container.innerHTML = `
+                <div class="empty">
+                    Aucun utilisateur.
+                </div>
+            `;
 
-    `;
+            return;
+        }
 
-  }
+        data.users.forEach(user => {
 
-  $("modal").classList.add("show");
+            const item =
+                document.createElement(
+                    "div"
+                );
 
+            item.className =
+                "admin-user";
+
+            item.innerHTML = `
+
+                <div class="admin-user-head">
+
+                    <div>
+
+                        <div class="admin-user-name">
+                            ${escapeHTML(
+                                user.name
+                            )}
+                        </div>
+
+                        <div class="admin-user-id">
+                            ${escapeHTML(
+                                user.id
+                            )}
+                        </div>
+
+                    </div>
+
+                    <div class="
+                        status
+                        ${
+                            user.status === "blocked"
+                                ? "blocked"
+                                : ""
+                        }
+                    ">
+                        ${
+                            user.status === "blocked"
+                                ? "Bloqué"
+                                : "Actif"
+                        }
+                    </div>
+
+                </div>
+
+                <div class="admin-balances">
+
+                    <span>
+                        ${formatCDF(
+                            user.wallet.CDF
+                        )}
+                    </span>
+
+                    <span>
+                        ${formatUSD(
+                            user.wallet.USD
+                        )}
+                    </span>
+
+                </div>
+            `;
+
+            container.appendChild(
+                item
+            );
+        });
+
+    }catch(error){
+
+        container.innerHTML = `
+            <div class="empty">
+                ${escapeHTML(
+                    error.message
+                )}
+            </div>
+        `;
+    }
 }
 
 
-function sendMoney(){
+/* =====================================================
+   ACTIONS
+===================================================== */
 
-  const recipient =
-    $("recipient").value.trim();
+function openTransfer(){
 
-  const amount =
-    Number($("sendAmount").value);
-
-
-  if(!recipient || !amount || amount <= 0){
-
-    toast("Informations invalides.");
-
-    return;
-
-  }
-
-
-  if(amount > account.balance){
-
-    toast("Solde insuffisant.");
-
-    return;
-
-  }
-
-
-  account.balance -= amount;
-
-
-  account.transactions.unshift({
-
-    id:Date.now(),
-
-    type:"debit",
-
-    title:"Envoi vers " + recipient,
-
-    date:new Date().toLocaleDateString("fr-FR"),
-
-    amount:amount
-
-  });
-
-
-  save();
-
-  updateUI();
-
-  closeModal();
-
-  toast(
-    formatNumber(amount) +
-    " DLZ envoyé."
-  );
-
+    showToast(
+        "Le transfert sera activé à l'étape suivante."
+    );
 }
 
+function openReceive(){
 
-/* -------------------------
-   PAIEMENT
-------------------------- */
+    showToast(
+        "La réception sera activée à l'étape suivante."
+    );
+}
 
 function openPayment(){
 
-  if(account.card.locked){
-
-    toast("La carte est verrouillée.");
-
-    return;
-
-  }
-
-
-  if(!account.card.payments){
-
-    toast("Les paiements sont désactivés.");
-
-    return;
-
-  }
-
-
-  $("modalTitle").textContent =
-    "Paiement";
-
-  $("modalContent").innerHTML = `
-
-    <p class="modal-text">
-      Effectuez un paiement depuis votre portefeuille.
-    </p>
-
-    <label>Marchand</label>
-
-    <input
-      id="merchant"
-      placeholder="Nom du marchand"
-    >
-
-    <label>Montant</label>
-
-    <input
-      id="paymentAmount"
-      type="number"
-      min="1"
-      placeholder="Montant en DLZ"
-    >
-
-    <button
-      class="primary"
-      onclick="makePayment()">
-      Payer
-    </button>
-
-  `;
-
-  $("modal").classList.add("show");
-
+    showToast(
+        "Le paiement simulé sera activé à l'étape suivante."
+    );
 }
 
 
-function makePayment(){
-
-  const merchant =
-    $("merchant").value.trim();
-
-  const amount =
-    Number($("paymentAmount").value);
-
-
-  if(!merchant || !amount || amount <= 0){
-
-    toast("Veuillez vérifier les informations.");
-
-    return;
-
-  }
-
-
-  if(amount > account.balance){
-
-    toast("Solde insuffisant.");
-
-    return;
-
-  }
-
-
-  account.balance -= amount;
-
-
-  account.transactions.unshift({
-
-    id:Date.now(),
-
-    type:"payment",
-
-    title:"Paiement — " + merchant,
-
-    date:new Date().toLocaleDateString("fr-FR"),
-
-    amount:amount
-
-  });
-
-
-  save();
-
-  updateUI();
-
-  closeModal();
-
-  toast("Paiement enregistré.");
-
-}
-
-
-/* -------------------------
-   CARTE
-------------------------- */
-
-function toggleCardLock(button){
-
-  account.card.locked =
-    !account.card.locked;
-
-  button.classList.toggle(
-    "on",
-    !account.card.locked
-  );
-
-  $("cardStatus").textContent =
-    account.card.locked
-    ? "Votre carte est verrouillée"
-    : "Votre carte est active";
-
-  save();
-
-  toast(
-    account.card.locked
-    ? "Carte verrouillée."
-    : "Carte déverrouillée."
-  );
-
-}
-
-
-function toggleCardFeature(button){
-
-  account.card.payments =
-    !account.card.payments;
-
-  button.classList.toggle(
-    "on",
-    account.card.payments
-  );
-
-  save();
-
-  toast(
-    account.card.payments
-    ? "Paiements activés."
-    : "Paiements désactivés."
-  );
-
-}
-
-
-/* -------------------------
+/* =====================================================
    THÈME
-------------------------- */
+===================================================== */
 
 function toggleTheme(){
 
-  document.body.classList.toggle("dark");
-
-  localStorage.setItem(
-    "dalzon_theme",
-    document.body.classList.contains("dark")
-      ? "dark"
-      : "light"
-  );
-
-}
-
-
-/* -------------------------
-   MODAL / TOAST
-------------------------- */
-
-function closeModal(){
-
-  $("modal").classList.remove("show");
-
-}
-
-
-function toast(message){
-
-  const t = $("toast");
-
-  t.textContent = message;
-
-  t.classList.add("show");
-
-  clearTimeout(window.toastTimer);
-
-  window.toastTimer =
-    setTimeout(() =>
-      t.classList.remove("show"),
-      2500
+    document.body.classList.toggle(
+        "dark"
     );
 
+    const dark =
+        document.body.classList.contains(
+            "dark"
+        );
+
+    /*
+       Seul le thème est conservé localement.
+       Aucun compte, solde ou transaction.
+    */
+
+    try{
+
+        localStorage.setItem(
+            "dalzon_theme",
+            dark
+                ? "dark"
+                : "light"
+        );
+
+    }catch(error){}
 }
 
 
-function copyId(){
+function loadTheme(){
 
-  navigator.clipboard
-    ?.writeText(account.id)
-    .then(() =>
-      toast("Identifiant copié.")
-    )
-    .catch(() =>
-      toast(account.id)
-    );
+    try{
 
+        const theme =
+            localStorage.getItem(
+                "dalzon_theme"
+            );
+
+        if(theme === "dark"){
+
+            document.body.classList.add(
+                "dark"
+            );
+        }
+
+    }catch(error){}
 }
 
 
-/* -------------------------
-   SÉCURITÉ AFFICHAGE
-------------------------- */
-
-function escapeHTML(value){
-
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
-
-
-/* -------------------------
+/* =====================================================
    DÉCONNEXION
-------------------------- */
+===================================================== */
 
 function logout(){
 
-  $("app").classList.add("hidden");
+    /*
+       Le token est uniquement conservé
+       en mémoire pendant cette session.
+    */
 
-  $("loginScreen").classList.remove("hidden");
+    authToken = null;
+    currentUser = null;
 
-  $("authEmail").value="";
-  $("authPassword").value="";
+    document
+        .getElementById("app")
+        .style.display = "none";
 
-  authMode="login";
+    document
+        .getElementById("authScreen")
+        .style.display = "flex";
 
-  switchAuth();
+    document
+        .getElementById("passwordInput")
+        .value = "";
 
+    showToast(
+        "Vous êtes déconnecté."
+    );
 }
 
 
-/* -------------------------
+/* =====================================================
+   OUTILS
+===================================================== */
+
+function formatCDF(amount){
+
+    return new Intl.NumberFormat(
+        "fr-FR"
+    ).format(
+        Number(amount || 0)
+    ) + " CDF";
+}
+
+
+function formatUSD(amount){
+
+    return new Intl.NumberFormat(
+        "en-US",
+        {
+            style:"currency",
+            currency:"USD"
+        }
+    ).format(
+        Number(amount || 0)
+    );
+}
+
+
+function formatDate(value){
+
+    if(!value) return "—";
+
+    const date =
+        new Date(value);
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    ){
+
+        return value;
+    }
+
+    return new Intl.DateTimeFormat(
+        "fr-FR",
+        {
+            day:"2-digit",
+            month:"short",
+            year:"numeric",
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    ).format(date);
+}
+
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+/* =====================================================
+   MESSAGES
+===================================================== */
+
+function showAuthError(message){
+
+    const error =
+        document.getElementById(
+            "authError"
+        );
+
+    error.textContent =
+        message;
+
+    error.style.display =
+        "block";
+}
+
+
+function hideAuthError(){
+
+    const error =
+        document.getElementById(
+            "authError"
+        );
+
+    error.textContent = "";
+
+    error.style.display =
+        "none";
+}
+
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        toastTimer
+    );
+
+    toastTimer =
+        setTimeout(() => {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },2500);
+}
+
+
+/* =====================================================
    INITIALISATION
-------------------------- */
+===================================================== */
 
-(function init(){
-
-  const theme =
-    localStorage.getItem("dalzon_theme");
-
-  if(theme === "dark")
-    document.body.classList.add("dark");
-
-
-  if(account){
-
-    openApp();
-
-  }
-
-})();
+loadTheme();
 
 </script>
 
