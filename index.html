@@ -2,50 +2,47 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-               maximum-scale=1.0, user-scalable=no">
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
 <title>DALZON Wallet</title>
 
 <meta name="description"
-      content="DALZON Wallet — plateforme de simulation éducative de comptes CDF et USD.">
+      content="DALZON Wallet — application éducative de simulation de comptes CDF et USD.">
 
-<meta name="theme-color" content="#0b0f14">
-
+<meta name="theme-color" content="#0b0d10">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-<!-- PWA : ajout uniquement -->
-<link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="./manifest.json">
 
 <style>
 :root{
-    --bg:#f5f7fa;
-    --surface:#ffffff;
-    --surface2:#eef1f5;
-    --text:#101418;
-    --muted:#737b86;
-    --border:#e3e7ec;
-    --accent:#111827;
-    --accent2:#2563eb;
-    --success:#15803d;
-    --danger:#dc2626;
-    --warning:#b45309;
-    --shadow:0 15px 40px rgba(0,0,0,.08);
+    --bg:#f4f5f7;
+    --panel:#ffffff;
+    --panel2:#f0f1f3;
+    --text:#0d1014;
+    --muted:#7b818b;
+    --line:#e5e7eb;
+    --black:#0b0d10;
+    --white:#ffffff;
+    --blue:#2563eb;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#d97706;
+    --shadow:0 18px 50px rgba(0,0,0,.08);
 }
 
 body.dark{
-    --bg:#090c10;
-    --surface:#11161c;
-    --surface2:#181e25;
+    --bg:#080a0d;
+    --panel:#111419;
+    --panel2:#191d23;
     --text:#f5f7fa;
-    --muted:#98a1ad;
-    --border:#252c35;
-    --accent:#f5f7fa;
-    --accent2:#60a5fa;
-    --shadow:0 20px 50px rgba(0,0,0,.30);
+    --muted:#9299a3;
+    --line:#272c33;
+    --black:#f5f7fa;
+    --white:#080a0d;
+    --shadow:0 20px 55px rgba(0,0,0,.35);
 }
 
 *{
@@ -55,20 +52,20 @@ body.dark{
     -webkit-tap-highlight-color:transparent;
 }
 
-html{
-    scroll-behavior:smooth;
+html,body{
+    width:100%;
+    min-height:100%;
 }
 
 body{
+    background:var(--bg);
+    color:var(--text);
     font-family:
         Inter,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
     overflow-x:hidden;
 }
 
@@ -79,402 +76,521 @@ select{
 }
 
 button{
-    -webkit-user-select:none;
-    user-select:none;
+    border:0;
+    cursor:pointer;
 }
 
 svg{
+    width:21px;
+    height:21px;
+    fill:none;
     stroke:currentColor;
     stroke-width:1.8;
     stroke-linecap:round;
     stroke-linejoin:round;
 }
 
-.icon{
-    width:21px;
-    height:21px;
-    display:block;
-    flex:none;
-}
+/* =========================================================
+   APP SHELL
+========================================================= */
 
-.icon-lg{
-    width:25px;
-    height:25px;
-}
-
-/* AUTHENTIFICATION */
-
-.auth-screen{
+.app{
+    display:none;
+    width:100%;
     min-height:100vh;
+    padding-bottom:88px;
+}
+
+.mobile-shell{
+    width:100%;
+    max-width:520px;
+    min-height:100vh;
+    margin:auto;
+    background:var(--bg);
+}
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+.auth{
+    min-height:100vh;
+    width:100%;
     display:flex;
-    align-items:center;
     justify-content:center;
-    padding:22px;
+    align-items:center;
+    padding:20px;
     background:
-        radial-gradient(circle at 15% 15%,rgba(37,99,235,.13),transparent 32%),
-        radial-gradient(circle at 85% 85%,rgba(0,0,0,.08),transparent 32%),
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(37,99,235,.13),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(0,0,0,.08),
+            transparent 35%
+        ),
         var(--bg);
 }
 
-.auth-card{
+.auth-box{
     width:100%;
-    max-width:430px;
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:30px;
+    max-width:420px;
     padding:28px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:32px;
     box-shadow:var(--shadow);
-    animation:appear .45s ease;
+    animation:up .45s ease;
 }
 
-.brand{
+.logo-row{
     display:flex;
     align-items:center;
     gap:12px;
-    margin-bottom:28px;
+    margin-bottom:32px;
 }
 
-.brand-mark{
+.logo-square{
     width:48px;
     height:48px;
     border-radius:16px;
-    background:var(--accent);
+    background:var(--text);
     color:var(--bg);
     display:grid;
     place-items:center;
 }
 
-.brand-mark svg{
-    width:25px;
-    height:25px;
+.logo-square svg{
+    width:24px;
+    height:24px;
 }
 
-.brand-name{
-    font-size:19px;
-    font-weight:800;
-    letter-spacing:.8px;
+.logo-title{
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:1px;
 }
 
-.brand-sub{
-    margin-top:2px;
+.logo-sub{
     color:var(--muted);
-    font-size:12px;
+    font-size:11px;
+    margin-top:2px;
 }
 
 .auth-title{
-    margin-bottom:8px;
-    font-size:29px;
-    font-weight:800;
+    font-size:30px;
     letter-spacing:-1px;
+    font-weight:900;
+    margin-bottom:8px;
 }
 
-.auth-description{
-    margin-bottom:24px;
+.auth-text{
     color:var(--muted);
-    font-size:14px;
+    font-size:13px;
     line-height:1.6;
+    margin-bottom:24px;
 }
 
-.field{
+.error{
+    display:none;
+    padding:12px;
+    margin-bottom:14px;
+    border-radius:14px;
+    color:var(--red);
+    background:rgba(220,38,38,.08);
+    font-size:12px;
+}
+
+.input-group{
     margin-bottom:15px;
 }
 
-.field label{
+.input-group label{
     display:block;
     margin-bottom:7px;
-    font-size:12px;
-    font-weight:700;
+    font-size:11px;
+    font-weight:800;
 }
 
-.field input{
+.input{
     width:100%;
-    padding:14px 15px;
-    border:1px solid var(--border);
+    height:50px;
+    padding:0 15px;
+    border:1px solid var(--line);
     border-radius:15px;
     outline:none;
-    background:var(--surface2);
+    background:var(--panel2);
     color:var(--text);
-    font-size:14px;
-    transition:.2s;
 }
 
-.field input:focus{
-    border-color:var(--accent2);
-    box-shadow:0 0 0 3px rgba(37,99,235,.10);
+.input:focus{
+    border-color:var(--blue);
 }
 
-.primary-btn{
+.primary{
     width:100%;
-    border:0;
+    height:51px;
     border-radius:16px;
-    padding:15px;
-    background:var(--accent);
+    background:var(--text);
     color:var(--bg);
-    font-size:14px;
-    font-weight:800;
-    cursor:pointer;
-    transition:.2s;
+    font-weight:900;
 }
 
-.primary-btn:active{
+.primary:active{
     transform:scale(.98);
 }
 
-.primary-btn:disabled{
-    opacity:.55;
-    cursor:not-allowed;
-}
-
-.secondary-btn{
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:11px 13px;
-    background:var(--surface2);
-    color:var(--text);
-    font-size:12px;
-    font-weight:800;
-    cursor:pointer;
-}
-
-.auth-switch{
+.switch{
     margin-top:18px;
     text-align:center;
     color:var(--muted);
-    font-size:13px;
+    font-size:12px;
 }
 
-.auth-switch button{
-    border:0;
+.switch button{
     background:none;
-    color:var(--accent2);
-    font-weight:800;
-    cursor:pointer;
+    color:var(--blue);
+    font-weight:900;
 }
 
-.auth-error{
-    display:none;
-    margin-bottom:15px;
-    padding:12px;
-    border-radius:13px;
-    background:rgba(220,38,38,.09);
-    color:var(--danger);
-    font-size:13px;
-}
+/* =========================================================
+   APP HEADER
+========================================================= */
 
-/* APPLICATION */
-
-.app{
-    display:none;
-    min-height:100vh;
-    padding-bottom:95px;
-}
-
-.app-header{
+.topbar{
     position:sticky;
     top:0;
-    z-index:20;
-    height:72px;
-    padding:0 18px;
+    z-index:50;
+    height:68px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    background:rgba(245,247,250,.86);
-    backdrop-filter:blur(18px);
-    border-bottom:1px solid var(--border);
+    padding:0 18px;
+    background:rgba(244,245,247,.88);
+    backdrop-filter:blur(22px);
+    border-bottom:1px solid var(--line);
 }
 
-body.dark .app-header{
-    background:rgba(9,12,16,.86);
+body.dark .topbar{
+    background:rgba(8,10,13,.88);
 }
 
-.header-left{
+.top-left{
     display:flex;
     align-items:center;
-    gap:11px;
+    gap:10px;
     min-width:0;
 }
 
-.header-title{
-    font-size:17px;
-    font-weight:800;
+.mini-logo{
+    width:39px;
+    height:39px;
+    flex:none;
+    border-radius:13px;
+    background:var(--text);
+    color:var(--bg);
+    display:grid;
+    place-items:center;
+}
+
+.mini-logo svg{
+    width:20px;
+    height:20px;
+}
+
+.top-name{
+    font-size:14px;
+    font-weight:900;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
-.header-id{
-    margin-top:2px;
+.top-id{
     color:var(--muted);
-    font-size:10px;
+    font-size:9px;
+    margin-top:2px;
 }
 
-.header-actions{
+.top-actions{
     display:flex;
     gap:7px;
 }
 
-.circle-btn{
-    width:40px;
-    height:40px;
-    border:1px solid var(--border);
+.icon-button{
+    width:39px;
+    height:39px;
+    border:1px solid var(--line);
     border-radius:13px;
-    background:var(--surface);
+    background:var(--panel);
     color:var(--text);
     display:grid;
     place-items:center;
-    cursor:pointer;
 }
 
-/* CONTENU */
+/* =========================================================
+   PAGES
+========================================================= */
 
-.content{
-    width:100%;
-    max-width:760px;
-    margin:auto;
-    padding:20px 16px;
-}
-
-.page{
+.screen{
     display:none;
-    animation:pageIn .3s ease;
+    padding:19px 16px 20px;
+    animation:screenIn .28s ease;
 }
 
-.page.active{
+.screen.active{
     display:block;
 }
 
-.section-title{
-    margin-bottom:15px;
-    font-size:20px;
-    font-weight:800;
+.heading{
+    font-size:21px;
+    font-weight:900;
     letter-spacing:-.5px;
+    margin-bottom:16px;
 }
 
-/* SOLDE */
+.subheading{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:-9px;
+    margin-bottom:17px;
+}
 
-.balance-card{
+/* =========================================================
+   HERO BALANCE
+========================================================= */
+
+.balance-hero{
     position:relative;
     overflow:hidden;
-    margin-bottom:18px;
-    padding:23px;
-    border-radius:28px;
-    background:var(--accent);
+    min-height:205px;
+    padding:22px;
+    border-radius:29px;
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(255,255,255,.15),
+            transparent 35%
+        ),
+        var(--text);
     color:var(--bg);
     box-shadow:var(--shadow);
+    margin-bottom:15px;
 }
 
-.balance-card::after{
+.balance-hero:after{
     content:"";
     position:absolute;
-    width:180px;
-    height:180px;
-    right:-55px;
-    top:-65px;
-    border:1px solid rgba(255,255,255,.09);
+    width:230px;
+    height:230px;
+    border:1px solid rgba(255,255,255,.08);
     border-radius:50%;
+    right:-95px;
+    bottom:-130px;
 }
 
-.balance-label{
-    font-size:12px;
-    opacity:.65;
+.balance-top{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-.balance-total{
-    margin:6px 0 22px;
-    font-size:31px;
+.balance-caption{
+    font-size:10px;
+    opacity:.58;
+    font-weight:700;
+}
+
+.simulation-badge{
+    padding:6px 9px;
+    border-radius:9px;
+    background:rgba(255,255,255,.09);
+    font-size:8px;
     font-weight:800;
-    letter-spacing:-1px;
+    letter-spacing:1px;
 }
 
-.balance-grid{
+.total{
+    position:relative;
+    z-index:2;
+    margin-top:9px;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:-1.5px;
+}
+
+.total-label{
+    position:relative;
+    z-index:2;
+    margin-top:2px;
+    font-size:9px;
+    opacity:.45;
+}
+
+.currency-row{
+    position:relative;
+    z-index:2;
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:10px;
+    gap:9px;
+    margin-top:22px;
 }
 
-.currency-box{
-    padding:13px;
-    border-radius:17px;
+.currency{
+    padding:12px;
+    border-radius:16px;
     background:rgba(255,255,255,.08);
 }
 
 .currency-label{
-    margin-bottom:4px;
-    font-size:10px;
-    opacity:.6;
+    font-size:9px;
+    opacity:.52;
+    margin-bottom:5px;
 }
 
 .currency-value{
-    font-size:16px;
-    font-weight:800;
+    font-size:14px;
+    font-weight:900;
 }
 
-/* ACTIONS */
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
 
-.actions{
+.quick-actions{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:10px;
-    margin-bottom:24px;
+    gap:9px;
+    margin-bottom:25px;
 }
 
-.action{
-    min-height:92px;
-    border:1px solid var(--border);
-    border-radius:20px;
-    background:var(--surface);
+.quick{
+    min-height:91px;
+    padding:12px 5px;
+    border:1px solid var(--line);
+    border-radius:21px;
+    background:var(--panel);
     color:var(--text);
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
     gap:9px;
-    cursor:pointer;
-    transition:.2s;
+    transition:.18s;
 }
 
-.action:active{
-    transform:scale(.97);
+.quick:active{
+    transform:scale(.95);
 }
 
-.action-icon{
+.quick-icon{
     width:39px;
     height:39px;
     border-radius:13px;
-    background:var(--surface2);
+    background:var(--panel2);
     display:grid;
     place-items:center;
 }
 
-.action span{
-    font-size:11px;
-    font-weight:700;
+.quick span{
+    font-size:10px;
+    font-weight:800;
 }
 
-/* LISTES */
+/* =========================================================
+   ACCOUNT CARDS
+========================================================= */
+
+.accounts{
+    display:grid;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.account{
+    position:relative;
+    overflow:hidden;
+    padding:18px;
+    border:1px solid var(--line);
+    border-radius:23px;
+    background:var(--panel);
+}
+
+.account:after{
+    content:"";
+    position:absolute;
+    width:90px;
+    height:90px;
+    border:1px solid var(--line);
+    border-radius:50%;
+    right:-38px;
+    bottom:-48px;
+}
+
+.account-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:13px;
+}
+
+.account-title{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:12px;
+    font-weight:900;
+}
+
+.account-dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--text);
+}
+
+.account-code{
+    color:var(--muted);
+    font-size:8px;
+    letter-spacing:1px;
+}
+
+.account-amount{
+    font-size:24px;
+    font-weight:900;
+    letter-spacing:-.7px;
+}
+
+/* =========================================================
+   ACTIVITY
+========================================================= */
 
 .list{
     display:flex;
     flex-direction:column;
-    gap:9px;
+    gap:8px;
 }
 
 .transaction{
     display:flex;
     align-items:center;
-    gap:12px;
-    padding:14px;
-    border:1px solid var(--border);
+    gap:11px;
+    padding:13px;
+    border:1px solid var(--line);
     border-radius:18px;
-    background:var(--surface);
+    background:var(--panel);
 }
 
 .transaction-icon{
-    width:42px;
-    height:42px;
+    width:41px;
+    height:41px;
     flex:none;
-    border-radius:14px;
-    background:var(--surface2);
+    border-radius:13px;
+    background:var(--panel2);
     display:grid;
     place-items:center;
 }
@@ -485,82 +601,92 @@ body.dark .app-header{
 }
 
 .transaction-title{
-    font-size:13px;
-    font-weight:750;
+    font-size:12px;
+    font-weight:850;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
 .transaction-date{
-    margin-top:3px;
     color:var(--muted);
-    font-size:10px;
+    font-size:9px;
+    margin-top:4px;
 }
 
 .transaction-amount{
-    font-size:13px;
-    font-weight:800;
-    white-space:nowrap;
+    font-size:12px;
+    font-weight:900;
 }
 
-.amount-positive{
-    color:var(--success);
+.positive{
+    color:var(--green);
 }
 
-.amount-negative{
-    color:var(--danger);
+.negative{
+    color:var(--red);
 }
 
 .empty{
-    padding:35px 15px;
+    padding:32px 14px;
     text-align:center;
     color:var(--muted);
-    font-size:13px;
+    font-size:12px;
 }
 
-/* CARTE */
+/* =========================================================
+   CARD
+========================================================= */
 
-.dalzon-card{
+.wallet-card{
     position:relative;
     overflow:hidden;
-    min-height:220px;
-    margin-bottom:22px;
-    padding:24px;
-    border-radius:27px;
-    background:linear-gradient(135deg,#10151c,#28313c);
-    color:#fff;
-    box-shadow:0 20px 45px rgba(0,0,0,.22);
+    min-height:225px;
+    padding:23px;
+    border-radius:29px;
+    background:
+        linear-gradient(
+            135deg,
+            #0a0d11,
+            #202832
+        );
+    color:white;
+    box-shadow:0 25px 55px rgba(0,0,0,.23);
+    margin-bottom:18px;
 }
 
-.dalzon-card::before{
+.wallet-card:before{
     content:"";
     position:absolute;
-    width:240px;
-    height:240px;
-    right:-90px;
-    top:-80px;
+    width:260px;
+    height:260px;
+    right:-110px;
+    top:-110px;
     border:1px solid rgba(255,255,255,.09);
     border-radius:50%;
 }
 
-.dalzon-card::after{
+.wallet-card:after{
     content:"";
     position:absolute;
-    width:160px;
-    height:160px;
-    left:-80px;
-    bottom:-100px;
+    width:180px;
+    height:180px;
+    left:-100px;
+    bottom:-110px;
     border:1px solid rgba(255,255,255,.07);
     border-radius:50%;
 }
 
-.card-top{
+.card-head,
+.card-number,
+.card-bottom{
     position:relative;
     z-index:2;
+}
+
+.card-head{
     display:flex;
     justify-content:space-between;
-    align-items:center;
 }
 
 .card-brand{
@@ -569,333 +695,451 @@ body.dark .app-header{
     letter-spacing:2px;
 }
 
-.card-type{
-    font-size:9px;
+.card-label{
+    font-size:8px;
     letter-spacing:2px;
-    opacity:.6;
+    opacity:.5;
 }
 
 .card-number{
-    position:relative;
-    z-index:2;
-    margin-top:45px;
-    font-size:20px;
-    font-weight:600;
+    margin-top:48px;
+    font-size:18px;
+    font-weight:700;
     letter-spacing:2px;
 }
 
 .card-bottom{
-    position:relative;
-    z-index:2;
     display:flex;
     justify-content:space-between;
     margin-top:25px;
 }
 
-.card-small{
-    margin-bottom:3px;
-    font-size:8px;
-    opacity:.55;
+.card-caption{
+    color:rgba(255,255,255,.48);
+    font-size:7px;
+    margin-bottom:4px;
 }
 
 .card-value{
-    font-size:11px;
-    font-weight:700;
+    font-size:10px;
+    font-weight:800;
 }
 
-/* PROFIL */
+.info-card{
+    padding:17px;
+    border:1px solid var(--line);
+    border-radius:21px;
+    background:var(--panel);
+}
+
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    font-size:11px;
+}
+
+.info-row:last-child{
+    border-bottom:0;
+}
+
+.info-row span{
+    color:var(--muted);
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
 
 .profile-card{
-    margin-bottom:15px;
-    padding:20px;
-    border:1px solid var(--border);
+    padding:19px;
+    border:1px solid var(--line);
     border-radius:24px;
-    background:var(--surface);
+    background:var(--panel);
+    margin-bottom:11px;
 }
 
 .profile-head{
     display:flex;
     align-items:center;
-    gap:13px;
-    margin-bottom:20px;
+    gap:12px;
+    margin-bottom:17px;
 }
 
-.profile-avatar{
-    width:54px;
-    height:54px;
-    border-radius:17px;
-    background:var(--accent);
+.avatar{
+    width:55px;
+    height:55px;
+    border-radius:18px;
+    background:var(--text);
     color:var(--bg);
     display:grid;
     place-items:center;
+    font-weight:900;
     font-size:19px;
-    font-weight:800;
 }
 
 .profile-name{
-    font-size:16px;
-    font-weight:800;
+    font-size:15px;
+    font-weight:900;
 }
 
 .profile-email{
+    color:var(--muted);
+    font-size:10px;
     margin-top:3px;
-    color:var(--muted);
-    font-size:11px;
 }
 
-.profile-row{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    padding:13px 0;
-    border-top:1px solid var(--border);
-    font-size:13px;
-}
+/* =========================================================
+   ADMIN
+========================================================= */
 
-.profile-row span:first-child{
-    color:var(--muted);
-}
-
-/* ADMINISTRATION */
-
-.admin-header{
+.admin-top{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:10px;
+    gap:8px;
     margin-bottom:15px;
 }
 
-.admin-header .section-title{
+.admin-top .heading{
     margin:0;
 }
 
-.admin-actions{
-    display:flex;
-    gap:7px;
-}
-
-.admin-stats{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    margin-bottom:15px;
-}
-
-.admin-stat{
-    padding:16px;
-    border:1px solid var(--border);
-    border-radius:20px;
-    background:var(--surface);
-}
-
-.admin-stat-label{
-    color:var(--muted);
+.small-btn{
+    min-height:38px;
+    padding:0 12px;
+    border-radius:12px;
+    background:var(--panel2);
+    border:1px solid var(--line);
+    color:var(--text);
     font-size:10px;
-    font-weight:700;
+    font-weight:800;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-bottom:14px;
+}
+
+.stat{
+    padding:15px;
+    border:1px solid var(--line);
+    border-radius:19px;
+    background:var(--panel);
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:8px;
+    font-weight:800;
     text-transform:uppercase;
 }
 
-.admin-stat-value{
+.stat-value{
     margin-top:7px;
-    font-size:20px;
+    font-size:18px;
     font-weight:900;
 }
 
 .admin-search{
-    margin-bottom:15px;
-}
-
-.admin-search input{
-    width:100%;
-    padding:14px 15px;
-    border:1px solid var(--border);
-    border-radius:15px;
-    outline:none;
-    background:var(--surface);
-    color:var(--text);
-    font-size:13px;
-}
-
-.admin-search input:focus{
-    border-color:var(--accent2);
-    box-shadow:0 0 0 3px rgba(37,99,235,.10);
-}
-
-.admin-card{
-    margin-bottom:15px;
-    padding:18px;
-    border:1px solid var(--border);
-    border-radius:24px;
-    background:var(--surface);
+    margin-bottom:12px;
 }
 
 .admin-user{
-    padding:15px 0;
-    border-bottom:1px solid var(--border);
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
 }
 
 .admin-user:last-child{
-    border-bottom:none;
+    border-bottom:0;
 }
 
-.admin-user-head{
+.admin-user-top{
     display:flex;
     justify-content:space-between;
-    align-items:flex-start;
-    gap:10px;
-}
-
-.admin-user-name{
-    font-size:14px;
-    font-weight:800;
-}
-
-.admin-user-id{
-    margin-top:3px;
-    color:var(--muted);
-    font-size:10px;
-}
-
-.admin-user-email{
-    margin-top:4px;
-    color:var(--muted);
-    font-size:10px;
-    overflow-wrap:anywhere;
-}
-
-.admin-balances{
-    display:flex;
-    flex-wrap:wrap;
     gap:8px;
-    margin-top:12px;
 }
 
-.balance-chip{
-    padding:7px 9px;
-    border-radius:10px;
-    background:var(--surface2);
-    font-size:11px;
-    font-weight:800;
+.admin-name{
+    font-size:12px;
+    font-weight:900;
 }
 
-.admin-user-actions{
-    display:flex;
-    justify-content:flex-end;
-    margin-top:12px;
+.admin-id,
+.admin-email{
+    color:var(--muted);
+    font-size:9px;
+    margin-top:3px;
+    overflow-wrap:anywhere;
 }
 
 .status{
     height:max-content;
     padding:5px 8px;
     border-radius:8px;
-    background:rgba(21,128,61,.1);
-    color:var(--success);
+    background:rgba(22,163,74,.1);
+    color:var(--green);
+    font-size:8px;
+    font-weight:900;
+}
+
+.status.blocked{
+    color:var(--red);
+    background:rgba(220,38,38,.1);
+}
+
+.admin-balances{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+
+.chip{
+    padding:6px 8px;
+    border-radius:9px;
+    background:var(--panel2);
     font-size:9px;
     font-weight:800;
 }
 
-.status.blocked{
-    background:rgba(220,38,38,.1);
-    color:var(--danger);
+.admin-buttons{
+    display:flex;
+    justify-content:flex-end;
+    gap:7px;
+    margin-top:10px;
 }
 
-.block-btn{
-    border:1px solid var(--border);
-    border-radius:11px;
-    padding:9px 11px;
-    background:var(--surface2);
+.admin-btn{
+    padding:8px 10px;
+    border-radius:10px;
+    background:var(--panel2);
     color:var(--text);
-    font-size:11px;
-    font-weight:800;
-    cursor:pointer;
+    font-size:9px;
+    font-weight:900;
 }
 
-.block-btn.danger{
-    color:var(--danger);
+.admin-btn.danger{
+    color:var(--red);
 }
 
-.block-btn.success{
-    color:var(--success);
+.admin-btn.success{
+    color:var(--green);
 }
 
-/* NAVIGATION */
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
 
-.bottom-nav{
+.bottom{
     position:fixed;
+    z-index:100;
     bottom:0;
     left:0;
     right:0;
-    z-index:30;
     height:78px;
-    display:flex;
-    justify-content:center;
-    background:rgba(245,247,250,.92);
-    backdrop-filter:blur(18px);
-    border-top:1px solid var(--border);
+    background:rgba(244,245,247,.91);
+    backdrop-filter:blur(22px);
+    border-top:1px solid var(--line);
 }
 
-body.dark .bottom-nav{
-    background:rgba(9,12,16,.92);
+body.dark .bottom{
+    background:rgba(8,10,13,.91);
 }
 
-.nav-inner{
+.bottom-inner{
     width:100%;
-    max-width:620px;
+    max-width:520px;
+    height:100%;
+    margin:auto;
     display:grid;
     grid-template-columns:repeat(4,1fr);
 }
 
-.nav-btn{
-    border:none;
+.nav{
     background:none;
     color:var(--muted);
     display:flex;
     flex-direction:column;
-    align-items:center;
     justify-content:center;
+    align-items:center;
     gap:5px;
-    cursor:pointer;
-}
-
-.nav-btn span{
-    font-size:9px;
-    font-weight:700;
-}
-
-.nav-btn.active{
-    color:var(--text);
-}
-
-.nav-btn.active .nav-icon{
-    background:var(--surface2);
 }
 
 .nav-icon{
     width:38px;
-    height:32px;
-    border-radius:12px;
+    height:31px;
+    border-radius:11px;
     display:grid;
     place-items:center;
 }
 
-/* TOAST */
+.nav span{
+    font-size:8px;
+    font-weight:800;
+}
+
+.nav.active{
+    color:var(--text);
+}
+
+.nav.active .nav-icon{
+    background:var(--panel2);
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal-layer{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    background:rgba(0,0,0,.48);
+    backdrop-filter:blur(7px);
+}
+
+.modal-layer.show{
+    display:flex;
+}
+
+.modal{
+    width:100%;
+    max-width:520px;
+    max-height:92vh;
+    overflow-y:auto;
+    padding:18px 17px 25px;
+    border-radius:28px 28px 0 0;
+    background:var(--panel);
+    color:var(--text);
+    animation:modalUp .25s ease;
+}
+
+.modal-handle{
+    width:40px;
+    height:4px;
+    margin:0 auto 20px;
+    border-radius:10px;
+    background:var(--line);
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.modal-title{
+    font-size:20px;
+    font-weight:900;
+}
+
+.close{
+    width:36px;
+    height:36px;
+    border-radius:12px;
+    background:var(--panel2);
+    color:var(--text);
+    display:grid;
+    place-items:center;
+}
+
+.modal-description{
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+    margin-top:-9px;
+    margin-bottom:18px;
+}
+
+.form-field{
+    margin-bottom:13px;
+}
+
+.form-field label{
+    display:block;
+    margin-bottom:6px;
+    font-size:10px;
+    font-weight:900;
+}
+
+.form-field input,
+.form-field select{
+    width:100%;
+    height:48px;
+    padding:0 13px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    outline:none;
+    background:var(--panel2);
+    color:var(--text);
+    font-size:12px;
+}
+
+.form-field input:focus,
+.form-field select:focus{
+    border-color:var(--blue);
+}
+
+.modal-button{
+    width:100%;
+    height:49px;
+    border-radius:15px;
+    background:var(--text);
+    color:var(--bg);
+    font-size:12px;
+    font-weight:900;
+    margin-top:5px;
+}
+
+.receive-box{
+    padding:20px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:var(--panel2);
+    text-align:center;
+    margin-bottom:14px;
+}
+
+.receive-label{
+    color:var(--muted);
+    font-size:9px;
+    margin-bottom:7px;
+}
+
+.receive-id{
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:.8px;
+    overflow-wrap:anywhere;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
 
 .toast{
     position:fixed;
+    z-index:500;
     left:50%;
     bottom:92px;
-    z-index:100;
-    max-width:calc(100vw - 30px);
-    padding:12px 17px;
+    transform:translate(-50%,20px);
+    opacity:0;
+    pointer-events:none;
+    padding:12px 16px;
     border-radius:13px;
     background:#111827;
     color:#fff;
-    font-size:12px;
+    font-size:11px;
     white-space:nowrap;
-    opacity:0;
-    pointer-events:none;
-    transform:translate(-50%,20px);
     transition:.25s;
 }
 
@@ -904,9 +1148,11 @@ body.dark .bottom-nav{
     transform:translate(-50%,0);
 }
 
-/* ANIMATIONS */
+/* =========================================================
+   ANIMATIONS
+========================================================= */
 
-@keyframes appear{
+@keyframes up{
     from{
         opacity:0;
         transform:translateY(15px);
@@ -917,10 +1163,10 @@ body.dark .bottom-nav{
     }
 }
 
-@keyframes pageIn{
+@keyframes screenIn{
     from{
         opacity:0;
-        transform:translateY(8px);
+        transform:translateY(7px);
     }
     to{
         opacity:1;
@@ -928,37 +1174,38 @@ body.dark .bottom-nav{
     }
 }
 
-/* RESPONSIVE */
-
-@media(max-width:520px){
-    .admin-stats{
-        grid-template-columns:1fr 1fr;
+@keyframes modalUp{
+    from{
+        opacity:0;
+        transform:translateY(100%);
     }
-
-    .admin-header{
-        align-items:flex-start;
-    }
-
-    .admin-actions{
-        flex-shrink:0;
+    to{
+        opacity:1;
+        transform:none;
     }
 }
 
-@media(max-width:360px){
-    .auth-card{
-        padding:22px;
+@media(min-width:521px){
+    .app{
+        background:#e9ebee;
     }
 
-    .balance-total{
-        font-size:27px;
+    .mobile-shell{
+        box-shadow:0 0 50px rgba(0,0,0,.08);
+    }
+}
+
+@media(max-width:350px){
+    .total{
+        font-size:29px;
     }
 
-    .card-number{
-        font-size:17px;
+    .account-amount{
+        font-size:21px;
     }
 
-    .admin-stats{
-        grid-template-columns:1fr;
+    .quick span{
+        font-size:9px;
     }
 }
 </style>
@@ -966,174 +1213,493 @@ body.dark .bottom-nav{
 
 <body>
 
-<section class="auth-screen" id="authScreen">
+<!-- =======================================================
+     AUTHENTIFICATION
+======================================================== -->
 
-    <div class="auth-card">
+<section class="auth" id="authScreen">
 
-        <div class="brand">
+    <div class="auth-box">
 
-            <div class="brand-mark">
+        <div class="logo-row">
 
-                <svg class="icon"
-                     viewBox="0 0 24 24"
-                     fill="none">
-
-                    <rect x="3"
-                          y="5"
-                          width="18"
-                          height="14"
-                          rx="3"/>
-
+            <div class="logo-square">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="14" rx="3"/>
                     <path d="M3 10h18"/>
-
-                    <path d="M7 15h3"/>
-
+                    <path d="M7 15h4"/>
                 </svg>
-
             </div>
 
             <div>
-
-                <div class="brand-name">
-                    DALZON
-                </div>
-
-                <div class="brand-sub">
-                    Wallet
-                </div>
-
+                <div class="logo-title">DALZON</div>
+                <div class="logo-sub">Wallet v2.2</div>
             </div>
 
         </div>
 
-        <h1 class="auth-title"
-            id="authTitle">
+        <h1 class="auth-title" id="authTitle">
             Connexion
         </h1>
 
-        <p class="auth-description"
-           id="authDescription">
-            Accédez à votre espace DALZON.
+        <p class="auth-text" id="authDescription">
+            Retrouvez votre espace de simulation DALZON Wallet.
         </p>
 
-        <div class="auth-error"
-             id="authError">
-        </div>
+        <div class="error" id="authError"></div>
 
-        <div class="field"
-             id="nameField"
-             style="display:none">
-
-            <label for="nameInput">
-                Nom complet
-            </label>
-
+        <div class="input-group" id="nameField" style="display:none">
+            <label>Nom complet</label>
             <input
-                type="text"
+                class="input"
                 id="nameInput"
-                placeholder="Votre nom"
+                type="text"
+                maxlength="100"
                 autocomplete="name"
-                maxlength="100">
-
+                placeholder="Votre nom">
         </div>
 
-        <div class="field">
-
-            <label for="emailInput">
-                Email
-            </label>
-
+        <div class="input-group">
+            <label>Email</label>
             <input
-                type="email"
+                class="input"
                 id="emailInput"
-                placeholder="exemple@email.com"
+                type="email"
+                maxlength="160"
                 autocomplete="email"
-                maxlength="160">
-
+                placeholder="exemple@email.com">
         </div>
 
-        <div class="field">
-
-            <label for="passwordInput">
-                Mot de passe
-            </label>
-
+        <div class="input-group">
+            <label>Mot de passe</label>
             <input
-                type="password"
+                class="input"
                 id="passwordInput"
-                placeholder="Votre mot de passe"
+                type="password"
+                maxlength="128"
                 autocomplete="current-password"
-                maxlength="128">
-
+                placeholder="Votre mot de passe">
         </div>
 
-        <button class="primary-btn"
-                id="authButton"
-                type="button"
-                onclick="submitAuth()">
-
+        <button
+            class="primary"
+            id="authButton"
+            type="button"
+            onclick="submitAuth()">
             Se connecter
-
         </button>
 
-        <div class="auth-switch">
-
+        <div class="switch">
             <span id="switchText">
                 Vous n'avez pas encore de compte ?
             </span>
 
             <button
+                id="switchButton"
                 type="button"
-                onclick="toggleAuthMode()"
-                id="switchButton">
-
+                onclick="toggleAuthMode()">
                 Créer un compte
-
             </button>
-
         </div>
 
     </div>
 
 </section>
 
-<div class="app"
-     id="app">
 
-    <header class="app-header">
+<!-- =======================================================
+     APPLICATION
+======================================================== -->
 
-        <div class="header-left">
+<div class="app" id="app">
 
-            <div class="brand-mark"
-                 style="width:42px;height:42px;border-radius:13px">
+<div class="mobile-shell">
 
-                <svg class="icon"
-                     viewBox="0 0 24 24"
-                     fill="none">
+<header class="topbar">
 
-                    <rect x="3"
-                          y="5"
-                          width="18"
-                          height="14"
-                          rx="3"/>
+    <div class="top-left">
 
-                    <path d="M3 10h18"/>
+        <div class="mini-logo">
+            <svg viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="14" rx="3"/>
+                <path d="M3 10h18"/>
+                <path d="M7 15h4"/>
+            </svg>
+        </div>
 
-                    <path d="M7 15h3"/>
+        <div>
+            <div class="top-name" id="headerName">
+                DALZON
+            </div>
 
+            <div class="top-id" id="headerId">
+                —
+            </div>
+        </div>
+
+    </div>
+
+    <div class="top-actions">
+
+        <button
+            class="icon-button"
+            type="button"
+            onclick="toggleTheme()"
+            aria-label="Changer le thème">
+
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2"/>
+                <path d="M12 20v2"/>
+                <path d="M4.9 4.9l1.4 1.4"/>
+                <path d="M17.7 17.7l1.4 1.4"/>
+                <path d="M2 12h2"/>
+                <path d="M20 12h2"/>
+                <path d="M4.9 19.1l1.4-1.4"/>
+                <path d="M17.7 6.3l1.4-1.4"/>
+            </svg>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<main>
+
+<!-- =====================================================
+     ACCUEIL
+===================================================== -->
+
+<section class="screen active" id="homePage">
+
+    <div class="heading">
+        Bonjour, <span id="welcomeName">vous</span>
+    </div>
+
+    <div class="subheading">
+        Votre espace DALZON Wallet
+    </div>
+
+    <div class="balance-hero">
+
+        <div class="balance-top">
+
+            <div class="balance-caption">
+                SOLDE GLOBAL
+            </div>
+
+            <div class="simulation-badge">
+                SIMULATION
+            </div>
+
+        </div>
+
+        <div class="total" id="totalBalance">
+            $0.00
+        </div>
+
+        <div class="total-label">
+            Valeur affichée en USD
+        </div>
+
+        <div class="currency-row">
+
+            <div class="currency">
+                <div class="currency-label">
+                    COMPTE CDF
+                </div>
+
+                <div
+                    class="currency-value"
+                    id="cdfBalance">
+                    0 CDF
+                </div>
+            </div>
+
+            <div class="currency">
+                <div class="currency-label">
+                    COMPTE USD
+                </div>
+
+                <div
+                    class="currency-value"
+                    id="usdBalance">
+                    $0.00
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="quick-actions">
+
+        <button
+            class="quick"
+            type="button"
+            onclick="openTransfer()">
+
+            <div class="quick-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14"/>
+                    <path d="m13 6 6 6-6 6"/>
                 </svg>
+            </div>
 
+            <span>Envoyer</span>
+
+        </button>
+
+
+        <button
+            class="quick"
+            type="button"
+            onclick="openReceive()">
+
+            <div class="quick-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 5v14"/>
+                    <path d="m18 13-6 6-6-6"/>
+                </svg>
+            </div>
+
+            <span>Recevoir</span>
+
+        </button>
+
+
+        <button
+            class="quick"
+            type="button"
+            onclick="openPayment()">
+
+            <div class="quick-icon">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="14" rx="3"/>
+                    <path d="M3 10h18"/>
+                </svg>
+            </div>
+
+            <span>Paiement</span>
+
+        </button>
+
+    </div>
+
+
+    <div class="heading">
+        Mes comptes
+    </div>
+
+    <div class="accounts">
+
+        <div class="account">
+
+            <div class="account-head">
+
+                <div class="account-title">
+                    <span class="account-dot"></span>
+                    Compte CDF
+                </div>
+
+                <div class="account-code">
+                    CDF
+                </div>
+
+            </div>
+
+            <div
+                class="account-amount"
+                id="homeCDF">
+                0 CDF
+            </div>
+
+        </div>
+
+
+        <div class="account">
+
+            <div class="account-head">
+
+                <div class="account-title">
+                    <span class="account-dot"></span>
+                    Compte USD
+                </div>
+
+                <div class="account-code">
+                    USD
+                </div>
+
+            </div>
+
+            <div
+                class="account-amount"
+                id="homeUSD">
+                $0.00
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="heading">
+        Activité récente
+    </div>
+
+    <div class="list" id="homeTransactions">
+        <div class="empty">
+            Aucune opération pour le moment.
+        </div>
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ACTIVITÉ
+===================================================== -->
+
+<section class="screen" id="activityPage">
+
+    <div class="heading">
+        Activité
+    </div>
+
+    <div class="subheading">
+        Historique de votre compte
+    </div>
+
+    <div class="list" id="transactionsList">
+        <div class="empty">
+            Aucune opération.
+        </div>
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CARTE
+===================================================== -->
+
+<section class="screen" id="cardPage">
+
+    <div class="heading">
+        Ma carte
+    </div>
+
+    <div class="subheading">
+        Carte virtuelle de simulation
+    </div>
+
+    <div class="wallet-card">
+
+        <div class="card-head">
+
+            <div class="card-brand">
+                DALZON
+            </div>
+
+            <div class="card-label">
+                SIMULATION
+            </div>
+
+        </div>
+
+        <div
+            class="card-number"
+            id="cardNumber">
+            DLZ •••• •••• ••••
+        </div>
+
+        <div class="card-bottom">
+
+            <div>
+                <div class="card-caption">
+                    TITULAIRE
+                </div>
+
+                <div
+                    class="card-value"
+                    id="cardHolder">
+                    —
+                </div>
+            </div>
+
+            <div>
+                <div class="card-caption">
+                    EXP
+                </div>
+
+                <div
+                    class="card-value"
+                    id="cardExpiry">
+                    --/--
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-card">
+
+        <div class="info-row">
+            <span>Type</span>
+            <strong>DALZON CARD</strong>
+        </div>
+
+        <div class="info-row">
+            <span>Statut</span>
+            <strong>Active</strong>
+        </div>
+
+        <div class="info-row">
+            <span>Nature</span>
+            <strong>Simulation</strong>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROFIL
+===================================================== -->
+
+<section class="screen" id="profilePage">
+
+    <div class="heading">
+        Profil
+    </div>
+
+    <div class="profile-card">
+
+        <div class="profile-head">
+
+            <div
+                class="avatar"
+                id="profileAvatar">
+                D
             </div>
 
             <div>
 
-                <div class="header-title"
-                     id="headerName">
-                    DALZON
+                <div
+                    class="profile-name"
+                    id="profileName">
+                    —
                 </div>
 
-                <div class="header-id"
-                     id="headerId">
+                <div
+                    class="profile-email"
+                    id="profileEmail">
                     —
                 </div>
 
@@ -1141,643 +1707,294 @@ body.dark .bottom-nav{
 
         </div>
 
-        <div class="header-actions">
 
-            <button class="circle-btn"
-                    type="button"
-                    onclick="toggleTheme()"
-                    aria-label="Changer le thème">
+        <div class="info-row">
+            <span>Identifiant</span>
+            <strong id="profileId">—</strong>
+        </div>
 
-                <svg class="icon"
-                     viewBox="0 0 24 24"
-                     fill="none">
+        <div class="info-row">
+            <span>Statut</span>
+            <strong id="profileStatus">—</strong>
+        </div>
 
-                    <circle cx="12"
-                            cy="12"
-                            r="4"/>
+        <div class="info-row">
+            <span>Compte</span>
+            <strong id="profileRole">—</strong>
+        </div>
 
-                    <path d="M12 2v2"/>
-                    <path d="M12 20v2"/>
-                    <path d="m4.93 4.93 1.41 1.41"/>
-                    <path d="m17.66 17.66 1.41 1.41"/>
-                    <path d="M2 12h2"/>
-                    <path d="M20 12h2"/>
-                    <path d="m6.34 17.66-1.41 1.41"/>
-                    <path d="m19.07 4.93-1.41 1.41"/>
+    </div>
 
+
+    <div
+        class="profile-card"
+        id="adminEntry"
+        style="display:none">
+
+        <button
+            class="primary"
+            type="button"
+            onclick="openAdmin()">
+            Administration
+        </button>
+
+    </div>
+
+
+    <div class="profile-card">
+
+        <button
+            class="primary"
+            type="button"
+            onclick="logout()">
+            Se déconnecter
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ADMINISTRATION
+===================================================== -->
+
+<section class="screen" id="adminPage">
+
+    <div class="admin-top">
+
+        <div class="heading">
+            Administration
+        </div>
+
+        <button
+            class="small-btn"
+            type="button"
+            onclick="loadAdminDashboard()">
+            Actualiser
+        </button>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-label">
+                Utilisateurs
+            </div>
+            <div
+                class="stat-value"
+                id="adminTotalUsers">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">
+                Actifs
+            </div>
+            <div
+                class="stat-value"
+                id="adminActiveUsers">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">
+                Bloqués
+            </div>
+            <div
+                class="stat-value"
+                id="adminBlockedUsers">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">
+                Total CDF
+            </div>
+            <div
+                class="stat-value"
+                id="adminTotalCDF">
+                0 CDF
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">
+                Total USD
+            </div>
+            <div
+                class="stat-value"
+                id="adminTotalUSD">
+                $0.00
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="input-group admin-search">
+
+        <input
+            class="input"
+            id="adminSearch"
+            type="search"
+            placeholder="Rechercher un compte..."
+            maxlength="100"
+            oninput="filterAdminUsers()">
+
+    </div>
+
+
+    <div class="info-card">
+
+        <div id="adminUsers">
+            <div class="empty">
+                Chargement...
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="bottom">
+
+<div class="bottom-inner">
+
+    <button
+        class="nav active"
+        type="button"
+        onclick="navigate('homePage',this)">
+
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="m3 10 9-7 9 7"/>
+                <path d="M5 9v11h14V9"/>
+                <path d="M9 20v-6h6v6"/>
+            </svg>
+        </div>
+
+        <span>Accueil</span>
+
+    </button>
+
+
+    <button
+        class="nav"
+        type="button"
+        onclick="navigate('activityPage',this)">
+
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M4 19V5"/>
+                <path d="M4 19h16"/>
+                <path d="m7 15 4-4 3 2 5-6"/>
+            </svg>
+        </div>
+
+        <span>Activité</span>
+
+    </button>
+
+
+    <button
+        class="nav"
+        type="button"
+        onclick="navigate('cardPage',this)">
+
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="14" rx="3"/>
+                <path d="M3 10h18"/>
+                <path d="M7 15h4"/>
+            </svg>
+        </div>
+
+        <span>Carte</span>
+
+    </button>
+
+
+    <button
+        class="nav"
+        type="button"
+        onclick="navigate('profilePage',this)">
+
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+            </svg>
+        </div>
+
+        <span>Profil</span>
+
+    </button>
+
+</div>
+
+</nav>
+
+</div>
+</div>
+
+
+<!-- =======================================================
+     MODALE
+======================================================== -->
+
+<div
+    class="modal-layer"
+    id="modalLayer"
+    onclick="closeModalOutside(event)">
+
+    <div class="modal" id="modalContent">
+
+        <div class="modal-handle"></div>
+
+        <div class="modal-head">
+
+            <div
+                class="modal-title"
+                id="modalTitle">
+                DALZON
+            </div>
+
+            <button
+                class="close"
+                type="button"
+                onclick="closeModal()">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M6 6l12 12"/>
+                    <path d="M18 6 6 18"/>
                 </svg>
 
             </button>
 
         </div>
 
-    </header>
+        <div id="modalBody"></div>
 
-    <main class="content">
-
-        <section class="page active"
-                 id="homePage">
-
-            <div class="section-title">
-                Vue d'ensemble
-            </div>
-
-            <div class="balance-card">
-
-                <div class="balance-label">
-                    Solde total
-                </div>
-
-                <div class="balance-total"
-                     id="totalBalance">
-                    $0.00
-                </div>
-
-                <div class="balance-grid">
-
-                    <div class="currency-box">
-
-                        <div class="currency-label">
-                            CDF
-                        </div>
-
-                        <div class="currency-value"
-                             id="cdfBalance">
-                            0 CDF
-                        </div>
-
-                    </div>
-
-                    <div class="currency-box">
-
-                        <div class="currency-label">
-                            USD
-                        </div>
-
-                        <div class="currency-value"
-                             id="usdBalance">
-                            $0.00
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="actions">
-
-                <button class="action"
-                        type="button"
-                        onclick="openTransfer()">
-
-                    <div class="action-icon">
-
-                        <svg class="icon"
-                             viewBox="0 0 24 24"
-                             fill="none">
-
-                            <path d="M5 12h14"/>
-                            <path d="m13 6 6 6-6 6"/>
-
-                        </svg>
-
-                    </div>
-
-                    <span>
-                        Envoyer
-                    </span>
-
-                </button>
-
-                <button class="action"
-                        type="button"
-                        onclick="openReceive()">
-
-                    <div class="action-icon">
-
-                        <svg class="icon"
-                             viewBox="0 0 24 24"
-                             fill="none">
-
-                            <path d="M12 5v14"/>
-                            <path d="m18 13-6 6-6-6"/>
-
-                        </svg>
-
-                    </div>
-
-                    <span>
-                        Recevoir
-                    </span>
-
-                </button>
-
-                <button class="action"
-                        type="button"
-                        onclick="openPayment()">
-
-                    <div class="action-icon">
-
-                        <svg class="icon"
-                             viewBox="0 0 24 24"
-                             fill="none">
-
-                            <rect x="3"
-                                  y="5"
-                                  width="18"
-                                  height="14"
-                                  rx="3"/>
-
-                            <path d="M3 10h18"/>
-
-                        </svg>
-
-                    </div>
-
-                    <span>
-                        Paiement
-                    </span>
-
-                </button>
-
-            </div>
-
-            <div class="section-title">
-                Activité récente
-            </div>
-
-            <div class="list"
-                 id="homeTransactions">
-
-                <div class="empty">
-                    Aucune opération pour le moment.
-                </div>
-
-            </div>
-
-        </section>
-
-        <section class="page"
-                 id="activityPage">
-
-            <div class="section-title">
-                Activité
-            </div>
-
-            <div class="list"
-                 id="transactionsList">
-
-                <div class="empty">
-                    Aucune opération.
-                </div>
-
-            </div>
-
-        </section>
-
-        <section class="page"
-                 id="cardPage">
-
-            <div class="section-title">
-                Ma carte
-            </div>
-
-            <div class="dalzon-card">
-
-                <div class="card-top">
-
-                    <div class="card-brand">
-                        DALZON
-                    </div>
-
-                    <div class="card-type">
-                        SIMULATION
-                    </div>
-
-                </div>
-
-                <div class="card-number"
-                     id="cardNumber">
-                    DLZ •••• •••• ••••
-                </div>
-
-                <div class="card-bottom">
-
-                    <div>
-
-                        <div class="card-small">
-                            TITULAIRE
-                        </div>
-
-                        <div class="card-value"
-                             id="cardHolder">
-                            —
-                        </div>
-
-                    </div>
-
-                    <div>
-
-                        <div class="card-small">
-                            EXP
-                        </div>
-
-                        <div class="card-value"
-                             id="cardExpiry">
-                            --/--
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="profile-card">
-
-                <div class="profile-row">
-
-                    <span>
-                        Type
-                    </span>
-
-                    <strong>
-                        DALZON CARD
-                    </strong>
-
-                </div>
-
-                <div class="profile-row">
-
-                    <span>
-                        Statut
-                    </span>
-
-                    <strong>
-                        Active
-                    </strong>
-
-                </div>
-
-                <div class="profile-row">
-
-                    <span>
-                        Nature
-                    </span>
-
-                    <strong>
-                        Simulation
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <section class="page"
-                 id="profilePage">
-
-            <div class="section-title">
-                Profil
-            </div>
-
-            <div class="profile-card">
-
-                <div class="profile-head">
-
-                    <div class="profile-avatar"
-                         id="profileAvatar">
-                        D
-                    </div>
-
-                    <div>
-
-                        <div class="profile-name"
-                             id="profileName">
-                            —
-                        </div>
-
-                        <div class="profile-email"
-                             id="profileEmail">
-                            —
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="profile-row">
-
-                    <span>
-                        Identifiant
-                    </span>
-
-                    <strong id="profileId">
-                        —
-                    </strong>
-
-                </div>
-
-                <div class="profile-row">
-
-                    <span>
-                        Statut
-                    </span>
-
-                    <strong id="profileStatus">
-                        —
-                    </strong>
-
-                </div>
-
-                <div class="profile-row">
-
-                    <span>
-                        Type de compte
-                    </span>
-
-                    <strong id="profileRole">
-                        —
-                    </strong>
-
-                </div>
-
-            </div>
-
-            <div class="profile-card"
-                 id="adminEntry"
-                 style="display:none">
-
-                <button class="primary-btn"
-                        type="button"
-                        onclick="openAdmin()">
-
-                    Administration
-
-                </button>
-
-            </div>
-
-            <div class="profile-card">
-
-                <button class="primary-btn"
-                        type="button"
-                        onclick="logout()">
-
-                    Se déconnecter
-
-                </button>
-
-            </div>
-
-        </section>
-
-        <section class="page"
-                 id="adminPage">
-
-            <div class="admin-header">
-
-                <div class="section-title">
-                    Administration
-                </div>
-
-                <div class="admin-actions">
-
-                    <button class="secondary-btn"
-                            type="button"
-                            onclick="navigate('profilePage',null)">
-
-                        Retour
-
-                    </button>
-
-                    <button class="secondary-btn"
-                            type="button"
-                            onclick="loadAdminDashboard()">
-
-                        Actualiser
-
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="admin-stats">
-
-                <div class="admin-stat">
-
-                    <div class="admin-stat-label">
-                        Utilisateurs
-                    </div>
-
-                    <div class="admin-stat-value"
-                         id="adminTotalUsers">
-                        0
-                    </div>
-
-                </div>
-
-                <div class="admin-stat">
-
-                    <div class="admin-stat-label">
-                        Actifs
-                    </div>
-
-                    <div class="admin-stat-value"
-                         id="adminActiveUsers">
-                        0
-                    </div>
-
-                </div>
-
-                <div class="admin-stat">
-
-                    <div class="admin-stat-label">
-                        Bloqués
-                    </div>
-
-                    <div class="admin-stat-value"
-                         id="adminBlockedUsers">
-                        0
-                    </div>
-
-                </div>
-
-                <div class="admin-stat">
-
-                    <div class="admin-stat-label">
-                        Total CDF
-                    </div>
-
-                    <div class="admin-stat-value"
-                         id="adminTotalCDF">
-                        0 CDF
-                    </div>
-
-                </div>
-
-                <div class="admin-stat">
-
-                    <div class="admin-stat-label">
-                        Total USD
-                    </div>
-
-                    <div class="admin-stat-value"
-                         id="adminTotalUSD">
-                        $0.00
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="admin-search">
-
-                <input
-                    type="search"
-                    id="adminSearch"
-                    placeholder="Rechercher un utilisateur..."
-                    autocomplete="off"
-                    maxlength="100"
-                    oninput="filterAdminUsers()">
-
-            </div>
-
-            <div class="admin-card">
-
-                <div id="adminUsers">
-
-                    <div class="empty">
-                        Chargement...
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-    <nav class="bottom-nav">
-
-        <div class="nav-inner">
-
-            <button class="nav-btn active"
-                    type="button"
-                    onclick="navigate('homePage',this)">
-
-                <div class="nav-icon">
-
-                    <svg class="icon"
-                         viewBox="0 0 24 24"
-                         fill="none">
-
-                        <path d="m3 10 9-7 9 7"/>
-                        <path d="M5 9v11h14V9"/>
-                        <path d="M9 20v-6h6v6"/>
-
-                    </svg>
-
-                </div>
-
-                <span>
-                    Accueil
-                </span>
-
-            </button>
-
-            <button class="nav-btn"
-                    type="button"
-                    onclick="navigate('activityPage',this)">
-
-                <div class="nav-icon">
-
-                    <svg class="icon"
-                         viewBox="0 0 24 24"
-                         fill="none">
-
-                        <path d="M4 19V5"/>
-                        <path d="M4 19h16"/>
-                        <path d="m7 15 4-4 3 2 5-6"/>
-
-                    </svg>
-
-                </div>
-
-                <span>
-                    Activité
-                </span>
-
-            </button>
-
-            <button class="nav-btn"
-                    type="button"
-                    onclick="navigate('cardPage',this)">
-
-                <div class="nav-icon">
-
-                    <svg class="icon"
-                         viewBox="0 0 24 24"
-                         fill="none">
-
-                        <rect x="3"
-                              y="5"
-                              width="18"
-                              height="14"
-                              rx="3"/>
-
-                        <path d="M3 10h18"/>
-                        <path d="M7 15h4"/>
-
-                    </svg>
-
-                </div>
-
-                <span>
-                    Carte
-                </span>
-
-            </button>
-
-            <button class="nav-btn"
-                    type="button"
-                    onclick="navigate('profilePage',this)">
-
-                <div class="nav-icon">
-
-                    <svg class="icon"
-                         viewBox="0 0 24 24"
-                         fill="none">
-
-                        <circle cx="12"
-                                cy="8"
-                                r="4"/>
-
-                        <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
-
-                    </svg>
-
-                </div>
-
-                <span>
-                    Profil
-                </span>
-
-            </button>
-
-        </div>
-
-    </nav>
+    </div>
 
 </div>
 
-<div class="toast"
-     id="toast">
-</div>
+
+<div class="toast" id="toast"></div>
+
 
 <script>
 "use strict";
@@ -1786,17 +2003,18 @@ body.dark .bottom-nav{
    CONFIGURATION
 ========================================================= */
 
-const API_BASE = "https://dalzonmoney.onrender.com";
+const API_BASE =
+    "https://dalzonmoney.onrender.com";
 
+let authToken = null;
 let currentUser = null;
 let authMode = "login";
-let authToken = null;
 let adminUsersCache = [];
 let toastTimer = null;
 
 
 /* =========================================================
-   REQUÊTE API CENTRALISÉE
+   API
 ========================================================= */
 
 async function apiRequest(endpoint, options = {}){
@@ -1817,7 +2035,7 @@ async function apiRequest(endpoint, options = {}){
     }
 
     if(authToken){
-        headers["Authorization"] =
+        headers.Authorization =
             "Bearer " + authToken;
     }
 
@@ -1844,26 +2062,19 @@ async function apiRequest(endpoint, options = {}){
     let data = {};
 
     try{
-
         data = await response.json();
-
-    }catch(error){
-
-        data = {};
-    }
+    }catch(error){}
 
     if(response.status === 401){
 
         authToken = null;
         currentUser = null;
-        adminUsersCache = [];
 
         hideApp();
 
         showAuthError(
             data.error ||
-            data.message ||
-            "Votre session a expiré. Veuillez vous reconnecter."
+            "Votre session a expiré."
         );
     }
 
@@ -1881,7 +2092,7 @@ async function apiRequest(endpoint, options = {}){
 
 
 /* =========================================================
-   MODE CONNEXION / INSCRIPTION
+   AUTH
 ========================================================= */
 
 function toggleAuthMode(){
@@ -1913,14 +2124,13 @@ function toggleAuthMode(){
 
     if(authMode === "register"){
 
-        nameField.style.display =
-            "block";
+        nameField.style.display = "block";
 
         title.textContent =
             "Créer un compte";
 
         description.textContent =
-            "Créez votre espace personnel DALZON.";
+            "Créez votre espace personnel DALZON Wallet.";
 
         button.textContent =
             "Créer mon compte";
@@ -1933,14 +2143,13 @@ function toggleAuthMode(){
 
     }else{
 
-        nameField.style.display =
-            "none";
+        nameField.style.display = "none";
 
         title.textContent =
             "Connexion";
 
         description.textContent =
-            "Accédez à votre espace DALZON.";
+            "Retrouvez votre espace de simulation DALZON Wallet.";
 
         button.textContent =
             "Se connecter";
@@ -1953,10 +2162,6 @@ function toggleAuthMode(){
     }
 }
 
-
-/* =========================================================
-   AUTHENTIFICATION
-========================================================= */
 
 async function submitAuth(){
 
@@ -1984,11 +2189,9 @@ async function submitAuth(){
         authMode === "register" &&
         !name
     ){
-
         showAuthError(
             "Veuillez entrer votre nom."
         );
-
         return;
     }
 
@@ -2006,7 +2209,7 @@ async function submitAuth(){
     ){
 
         showAuthError(
-            "Veuillez entrer une adresse email valide."
+            "Adresse email invalide."
         );
 
         return;
@@ -2024,30 +2227,13 @@ async function submitAuth(){
         return;
     }
 
-    const endpoint =
-        authMode === "register"
-            ? "/api/auth/register"
-            : "/api/auth/login";
-
-    const body =
-        authMode === "register"
-            ? {
-                name,
-                email,
-                password
-              }
-            : {
-                email,
-                password
-              };
-
     const button =
         document.getElementById("authButton");
 
-    const oldText =
-        button.textContent;
-
     button.disabled = true;
+
+    const old =
+        button.textContent;
 
     button.textContent =
         authMode === "register"
@@ -2058,17 +2244,28 @@ async function submitAuth(){
 
         const data =
             await apiRequest(
-                endpoint,
+                authMode === "register"
+                    ? "/api/auth/register"
+                    : "/api/auth/login",
                 {
                     method:"POST",
-                    body
+                    body:
+                        authMode === "register"
+                            ? {
+                                name,
+                                email,
+                                password
+                              }
+                            : {
+                                email,
+                                password
+                              }
                 }
             );
 
         if(!data.token){
-
             throw new Error(
-                "Le serveur n'a pas retourné de session."
+                "Session non reçue."
             );
         }
 
@@ -2084,37 +2281,30 @@ async function submitAuth(){
 
         showAuthError(
             error.message ||
-            "Impossible de contacter le serveur."
+            "Connexion impossible."
         );
 
     }finally{
 
         button.disabled = false;
-
-        button.textContent =
-            oldText;
+        button.textContent = old;
     }
 }
 
 
 /* =========================================================
-   CHARGEMENT DU COMPTE
+   COMPTE
 ========================================================= */
 
 async function loadAccount(){
 
-    if(!authToken){
-        return;
-    }
+    if(!authToken) return;
 
     try{
 
         const data =
             await apiRequest(
-                "/api/account",
-                {
-                    method:"GET"
-                }
+                "/api/account"
             );
 
         currentUser =
@@ -2125,7 +2315,7 @@ async function loadAccount(){
         if(!currentUser){
 
             throw new Error(
-                "Les informations du compte sont indisponibles."
+                "Compte indisponible."
             );
         }
 
@@ -2137,106 +2327,17 @@ async function loadAccount(){
 
     }catch(error){
 
-        console.error(
-            "Erreur compte:",
-            error
-        );
-
-        if(authToken){
-
-            showToast(
-                error.message ||
-                "Impossible de charger le compte."
-            );
-        }
-    }
-}
-
-
-/* =========================================================
-   TRANSACTIONS
-========================================================= */
-
-async function loadTransactions(){
-
-    if(!authToken){
-        return;
-    }
-
-    try{
-
-        const data =
-            await apiRequest(
-                "/api/transactions",
-                {
-                    method:"GET"
-                }
-            );
-
-        renderTransactions(
-            Array.isArray(data.transactions)
-                ? data.transactions
-                : []
-        );
-
-    }catch(error){
-
-        console.error(
-            "Erreur transactions:",
-            error
+        showToast(
+            error.message ||
+            "Impossible de charger le compte."
         );
     }
 }
 
-
-/* =========================================================
-   AFFICHAGE APPLICATION
-========================================================= */
-
-async function showApp(){
-
-    document
-        .getElementById("authScreen")
-        .style.display = "none";
-
-    document
-        .getElementById("app")
-        .style.display = "block";
-
-    navigate(
-        "homePage",
-        document.querySelector(".nav-btn")
-    );
-
-    await loadAccount();
-}
-
-
-/* =========================================================
-   MASQUER APPLICATION
-========================================================= */
-
-function hideApp(){
-
-    document
-        .getElementById("app")
-        .style.display = "none";
-
-    document
-        .getElementById("authScreen")
-        .style.display = "flex";
-}
-
-
-/* =========================================================
-   AFFICHAGE UTILISATEUR
-========================================================= */
 
 function renderUser(user){
 
-    if(!user){
-        return;
-    }
+    if(!user) return;
 
     const accountId =
         user.account_id ||
@@ -2244,15 +2345,9 @@ function renderUser(user){
         user.id ||
         "—";
 
-    document
-        .getElementById("headerName")
-        .textContent =
-            user.name || "DALZON";
-
-    document
-        .getElementById("headerId")
-        .textContent =
-            accountId;
+    const name =
+        user.name ||
+        "DALZON";
 
     const cdf =
         Number(
@@ -2268,134 +2363,158 @@ function renderUser(user){
             0
         );
 
-    document
-        .getElementById("cdfBalance")
-        .textContent =
-            formatCDF(cdf);
+    document.getElementById(
+        "headerName"
+    ).textContent = name;
 
-    document
-        .getElementById("usdBalance")
-        .textContent =
-            formatUSD(usd);
+    document.getElementById(
+        "headerId"
+    ).textContent = accountId;
 
-    document
-        .getElementById("totalBalance")
-        .textContent =
-            formatUSD(usd);
+    document.getElementById(
+        "welcomeName"
+    ).textContent =
+        name.split(" ")[0] || name;
+
+    document.getElementById(
+        "cdfBalance"
+    ).textContent =
+        formatCDF(cdf);
+
+    document.getElementById(
+        "usdBalance"
+    ).textContent =
+        formatUSD(usd);
+
+    document.getElementById(
+        "homeCDF"
+    ).textContent =
+        formatCDF(cdf);
+
+    document.getElementById(
+        "homeUSD"
+    ).textContent =
+        formatUSD(usd);
+
+    document.getElementById(
+        "totalBalance"
+    ).textContent =
+        formatUSD(usd);
+
+    document.getElementById(
+        "profileName"
+    ).textContent = name;
+
+    document.getElementById(
+        "profileEmail"
+    ).textContent =
+        user.email || "—";
+
+    document.getElementById(
+        "profileId"
+    ).textContent =
+        accountId;
+
+    document.getElementById(
+        "profileStatus"
+    ).textContent =
+        user.status === "active"
+            ? "Actif"
+            : "Bloqué";
+
+    document.getElementById(
+        "profileRole"
+    ).textContent =
+        user.role === "admin"
+            ? "Administrateur"
+            : "Utilisateur";
+
+    document.getElementById(
+        "profileAvatar"
+    ).textContent =
+        name
+            .trim()
+            .charAt(0)
+            .toUpperCase() || "D";
 
     if(user.card){
 
-        document
-            .getElementById("cardNumber")
-            .textContent =
-                user.card.number ||
-                "DLZ •••• •••• ••••";
+        document.getElementById(
+            "cardNumber"
+        ).textContent =
+            user.card.number ||
+            "DLZ •••• •••• ••••";
 
-        document
-            .getElementById("cardExpiry")
-            .textContent =
-                user.card.expiry ||
-                "--/--";
+        document.getElementById(
+            "cardExpiry"
+        ).textContent =
+            user.card.expiry ||
+            "--/--";
     }
 
-    document
-        .getElementById("cardHolder")
-        .textContent =
-            String(
-                user.name ||
-                "DALZON"
-            )
-            .toUpperCase();
+    document.getElementById(
+        "cardHolder"
+    ).textContent =
+        name.toUpperCase();
 
-    document
-        .getElementById("profileName")
-        .textContent =
-            user.name || "—";
-
-    document
-        .getElementById("profileEmail")
-        .textContent =
-            user.email || "—";
-
-    document
-        .getElementById("profileId")
-        .textContent =
-            accountId;
-
-    document
-        .getElementById("profileStatus")
-        .textContent =
-            user.status === "active"
-                ? "Actif"
-                : "Bloqué";
-
-    document
-        .getElementById("profileRole")
-        .textContent =
-            user.role === "admin"
-                ? "Administrateur"
-                : "Utilisateur";
-
-    const firstLetter =
-        String(
-            user.name || "D"
-        )
-        .trim()
-        .charAt(0)
-        .toUpperCase();
-
-    document
-        .getElementById("profileAvatar")
-        .textContent =
-            firstLetter || "D";
-
-    const adminEntry =
-        document.getElementById("adminEntry");
-
-    if(
+    document.getElementById(
+        "adminEntry"
+    ).style.display =
         user.role === "admin"
-    ){
-
-        adminEntry.style.display =
-            "block";
-
-    }else{
-
-        adminEntry.style.display =
-            "none";
-    }
+            ? "block"
+            : "none";
 }
 
 
 /* =========================================================
-   TRANSACTIONS — AFFICHAGE SÉCURISÉ
+   TRANSACTIONS
 ========================================================= */
 
-function getTransactionAmount(transaction){
+async function loadTransactions(){
+
+    try{
+
+        const data =
+            await apiRequest(
+                "/api/transactions"
+            );
+
+        const transactions =
+            Array.isArray(
+                data.transactions
+            )
+                ? data.transactions
+                : [];
+
+        renderTransactions(
+            transactions
+        );
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+
+function getAmount(t){
 
     if(
-        transaction.amount !== undefined &&
-        transaction.amount !== null
+        t.amount !== undefined &&
+        t.amount !== null
     ){
-
-        return Number(
-            transaction.amount
-        );
+        return Number(t.amount);
     }
 
-    if(
-        transaction.currency === "USD"
-    ){
+    if(t.currency === "USD"){
 
-        return (
-            Number(
-                transaction.amount_usd_cents || 0
-            ) / 100
-        );
+        return Number(
+            t.amount_usd_cents || 0
+        ) / 100;
     }
 
     return Number(
-        transaction.amount_cdf || 0
+        t.amount_cdf || 0
     );
 }
 
@@ -2410,16 +2529,11 @@ function renderTransactions(transactions){
     containers.forEach(
         container => {
 
-            if(!container){
-                return;
-            }
+            if(!container) return;
 
             container.innerHTML = "";
 
-            if(
-                !Array.isArray(transactions) ||
-                transactions.length === 0
-            ){
+            if(!transactions.length){
 
                 container.innerHTML =
                     '<div class="empty">Aucune opération pour le moment.</div>';
@@ -2431,125 +2545,447 @@ function renderTransactions(transactions){
                 transaction => {
 
                     const positive =
-                        transaction.type === "credit";
+                        transaction.type === "credit" ||
+                        transaction.type === "receive";
 
                     const amount =
-                        getTransactionAmount(
-                            transaction
-                        );
+                        getAmount(transaction);
 
-                    const formattedAmount =
+                    const currency =
                         transaction.currency === "USD"
+                            ? "USD"
+                            : "CDF";
+
+                    const formatted =
+                        currency === "USD"
                             ? formatUSD(amount)
                             : formatCDF(amount);
 
-                    const sign =
-                        positive
-                            ? "+"
-                            : "-";
+                    const item =
+                        document.createElement("div");
 
-                    const element =
-                        document.createElement(
-                            "div"
-                        );
-
-                    element.className =
+                    item.className =
                         "transaction";
 
-                    const icon =
-                        document.createElement(
-                            "div"
-                        );
+                    item.innerHTML = `
+                        <div class="transaction-icon">
+                            ${
+                                positive
+                                    ? `
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 19V5"/>
+                                        <path d="m6 11 6-6 6 6"/>
+                                    </svg>`
+                                    : `
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 5v14"/>
+                                        <path d="m18 13-6 6-6-6"/>
+                                    </svg>`
+                            }
+                        </div>
 
-                    icon.className =
-                        "transaction-icon";
+                        <div class="transaction-info">
 
-                    icon.innerHTML =
-                        positive
-                            ? `
-                                <svg class="icon"
-                                     viewBox="0 0 24 24"
-                                     fill="none">
+                            <div class="transaction-title">
+                                ${escapeHTML(
+                                    transaction.description ||
+                                    "Opération"
+                                )}
+                            </div>
 
-                                    <path d="M12 19V5"/>
-                                    <path d="m6 11 6-6 6 6"/>
+                            <div class="transaction-date">
+                                ${escapeHTML(
+                                    formatDate(
+                                        transaction.created_at
+                                    )
+                                )}
+                            </div>
 
-                                </svg>
-                              `
-                            : `
-                                <svg class="icon"
-                                     viewBox="0 0 24 24"
-                                     fill="none">
+                        </div>
 
-                                    <path d="M12 5v14"/>
-                                    <path d="m18 13-6 6-6-6"/>
-
-                                </svg>
-                              `;
-
-                    const info =
-                        document.createElement(
-                            "div"
-                        );
-
-                    info.className =
-                        "transaction-info";
-
-                    const title =
-                        document.createElement(
-                            "div"
-                        );
-
-                    title.className =
-                        "transaction-title";
-
-                    title.textContent =
-                        transaction.description ||
-                        "Opération";
-
-                    const date =
-                        document.createElement(
-                            "div"
-                        );
-
-                    date.className =
-                        "transaction-date";
-
-                    date.textContent =
-                        formatDate(
-                            transaction.created_at
-                        );
-
-                    info.appendChild(title);
-                    info.appendChild(date);
-
-                    const amountElement =
-                        document.createElement(
-                            "div"
-                        );
-
-                    amountElement.className =
-                        "transaction-amount " +
-                        (
+                        <div class="transaction-amount ${
                             positive
-                                ? "amount-positive"
-                                : "amount-negative"
-                        );
-
-                    amountElement.textContent =
-                        sign + formattedAmount;
-
-                    element.appendChild(icon);
-                    element.appendChild(info);
-                    element.appendChild(amountElement);
+                                ? "positive"
+                                : "negative"
+                        }">
+                            ${positive ? "+" : "-"}${formatted}
+                        </div>
+                    `;
 
                     container.appendChild(
-                        element
+                        item
                     );
                 }
             );
         }
     );
+}
+
+
+/* =========================================================
+   ENVOYER
+========================================================= */
+
+function openTransfer(){
+
+    openModal(
+        "Envoyer",
+        `
+        <div class="modal-description">
+            Envoyez une somme simulée vers un autre compte DALZON.
+        </div>
+
+        <div class="form-field">
+            <label>COMPTE DESTINATAIRE</label>
+            <input
+                id="transferRecipient"
+                placeholder="Ex : DLZ-2026-1234"
+                maxlength="80">
+        </div>
+
+        <div class="form-field">
+            <label>COMPTE À DÉBITER</label>
+
+            <select id="transferCurrency">
+                <option value="CDF">Compte CDF</option>
+                <option value="USD">Compte USD</option>
+            </select>
+        </div>
+
+        <div class="form-field">
+            <label>MONTANT</label>
+
+            <input
+                id="transferAmount"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00">
+        </div>
+
+        <div class="form-field">
+            <label>MOTIF</label>
+
+            <input
+                id="transferDescription"
+                maxlength="120"
+                placeholder="Motif du transfert">
+        </div>
+
+        <button
+            class="modal-button"
+            type="button"
+            onclick="submitTransfer()">
+            Confirmer l'envoi
+        </button>
+        `
+    );
+}
+
+
+async function submitTransfer(){
+
+    const recipient =
+        document
+            .getElementById("transferRecipient")
+            .value
+            .trim();
+
+    const currency =
+        document
+            .getElementById("transferCurrency")
+            .value;
+
+    const amount =
+        Number(
+            document
+                .getElementById("transferAmount")
+                .value
+        );
+
+    const description =
+        document
+            .getElementById("transferDescription")
+            .value
+            .trim();
+
+    if(!recipient){
+
+        showToast(
+            "Entrez le compte destinataire."
+        );
+
+        return;
+    }
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+
+        showToast(
+            "Montant invalide."
+        );
+
+        return;
+    }
+
+    try{
+
+        await apiRequest(
+            "/api/transfer",
+            {
+                method:"POST",
+                body:{
+                    recipient,
+                    currency,
+                    amount,
+                    description:
+                        description ||
+                        "Transfert DALZON"
+                }
+            }
+        );
+
+        closeModal();
+
+        showToast(
+            "Transfert effectué."
+        );
+
+        await loadAccount();
+
+    }catch(error){
+
+        showToast(
+            error.message ||
+            "Transfert impossible."
+        );
+    }
+}
+
+
+/* =========================================================
+   RECEVOIR
+========================================================= */
+
+function openReceive(){
+
+    const accountId =
+        currentUser?.account_id ||
+        currentUser?.accountId ||
+        currentUser?.id ||
+        "—";
+
+    openModal(
+        "Recevoir",
+        `
+        <div class="modal-description">
+            Utilisez cet identifiant pour recevoir une opération simulée.
+        </div>
+
+        <div class="receive-box">
+
+            <div class="receive-label">
+                VOTRE IDENTIFIANT DALZON
+            </div>
+
+            <div
+                class="receive-id"
+                id="receiveId">
+                ${escapeHTML(accountId)}
+            </div>
+
+        </div>
+
+        <button
+            class="modal-button"
+            type="button"
+            onclick="copyAccountId()">
+            Copier l'identifiant
+        </button>
+        `
+    );
+}
+
+
+async function copyAccountId(){
+
+    const id =
+        currentUser?.account_id ||
+        currentUser?.accountId ||
+        currentUser?.id ||
+        "";
+
+    if(!id) return;
+
+    try{
+
+        await navigator.clipboard.writeText(
+            String(id)
+        );
+
+        showToast(
+            "Identifiant copié."
+        );
+
+    }catch(error){
+
+        showToast(
+            "Copie indisponible."
+        );
+    }
+}
+
+
+/* =========================================================
+   PAIEMENT
+========================================================= */
+
+function openPayment(){
+
+    openModal(
+        "Paiement",
+        `
+        <div class="modal-description">
+            Effectuez un paiement simulé depuis votre compte DALZON.
+        </div>
+
+        <div class="form-field">
+
+            <label>DESTINATAIRE / MARCHAND</label>
+
+            <input
+                id="paymentMerchant"
+                maxlength="100"
+                placeholder="Nom du marchand">
+        </div>
+
+        <div class="form-field">
+
+            <label>COMPTE À DÉBITER</label>
+
+            <select id="paymentCurrency">
+                <option value="CDF">Compte CDF</option>
+                <option value="USD">Compte USD</option>
+            </select>
+
+        </div>
+
+        <div class="form-field">
+
+            <label>MONTANT</label>
+
+            <input
+                id="paymentAmount"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00">
+
+        </div>
+
+        <div class="form-field">
+
+            <label>RÉFÉRENCE</label>
+
+            <input
+                id="paymentReference"
+                maxlength="100"
+                placeholder="Référence du paiement">
+
+        </div>
+
+        <button
+            class="modal-button"
+            type="button"
+            onclick="submitPayment()">
+            Confirmer le paiement
+        </button>
+        `
+    );
+}
+
+
+async function submitPayment(){
+
+    const merchant =
+        document
+            .getElementById("paymentMerchant")
+            .value
+            .trim();
+
+    const currency =
+        document
+            .getElementById("paymentCurrency")
+            .value;
+
+    const amount =
+        Number(
+            document
+                .getElementById("paymentAmount")
+                .value
+        );
+
+    const reference =
+        document
+            .getElementById("paymentReference")
+            .value
+            .trim();
+
+    if(!merchant){
+
+        showToast(
+            "Entrez le nom du marchand."
+        );
+
+        return;
+    }
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+
+        showToast(
+            "Montant invalide."
+        );
+
+        return;
+    }
+
+    try{
+
+        await apiRequest(
+            "/api/payment",
+            {
+                method:"POST",
+                body:{
+                    merchant,
+                    currency,
+                    amount,
+                    reference:
+                        reference ||
+                        "Paiement DALZON"
+                }
+            }
+        );
+
+        closeModal();
+
+        showToast(
+            "Paiement effectué."
+        );
+
+        await loadAccount();
+
+    }catch(error){
+
+        showToast(
+            error.message ||
+            "Paiement impossible."
+        );
+    }
 }
 
 
@@ -2560,42 +2996,28 @@ function renderTransactions(transactions){
 function navigate(pageId, button){
 
     document
-        .querySelectorAll(".page")
+        .querySelectorAll(".screen")
         .forEach(
-            page => {
-                page.classList.remove(
-                    "active"
-                );
-            }
+            page =>
+                page.classList.remove("active")
         );
 
     const page =
-        document.getElementById(
-            pageId
-        );
+        document.getElementById(pageId);
 
     if(page){
-
-        page.classList.add(
-            "active"
-        );
+        page.classList.add("active");
     }
 
     document
-        .querySelectorAll(".nav-btn")
+        .querySelectorAll(".nav")
         .forEach(
-            btn => {
-                btn.classList.remove(
-                    "active"
-                );
-            }
+            nav =>
+                nav.classList.remove("active")
         );
 
     if(button){
-
-        button.classList.add(
-            "active"
-        );
+        button.classList.add("active");
     }
 
     window.scrollTo({
@@ -2606,10 +3028,10 @@ function navigate(pageId, button){
 
 
 /* =========================================================
-   ADMINISTRATION
+   ADMIN
 ========================================================= */
 
-async function openAdmin(){
+function openAdmin(){
 
     if(
         !currentUser ||
@@ -2624,26 +3046,19 @@ async function openAdmin(){
     }
 
     document
-        .querySelectorAll(".page")
+        .querySelectorAll(".screen")
         .forEach(
-            page => {
-                page.classList.remove(
-                    "active"
-                );
-            }
+            page =>
+                page.classList.remove("active")
         );
 
     document
         .getElementById("adminPage")
         .classList.add("active");
 
-    await loadAdminDashboard();
+    loadAdminDashboard();
 }
 
-
-/* =========================================================
-   CHARGEMENT ADMIN
-========================================================= */
 
 async function loadAdminDashboard(){
 
@@ -2659,10 +3074,7 @@ async function loadAdminDashboard(){
 
         const data =
             await apiRequest(
-                "/api/admin/users",
-                {
-                    method:"GET"
-                }
+                "/api/admin/users"
             );
 
         adminUsersCache =
@@ -2682,92 +3094,79 @@ async function loadAdminDashboard(){
 
         container.innerHTML =
             `
-                <div class="empty">
-                    ${escapeHTML(
-                        error.message ||
-                        "Impossible de charger les utilisateurs."
-                    )}
-                </div>
+            <div class="empty">
+                ${escapeHTML(
+                    error.message ||
+                    "Impossible de charger les utilisateurs."
+                )}
+            </div>
             `;
     }
 }
 
 
-/* =========================================================
-   STATISTIQUES ADMIN
-========================================================= */
-
 function renderAdminStats(users){
-
-    const total =
-        users.length;
 
     const active =
         users.filter(
-            user =>
-                user.status === "active"
+            u => u.status === "active"
         ).length;
 
     const blocked =
         users.filter(
-            user =>
-                user.status === "blocked"
+            u => u.status === "blocked"
         ).length;
 
-    const totalCDF =
+    const cdf =
         users.reduce(
-            (sum,user) =>
+            (sum,u) =>
                 sum +
                 Number(
-                    user.cdf ??
-                    user.wallet?.CDF ??
+                    u.cdf ??
+                    u.wallet?.CDF ??
                     0
                 ),
             0
         );
 
-    const totalUSD =
+    const usd =
         users.reduce(
-            (sum,user) =>
+            (sum,u) =>
                 sum +
                 Number(
-                    user.usd ??
-                    user.wallet?.USD ??
+                    u.usd ??
+                    u.wallet?.USD ??
                     0
                 ),
             0
         );
 
-    document
-        .getElementById("adminTotalUsers")
-        .textContent =
-            total;
+    document.getElementById(
+        "adminTotalUsers"
+    ).textContent =
+        users.length;
 
-    document
-        .getElementById("adminActiveUsers")
-        .textContent =
-            active;
+    document.getElementById(
+        "adminActiveUsers"
+    ).textContent =
+        active;
 
-    document
-        .getElementById("adminBlockedUsers")
-        .textContent =
-            blocked;
+    document.getElementById(
+        "adminBlockedUsers"
+    ).textContent =
+        blocked;
 
-    document
-        .getElementById("adminTotalCDF")
-        .textContent =
-            formatCDF(totalCDF);
+    document.getElementById(
+        "adminTotalCDF"
+    ).textContent =
+        formatCDF(cdf);
 
-    document
-        .getElementById("adminTotalUSD")
-        .textContent =
-            formatUSD(totalUSD);
+    document.getElementById(
+        "adminTotalUSD"
+    ).textContent =
+        formatUSD(usd);
 }
 
-
-/* =========================================================
-   AFFICHAGE UTILISATEURS ADMIN
-========================================================= */
 
 function renderAdminUsers(users){
 
@@ -2789,15 +3188,7 @@ function renderAdminUsers(users){
     users.forEach(
         user => {
 
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-            item.className =
-                "admin-user";
-
-            const accountId =
+            const id =
                 user.account_id ||
                 user.accountId ||
                 user.id ||
@@ -2817,167 +3208,125 @@ function renderAdminUsers(users){
                     0
                 );
 
-            const head =
-                document.createElement(
-                    "div"
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "admin-user";
+
+            item.innerHTML = `
+
+                <div class="admin-user-top">
+
+                    <div>
+
+                        <div class="admin-name">
+                            ${escapeHTML(
+                                user.name ||
+                                "Utilisateur"
+                            )}
+                        </div>
+
+                        <div class="admin-id">
+                            ${escapeHTML(id)}
+                        </div>
+
+                        <div class="admin-email">
+                            ${escapeHTML(
+                                user.email || "—"
+                            )}
+                        </div>
+
+                    </div>
+
+                    <div class="status ${
+                        user.status === "blocked"
+                            ? "blocked"
+                            : ""
+                    }">
+                        ${
+                            user.status === "blocked"
+                                ? "Bloqué"
+                                : "Actif"
+                        }
+                    </div>
+
+                </div>
+
+
+                <div class="admin-balances">
+
+                    <span class="chip">
+                        ${formatCDF(cdf)}
+                    </span>
+
+                    <span class="chip">
+                        ${formatUSD(usd)}
+                    </span>
+
+                </div>
+
+                <div class="admin-buttons"></div>
+            `;
+
+            const buttons =
+                item.querySelector(
+                    ".admin-buttons"
                 );
-
-            head.className =
-                "admin-user-head";
-
-            const identity =
-                document.createElement(
-                    "div"
-                );
-
-            const name =
-                document.createElement(
-                    "div"
-                );
-
-            name.className =
-                "admin-user-name";
-
-            name.textContent =
-                user.name ||
-                "Utilisateur";
-
-            const id =
-                document.createElement(
-                    "div"
-                );
-
-            id.className =
-                "admin-user-id";
-
-            id.textContent =
-                accountId;
-
-            const email =
-                document.createElement(
-                    "div"
-                );
-
-            email.className =
-                "admin-user-email";
-
-            email.textContent =
-                user.email ||
-                "—";
-
-            identity.appendChild(name);
-            identity.appendChild(id);
-            identity.appendChild(email);
-
-            const status =
-                document.createElement(
-                    "div"
-                );
-
-            status.className =
-                "status";
-
-            if(
-                user.status === "blocked"
-            ){
-
-                status.classList.add(
-                    "blocked"
-                );
-
-                status.textContent =
-                    "Bloqué";
-
-            }else{
-
-                status.textContent =
-                    "Actif";
-            }
-
-            head.appendChild(identity);
-            head.appendChild(status);
-
-            const balances =
-                document.createElement(
-                    "div"
-                );
-
-            balances.className =
-                "admin-balances";
-
-            const cdfChip =
-                document.createElement(
-                    "span"
-                );
-
-            cdfChip.className =
-                "balance-chip";
-
-            cdfChip.textContent =
-                formatCDF(cdf);
-
-            const usdChip =
-                document.createElement(
-                    "span"
-                );
-
-            usdChip.className =
-                "balance-chip";
-
-            usdChip.textContent =
-                formatUSD(usd);
-
-            balances.appendChild(cdfChip);
-            balances.appendChild(usdChip);
-
-            const actions =
-                document.createElement(
-                    "div"
-                );
-
-            actions.className =
-                "admin-user-actions";
 
             if(user.role !== "admin"){
 
-                const blockButton =
+                const credit =
                     document.createElement(
                         "button"
                     );
 
-                blockButton.type =
-                    "button";
+                credit.className =
+                    "admin-btn";
 
-                blockButton.className =
-                    "block-btn " +
+                credit.textContent =
+                    "Créditer";
+
+                credit.onclick =
+                    () =>
+                        openAdminCredit(
+                            user.id
+                        );
+
+                buttons.appendChild(
+                    credit
+                );
+
+
+                const block =
+                    document.createElement(
+                        "button"
+                    );
+
+                block.className =
+                    "admin-btn " +
                     (
                         user.status === "blocked"
                             ? "success"
                             : "danger"
                     );
 
-                blockButton.textContent =
+                block.textContent =
                     user.status === "blocked"
                         ? "Débloquer"
                         : "Bloquer";
 
-                blockButton.addEventListener(
-                    "click",
+                block.onclick =
                     () =>
                         toggleAdminBlock(
                             user.id,
                             user.status !== "blocked"
-                        )
-                );
+                        );
 
-                actions.appendChild(
-                    blockButton
+                buttons.appendChild(
+                    block
                 );
             }
-
-            item.appendChild(head);
-            item.appendChild(balances);
-            item.appendChild(actions);
 
             container.appendChild(
                 item
@@ -2987,19 +3336,12 @@ function renderAdminUsers(users){
 }
 
 
-/* =========================================================
-   RECHERCHE ADMIN
-========================================================= */
-
 function filterAdminUsers(){
 
-    const input =
-        document.getElementById(
-            "adminSearch"
-        );
-
     const query =
-        input.value
+        document
+            .getElementById("adminSearch")
+            .value
             .trim()
             .toLowerCase();
 
@@ -3012,7 +3354,7 @@ function filterAdminUsers(){
         return;
     }
 
-    const filtered =
+    renderAdminUsers(
         adminUsersCache.filter(
             user => {
 
@@ -3030,20 +3372,162 @@ function filterAdminUsers(){
                     .join(" ")
                     .toLowerCase();
 
-                return text.includes(
-                    query
-                );
+                return text.includes(query);
             }
-        );
-
-    renderAdminUsers(
-        filtered
+        )
     );
 }
 
 
 /* =========================================================
-   BLOQUER / DÉBLOQUER
+   ADMIN — CRÉDIT
+========================================================= */
+
+function openAdminCredit(userId){
+
+    openModal(
+        "Créditer un compte",
+        `
+        <div class="modal-description">
+            Ajoutez un montant simulé au compte sélectionné.
+        </div>
+
+        <div class="form-field">
+
+            <label>DEVISE</label>
+
+            <select id="creditCurrency">
+                <option value="CDF">Compte CDF</option>
+                <option value="USD">Compte USD</option>
+            </select>
+
+        </div>
+
+        <div class="form-field">
+
+            <label>MONTANT</label>
+
+            <input
+                id="creditAmount"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00">
+
+        </div>
+
+        <div class="form-field">
+
+            <label>MOTIF</label>
+
+            <input
+                id="creditDescription"
+                maxlength="120"
+                placeholder="Crédit administratif">
+
+        </div>
+
+        <button
+            class="modal-button"
+            type="button"
+            onclick="submitAdminCredit(${Number(userId)})">
+            Ajouter le crédit
+        </button>
+        `
+    );
+}
+
+
+async function submitAdminCredit(userId){
+
+    const currency =
+        document
+            .getElementById("creditCurrency")
+            .value;
+
+    const amount =
+        Number(
+            document
+                .getElementById("creditAmount")
+                .value
+        );
+
+    const description =
+        document
+            .getElementById("creditDescription")
+            .value
+            .trim();
+
+    if(
+        !Number.isInteger(
+            Number(userId)
+        )
+    ){
+
+        showToast(
+            "Compte invalide."
+        );
+
+        return;
+    }
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+
+        showToast(
+            "Montant invalide."
+        );
+
+        return;
+    }
+
+    try{
+
+        await apiRequest(
+            "/api/admin/credit",
+            {
+                method:"POST",
+                body:{
+                    userId:Number(userId),
+                    currency,
+                    amount,
+                    description:
+                        description ||
+                        "Crédit administratif"
+                }
+            }
+        );
+
+        closeModal();
+
+        showToast(
+            "Compte crédité."
+        );
+
+        await loadAdminDashboard();
+
+        if(
+            currentUser &&
+            Number(userId) ===
+            Number(currentUser.id)
+        ){
+            await loadAccount();
+        }
+
+    }catch(error){
+
+        showToast(
+            error.message ||
+            "Crédit impossible."
+        );
+    }
+}
+
+
+/* =========================================================
+   ADMIN — BLOQUER
 ========================================================= */
 
 async function toggleAdminBlock(
@@ -3051,14 +3535,10 @@ async function toggleAdminBlock(
     blocked
 ){
 
-    const numericId =
+    const id =
         Number(userId);
 
-    if(
-        !Number.isInteger(
-            numericId
-        )
-    ){
+    if(!Number.isInteger(id)){
 
         showToast(
             "Utilisateur invalide."
@@ -3074,7 +3554,7 @@ async function toggleAdminBlock(
             {
                 method:"POST",
                 body:{
-                    user_id:numericId,
+                    userId:id,
                     blocked:Boolean(blocked)
                 }
             }
@@ -3082,8 +3562,8 @@ async function toggleAdminBlock(
 
         showToast(
             blocked
-                ? "Utilisateur bloqué."
-                : "Utilisateur débloqué."
+                ? "Compte bloqué."
+                : "Compte débloqué."
         );
 
         await loadAdminDashboard();
@@ -3099,28 +3579,49 @@ async function toggleAdminBlock(
 
 
 /* =========================================================
-   ACTIONS
+   MODALES
 ========================================================= */
 
-function openTransfer(){
+function openModal(title,body){
 
-    showToast(
-        "Le transfert sera activé à l'étape suivante."
-    );
+    document.getElementById(
+        "modalTitle"
+    ).textContent = title;
+
+    document.getElementById(
+        "modalBody"
+    ).innerHTML = body;
+
+    document.getElementById(
+        "modalLayer"
+    ).classList.add("show");
+
+    document.body.style.overflow =
+        "hidden";
 }
 
-function openReceive(){
 
-    showToast(
-        "La réception sera activée à l'étape suivante."
-    );
+function closeModal(){
+
+    document.getElementById(
+        "modalLayer"
+    ).classList.remove("show");
+
+    document.body.style.overflow =
+        "";
 }
 
-function openPayment(){
 
-    showToast(
-        "Le paiement simulé sera activé à l'étape suivante."
-    );
+function closeModalOutside(event){
+
+    if(
+        event.target ===
+        document.getElementById(
+            "modalLayer"
+        )
+    ){
+        closeModal();
+    }
 }
 
 
@@ -3130,24 +3631,22 @@ function openPayment(){
 
 function toggleTheme(){
 
-    document
-        .body
-        .classList
-        .toggle("dark");
+    document.body.classList.toggle(
+        "dark"
+    );
 
-    const dark =
-        document
-            .body
-            .classList
-            .contains("dark");
+    const mode =
+        document.body.classList.contains(
+            "dark"
+        )
+            ? "dark"
+            : "light";
 
     try{
 
         localStorage.setItem(
-            "dalzon_theme",
-            dark
-                ? "dark"
-                : "light"
+            "dalzon_wallet_theme",
+            mode
         );
 
     }catch(error){}
@@ -3158,17 +3657,15 @@ function loadTheme(){
 
     try{
 
-        const theme =
+        if(
             localStorage.getItem(
-                "dalzon_theme"
+                "dalzon_wallet_theme"
+            ) === "dark"
+        ){
+
+            document.body.classList.add(
+                "dark"
             );
-
-        if(theme === "dark"){
-
-            document
-                .body
-                .classList
-                .add("dark");
         }
 
     }catch(error){}
@@ -3176,7 +3673,42 @@ function loadTheme(){
 
 
 /* =========================================================
-   DÉCONNEXION
+   APP
+========================================================= */
+
+async function showApp(){
+
+    document.getElementById(
+        "authScreen"
+    ).style.display = "none";
+
+    document.getElementById(
+        "app"
+    ).style.display = "block";
+
+    navigate(
+        "homePage",
+        document.querySelector(".nav")
+    );
+
+    await loadAccount();
+}
+
+
+function hideApp(){
+
+    document.getElementById(
+        "app"
+    ).style.display = "none";
+
+    document.getElementById(
+        "authScreen"
+    ).style.display = "flex";
+}
+
+
+/* =========================================================
+   LOGOUT
 ========================================================= */
 
 function logout(){
@@ -3185,21 +3717,12 @@ function logout(){
     currentUser = null;
     adminUsersCache = [];
 
+    closeModal();
     hideApp();
 
-    document
-        .getElementById("passwordInput")
-        .value = "";
-
-    document
-        .getElementById("nameInput")
-        .value = "";
-
-    document
-        .getElementById("emailInput")
-        .value = "";
-
-    hideAuthError();
+    document.getElementById(
+        "passwordInput"
+    ).value = "";
 
     showToast(
         "Vous êtes déconnecté."
@@ -3259,7 +3782,6 @@ function formatDate(value){
             date.getTime()
         )
     ){
-
         return String(value);
     }
 
@@ -3277,7 +3799,7 @@ function formatDate(value){
 
 
 /* =========================================================
-   ÉCHAPPEMENT HTML
+   SÉCURITÉ HTML
 ========================================================= */
 
 function escapeHTML(value){
@@ -3305,9 +3827,7 @@ function showAuthError(message){
         );
 
     error.textContent =
-        String(
-            message || "Erreur"
-        );
+        String(message || "Erreur");
 
     error.style.display =
         "block";
@@ -3321,8 +3841,7 @@ function hideAuthError(){
             "authError"
         );
 
-    error.textContent =
-        "";
+    error.textContent = "";
 
     error.style.display =
         "none";
@@ -3337,9 +3856,7 @@ function showToast(message){
         );
 
     toast.textContent =
-        String(
-            message || ""
-        );
+        String(message || "");
 
     toast.classList.add(
         "show"
@@ -3352,15 +3869,39 @@ function showToast(message){
     toastTimer =
         setTimeout(
             () => {
-
                 toast.classList.remove(
                     "show"
                 );
-
             },
-            2500
+            2600
         );
 }
+
+
+/* =========================================================
+   CLAVIER
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "Escape"
+        ){
+            closeModal();
+        }
+
+        if(
+            event.key === "Enter" &&
+            document.getElementById(
+                "authScreen"
+            ).style.display !== "none"
+        ){
+            submitAuth();
+        }
+    }
+);
 
 
 /* =========================================================
@@ -3371,10 +3912,12 @@ loadTheme();
 
 
 /* =========================================================
-   PWA — AJOUT UNIQUEMENT
+   PWA
 ========================================================= */
 
-if("serviceWorker" in navigator){
+if(
+    "serviceWorker" in navigator
+){
 
     window.addEventListener(
         "load",
@@ -3382,19 +3925,19 @@ if("serviceWorker" in navigator){
 
             navigator.serviceWorker
                 .register(
-                    "/service-worker.js"
+                    "./service-worker.js"
                 )
                 .then(
                     () => {
                         console.log(
-                            "DALZON Wallet PWA activée."
+                            "DALZON Wallet v2.2 — PWA active."
                         );
                     }
                 )
                 .catch(
                     error => {
                         console.error(
-                            "Erreur PWA :",
+                            "PWA :",
                             error
                         );
                     }
