@@ -14,7 +14,7 @@
 <style>
 :root{
     --bg:#f5f7fa;
-    --surface:#ffffff;
+    --surface:#fff;
     --surface2:#eef1f5;
     --text:#101418;
     --muted:#737b86;
@@ -24,7 +24,6 @@
     --success:#15803d;
     --danger:#dc2626;
     --shadow:0 15px 40px rgba(0,0,0,.08);
-    --radius:24px;
 }
 
 *{
@@ -34,17 +33,10 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-html{
-    scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth}
 
 body{
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     background:var(--bg);
     color:var(--text);
     min-height:100vh;
@@ -62,10 +54,6 @@ body.dark{
     --accent2:#60a5fa;
     --shadow:0 20px 50px rgba(0,0,0,.3);
 }
-
-/* =========================
-   ICONES SVG
-========================= */
 
 .icon{
     width:21px;
@@ -86,9 +74,7 @@ svg{
     stroke-linejoin:round;
 }
 
-/* =========================
-   AUTH
-========================= */
+/* AUTH */
 
 .auth-screen{
     min-height:100vh;
@@ -161,9 +147,7 @@ svg{
     margin-bottom:24px;
 }
 
-.field{
-    margin-bottom:15px;
-}
+.field{margin-bottom:15px}
 
 .field label{
     display:block;
@@ -172,7 +156,8 @@ svg{
     margin-bottom:7px;
 }
 
-.field input{
+.field input,
+.field select{
     width:100%;
     border:1px solid var(--border);
     background:var(--surface2);
@@ -181,12 +166,12 @@ svg{
     border-radius:15px;
     outline:none;
     font-size:14px;
-    transition:.2s;
 }
 
-.field input:focus{
+.field input:focus,
+.field select:focus{
     border-color:var(--accent2);
-    box-shadow:0 0 0 3px rgba(37,99,235,.10);
+    box-shadow:0 0 0 3px rgba(37,99,235,.1);
 }
 
 .primary-btn{
@@ -199,11 +184,13 @@ svg{
     font-size:14px;
     font-weight:800;
     cursor:pointer;
-    transition:.2s;
 }
 
-.primary-btn:active{
-    transform:scale(.98);
+.primary-btn:active{transform:scale(.98)}
+
+.primary-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
 }
 
 .auth-switch{
@@ -231,9 +218,7 @@ svg{
     font-size:13px;
 }
 
-/* =========================
-   APP
-========================= */
+/* APP */
 
 .app{
     display:none;
@@ -293,9 +278,7 @@ body.dark .app-header{
     cursor:pointer;
 }
 
-/* =========================
-   CONTENT
-========================= */
+/* CONTENT */
 
 .content{
     width:100%;
@@ -309,9 +292,7 @@ body.dark .app-header{
     animation:pageIn .3s ease;
 }
 
-.page.active{
-    display:block;
-}
+.page.active{display:block}
 
 .section-title{
     font-size:20px;
@@ -320,9 +301,7 @@ body.dark .app-header{
     margin-bottom:15px;
 }
 
-/* =========================
-   BALANCES
-========================= */
+/* BALANCE */
 
 .balance-card{
     background:var(--accent);
@@ -381,9 +360,7 @@ body.dark .app-header{
     font-weight:800;
 }
 
-/* =========================
-   QUICK ACTIONS
-========================= */
+/* ACTIONS */
 
 .actions{
     display:grid;
@@ -404,12 +381,9 @@ body.dark .app-header{
     gap:9px;
     color:var(--text);
     cursor:pointer;
-    transition:.2s;
 }
 
-.action:active{
-    transform:scale(.97);
-}
+.action:active{transform:scale(.97)}
 
 .action-icon{
     width:39px;
@@ -425,9 +399,7 @@ body.dark .app-header{
     font-weight:700;
 }
 
-/* =========================
-   TRANSACTIONS
-========================= */
+/* TRANSACTIONS */
 
 .list{
     display:flex;
@@ -478,13 +450,8 @@ body.dark .app-header{
     font-weight:800;
 }
 
-.amount-positive{
-    color:var(--success);
-}
-
-.amount-negative{
-    color:var(--danger);
-}
+.amount-positive{color:var(--success)}
+.amount-negative{color:var(--danger)}
 
 .empty{
     text-align:center;
@@ -493,17 +460,14 @@ body.dark .app-header{
     font-size:13px;
 }
 
-/* =========================
-   CARD
-========================= */
+/* CARD */
 
 .dalzon-card{
     min-height:215px;
     border-radius:27px;
     padding:24px;
-    color:white;
-    background:
-        linear-gradient(135deg,#10151c,#28313c);
+    color:#fff;
+    background:linear-gradient(135deg,#10151c,#28313c);
     position:relative;
     overflow:hidden;
     box-shadow:0 20px 45px rgba(0,0,0,.22);
@@ -574,9 +538,7 @@ body.dark .app-header{
     font-weight:700;
 }
 
-/* =========================
-   PROFILE
-========================= */
+/* PROFILE */
 
 .profile-card{
     border:1px solid var(--border);
@@ -619,18 +581,15 @@ body.dark .app-header{
 .profile-row{
     display:flex;
     justify-content:space-between;
+    gap:15px;
     padding:13px 0;
     border-top:1px solid var(--border);
     font-size:13px;
 }
 
-.profile-row span:first-child{
-    color:var(--muted);
-}
+.profile-row span:first-child{color:var(--muted)}
 
-/* =========================
-   ADMIN
-========================= */
+/* ADMIN */
 
 .admin-card{
     border:1px solid var(--border);
@@ -645,9 +604,7 @@ body.dark .app-header{
     border-bottom:1px solid var(--border);
 }
 
-.admin-user:last-child{
-    border-bottom:none;
-}
+.admin-user:last-child{border-bottom:none}
 
 .admin-user-head{
     display:flex;
@@ -687,9 +644,7 @@ body.dark .app-header{
     color:var(--danger);
 }
 
-/* =========================
-   BOTTOM NAV
-========================= */
+/* NAV */
 
 .bottom-nav{
     position:fixed;
@@ -733,9 +688,7 @@ body.dark .bottom-nav{
     font-weight:700;
 }
 
-.nav-btn.active{
-    color:var(--text);
-}
+.nav-btn.active{color:var(--text)}
 
 .nav-btn.active .nav-icon{
     background:var(--surface2);
@@ -749,9 +702,7 @@ body.dark .bottom-nav{
     place-items:center;
 }
 
-/* =========================
-   TOAST
-========================= */
+/* TOAST */
 
 .toast{
     position:fixed;
@@ -759,7 +710,7 @@ body.dark .bottom-nav{
     bottom:92px;
     transform:translate(-50%,20px);
     background:#111827;
-    color:white;
+    color:#fff;
     padding:12px 17px;
     border-radius:13px;
     font-size:12px;
@@ -775,61 +726,33 @@ body.dark .bottom-nav{
     transform:translate(-50%,0);
 }
 
-/* =========================
-   ANIMATIONS
-========================= */
+/* ANIMATIONS */
 
 @keyframes appear{
-    from{
-        opacity:0;
-        transform:translateY(15px);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
+    from{opacity:0;transform:translateY(15px)}
+    to{opacity:1;transform:none}
 }
 
 @keyframes pageIn{
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:none}
 }
 
 @media(max-width:360px){
-
-    .auth-card{
-        padding:22px;
-    }
-
-    .balance-total{
-        font-size:27px;
-    }
-
-    .card-number{
-        font-size:17px;
-    }
+    .auth-card{padding:22px}
+    .balance-total{font-size:27px}
+    .card-number{font-size:17px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ==================================================
-     AUTHENTIFICATION
-================================================== -->
-
 <section class="auth-screen" id="authScreen">
 
     <div class="auth-card">
 
         <div class="brand">
-
             <div class="brand-mark">
                 <svg class="icon" viewBox="0 0 24 24" fill="none">
                     <rect x="3" y="5" width="18" height="14" rx="3"/>
@@ -842,90 +765,52 @@ body.dark .bottom-nav{
                 <div class="brand-name">DALZON</div>
                 <div class="brand-sub">Wallet</div>
             </div>
-
         </div>
 
-        <h1 class="auth-title" id="authTitle">
-            Connexion
-        </h1>
+        <h1 class="auth-title" id="authTitle">Connexion</h1>
 
         <p class="auth-description" id="authDescription">
             Accédez à votre espace DALZON.
         </p>
 
-        <div
-            class="auth-error"
-            id="authError">
-        </div>
+        <div class="auth-error" id="authError"></div>
 
-        <div
-            class="field"
-            id="nameField"
-            style="display:none">
-
+        <div class="field" id="nameField" style="display:none">
             <label>Nom complet</label>
-
-            <input
-                type="text"
-                id="nameInput"
-                placeholder="Votre nom">
+            <input type="text" id="nameInput" placeholder="Votre nom">
         </div>
 
         <div class="field">
-
             <label>Email</label>
-
-            <input
-                type="email"
-                id="emailInput"
-                placeholder="exemple@email.com"
-                autocomplete="email">
+            <input type="email" id="emailInput"
+                   placeholder="exemple@email.com"
+                   autocomplete="email">
         </div>
 
         <div class="field">
-
             <label>Mot de passe</label>
-
-            <input
-                type="password"
-                id="passwordInput"
-                placeholder="Votre mot de passe"
-                autocomplete="current-password">
+            <input type="password" id="passwordInput"
+                   placeholder="Votre mot de passe"
+                   autocomplete="current-password">
         </div>
 
-        <button
-            class="primary-btn"
-            id="authButton"
-            onclick="submitAuth()">
-
+        <button class="primary-btn" id="authButton" onclick="submitAuth()">
             Se connecter
-
         </button>
 
         <div class="auth-switch">
-
             <span id="switchText">
                 Vous n'avez pas encore de compte ?
             </span>
 
-            <button
-                onclick="toggleAuthMode()"
-                id="switchButton">
-
+            <button onclick="toggleAuthMode()" id="switchButton">
                 Créer un compte
-
             </button>
-
         </div>
 
     </div>
-
 </section>
 
-
-<!-- ==================================================
-     APPLICATION
-================================================== -->
 
 <div class="app" id="app">
 
@@ -933,7 +818,8 @@ body.dark .bottom-nav{
 
         <div class="header-left">
 
-            <div class="brand-mark" style="width:42px;height:42px;border-radius:13px">
+            <div class="brand-mark"
+                 style="width:42px;height:42px;border-radius:13px">
 
                 <svg class="icon" viewBox="0 0 24 24" fill="none">
                     <rect x="3" y="5" width="18" height="14" rx="3"/>
@@ -944,37 +830,20 @@ body.dark .bottom-nav{
             </div>
 
             <div>
-
-                <div
-                    class="header-title"
-                    id="headerName">
-                    DALZON
-                </div>
-
-                <div
-                    class="header-id"
-                    id="headerId">
-                    —
-                </div>
-
+                <div class="header-title" id="headerName">DALZON</div>
+                <div class="header-id" id="headerId">—</div>
             </div>
 
         </div>
 
         <div class="header-actions">
 
-            <button
-                class="circle-btn"
-                onclick="toggleTheme()"
-                aria-label="Changer le thème">
+            <button class="circle-btn"
+                    onclick="toggleTheme()"
+                    aria-label="Changer le thème">
 
-                <svg
-                    class="icon"
-                    viewBox="0 0 24 24"
-                    fill="none">
-
+                <svg class="icon" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="4"/>
-
                     <path d="M12 2v2"/>
                     <path d="M12 20v2"/>
                     <path d="m4.93 4.93 1.41 1.41"/>
@@ -983,7 +852,6 @@ body.dark .bottom-nav{
                     <path d="M20 12h2"/>
                     <path d="m6.34 17.66-1.41 1.41"/>
                     <path d="m19.07 4.93-1.41 1.41"/>
-
                 </svg>
 
             </button>
@@ -995,13 +863,7 @@ body.dark .bottom-nav{
 
     <main class="content">
 
-        <!-- =========================
-             ACCUEIL
-        ========================== -->
-
-        <section
-            class="page active"
-            id="homePage">
+        <section class="page active" id="homePage">
 
             <div class="section-title">
                 Vue d'ensemble
@@ -1013,40 +875,24 @@ body.dark .bottom-nav{
                     Solde total
                 </div>
 
-                <div
-                    class="balance-total"
-                    id="totalBalance">
-                    —
+                <div class="balance-total" id="totalBalance">
+                    $0.00
                 </div>
 
                 <div class="balance-grid">
 
                     <div class="currency-box">
-
-                        <div class="currency-label">
-                            CDF
-                        </div>
-
-                        <div
-                            class="currency-value"
-                            id="cdfBalance">
+                        <div class="currency-label">CDF</div>
+                        <div class="currency-value" id="cdfBalance">
                             0 CDF
                         </div>
-
                     </div>
 
                     <div class="currency-box">
-
-                        <div class="currency-label">
-                            USD
-                        </div>
-
-                        <div
-                            class="currency-value"
-                            id="usdBalance">
+                        <div class="currency-label">USD</div>
+                        <div class="currency-value" id="usdBalance">
                             $0.00
                         </div>
-
                     </div>
 
                 </div>
@@ -1056,22 +902,13 @@ body.dark .bottom-nav{
 
             <div class="actions">
 
-                <button
-                    class="action"
-                    onclick="openTransfer()">
+                <button class="action" onclick="openTransfer()">
 
                     <div class="action-icon">
-
-                        <svg
-                            class="icon"
-                            viewBox="0 0 24 24"
-                            fill="none">
-
+                        <svg class="icon" viewBox="0 0 24 24" fill="none">
                             <path d="M5 12h14"/>
                             <path d="m13 6 6 6-6 6"/>
-
                         </svg>
-
                     </div>
 
                     <span>Envoyer</span>
@@ -1079,22 +916,13 @@ body.dark .bottom-nav{
                 </button>
 
 
-                <button
-                    class="action"
-                    onclick="openReceive()">
+                <button class="action" onclick="openReceive()">
 
                     <div class="action-icon">
-
-                        <svg
-                            class="icon"
-                            viewBox="0 0 24 24"
-                            fill="none">
-
+                        <svg class="icon" viewBox="0 0 24 24" fill="none">
                             <path d="M12 5v14"/>
                             <path d="m18 13-6 6-6-6"/>
-
                         </svg>
-
                     </div>
 
                     <span>Recevoir</span>
@@ -1102,28 +930,13 @@ body.dark .bottom-nav{
                 </button>
 
 
-                <button
-                    class="action"
-                    onclick="openPayment()">
+                <button class="action" onclick="openPayment()">
 
                     <div class="action-icon">
-
-                        <svg
-                            class="icon"
-                            viewBox="0 0 24 24"
-                            fill="none">
-
-                            <rect
-                                x="3"
-                                y="5"
-                                width="18"
-                                height="14"
-                                rx="3"/>
-
+                        <svg class="icon" viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="5" width="18" height="14" rx="3"/>
                             <path d="M3 10h18"/>
-
                         </svg>
-
                     </div>
 
                     <span>Paiement</span>
@@ -1137,51 +950,31 @@ body.dark .bottom-nav{
                 Activité récente
             </div>
 
-            <div
-                class="list"
-                id="homeTransactions">
-
+            <div class="list" id="homeTransactions">
                 <div class="empty">
                     Aucune opération pour le moment.
                 </div>
-
             </div>
 
         </section>
 
 
-        <!-- =========================
-             ACTIVITÉ
-        ========================== -->
-
-        <section
-            class="page"
-            id="activityPage">
+        <section class="page" id="activityPage">
 
             <div class="section-title">
                 Activité
             </div>
 
-            <div
-                class="list"
-                id="transactionsList">
-
+            <div class="list" id="transactionsList">
                 <div class="empty">
                     Aucune opération.
                 </div>
-
             </div>
 
         </section>
 
 
-        <!-- =========================
-             CARTE
-        ========================== -->
-
-        <section
-            class="page"
-            id="cardPage">
+        <section class="page" id="cardPage">
 
             <div class="section-title">
                 Ma carte
@@ -1201,40 +994,20 @@ body.dark .bottom-nav{
 
                 </div>
 
-                <div
-                    class="card-number"
-                    id="cardNumber">
+                <div class="card-number" id="cardNumber">
                     DLZ •••• •••• ••••
                 </div>
 
                 <div class="card-bottom">
 
                     <div>
-
-                        <div class="card-small">
-                            TITULAIRE
-                        </div>
-
-                        <div
-                            class="card-value"
-                            id="cardHolder">
-                            —
-                        </div>
-
+                        <div class="card-small">TITULAIRE</div>
+                        <div class="card-value" id="cardHolder">—</div>
                     </div>
 
                     <div>
-
-                        <div class="card-small">
-                            EXP
-                        </div>
-
-                        <div
-                            class="card-value"
-                            id="cardExpiry">
-                            --/--
-                        </div>
-
+                        <div class="card-small">EXP</div>
+                        <div class="card-value" id="cardExpiry">--/--</div>
                     </div>
 
                 </div>
@@ -1244,23 +1017,13 @@ body.dark .bottom-nav{
             <div class="profile-card">
 
                 <div class="profile-row">
-
                     <span>Type</span>
-
-                    <strong>
-                        DALZON CARD
-                    </strong>
-
+                    <strong>DALZON CARD</strong>
                 </div>
 
                 <div class="profile-row">
-
                     <span>Statut</span>
-
-                    <strong>
-                        Active
-                    </strong>
-
+                    <strong>Active</strong>
                 </div>
 
             </div>
@@ -1268,13 +1031,7 @@ body.dark .bottom-nav{
         </section>
 
 
-        <!-- =========================
-             PROFIL
-        ========================== -->
-
-        <section
-            class="page"
-            id="profilePage">
+        <section class="page" id="profilePage">
 
             <div class="section-title">
                 Profil
@@ -1284,23 +1041,17 @@ body.dark .bottom-nav{
 
                 <div class="profile-head">
 
-                    <div
-                        class="profile-avatar"
-                        id="profileAvatar">
+                    <div class="profile-avatar" id="profileAvatar">
                         D
                     </div>
 
                     <div>
 
-                        <div
-                            class="profile-name"
-                            id="profileName">
+                        <div class="profile-name" id="profileName">
                             —
                         </div>
 
-                        <div
-                            class="profile-email"
-                            id="profileEmail">
+                        <div class="profile-email" id="profileEmail">
                             —
                         </div>
 
@@ -1309,49 +1060,29 @@ body.dark .bottom-nav{
                 </div>
 
                 <div class="profile-row">
-
                     <span>Identifiant</span>
-
-                    <strong id="profileId">
-                        —
-                    </strong>
-
+                    <strong id="profileId">—</strong>
                 </div>
 
                 <div class="profile-row">
-
                     <span>Statut</span>
-
-                    <strong id="profileStatus">
-                        —
-                    </strong>
-
+                    <strong id="profileStatus">—</strong>
                 </div>
 
                 <div class="profile-row">
-
                     <span>Type de compte</span>
-
-                    <strong id="profileRole">
-                        —
-                    </strong>
-
+                    <strong id="profileRole">—</strong>
                 </div>
 
             </div>
 
 
-            <div
-                class="profile-card"
-                id="adminEntry"
-                style="display:none">
+            <div class="profile-card"
+                 id="adminEntry"
+                 style="display:none">
 
-                <button
-                    class="primary-btn"
-                    onclick="openAdmin()">
-
+                <button class="primary-btn" onclick="openAdmin()">
                     Administration
-
                 </button>
 
             </div>
@@ -1359,12 +1090,8 @@ body.dark .bottom-nav{
 
             <div class="profile-card">
 
-                <button
-                    class="primary-btn"
-                    onclick="logout()">
-
+                <button class="primary-btn" onclick="logout()">
                     Se déconnecter
-
                 </button>
 
             </div>
@@ -1372,13 +1099,7 @@ body.dark .bottom-nav{
         </section>
 
 
-        <!-- =========================
-             ADMINISTRATION
-        ========================== -->
-
-        <section
-            class="page"
-            id="adminPage">
+        <section class="page" id="adminPage">
 
             <div class="section-title">
                 Administration
@@ -1388,18 +1109,13 @@ body.dark .bottom-nav{
 
                 <div class="section-title"
                      style="font-size:15px">
-
                     Utilisateurs
-
                 </div>
 
-                <div
-                    id="adminUsers">
-
+                <div id="adminUsers">
                     <div class="empty">
                         Chargement...
                     </div>
-
                 </div>
 
             </div>
@@ -1409,31 +1125,19 @@ body.dark .bottom-nav{
     </main>
 
 
-    <!-- =========================
-         NAVIGATION
-    ========================== -->
-
     <nav class="bottom-nav">
 
         <div class="nav-inner">
 
-            <button
-                class="nav-btn active"
-                onclick="navigate('homePage',this)">
+            <button class="nav-btn active"
+                    onclick="navigate('homePage',this)">
 
                 <div class="nav-icon">
-
-                    <svg
-                        class="icon"
-                        viewBox="0 0 24 24"
-                        fill="none">
-
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
                         <path d="m3 10 9-7 9 7"/>
                         <path d="M5 9v11h14V9"/>
                         <path d="M9 20v-6h6v6"/>
-
                     </svg>
-
                 </div>
 
                 <span>Accueil</span>
@@ -1441,23 +1145,15 @@ body.dark .bottom-nav{
             </button>
 
 
-            <button
-                class="nav-btn"
-                onclick="navigate('activityPage',this)">
+            <button class="nav-btn"
+                    onclick="navigate('activityPage',this)">
 
                 <div class="nav-icon">
-
-                    <svg
-                        class="icon"
-                        viewBox="0 0 24 24"
-                        fill="none">
-
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
                         <path d="M4 19V5"/>
                         <path d="M4 19h16"/>
                         <path d="m7 15 4-4 3 2 5-6"/>
-
                     </svg>
-
                 </div>
 
                 <span>Activité</span>
@@ -1465,29 +1161,15 @@ body.dark .bottom-nav{
             </button>
 
 
-            <button
-                class="nav-btn"
-                onclick="navigate('cardPage',this)">
+            <button class="nav-btn"
+                    onclick="navigate('cardPage',this)">
 
                 <div class="nav-icon">
-
-                    <svg
-                        class="icon"
-                        viewBox="0 0 24 24"
-                        fill="none">
-
-                        <rect
-                            x="3"
-                            y="5"
-                            width="18"
-                            height="14"
-                            rx="3"/>
-
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="5" width="18" height="14" rx="3"/>
                         <path d="M3 10h18"/>
                         <path d="M7 15h4"/>
-
                     </svg>
-
                 </div>
 
                 <span>Carte</span>
@@ -1495,27 +1177,14 @@ body.dark .bottom-nav{
             </button>
 
 
-            <button
-                class="nav-btn"
-                onclick="navigate('profilePage',this)">
+            <button class="nav-btn"
+                    onclick="navigate('profilePage',this)">
 
                 <div class="nav-icon">
-
-                    <svg
-                        class="icon"
-                        viewBox="0 0 24 24"
-                        fill="none">
-
-                        <circle
-                            cx="12"
-                            cy="8"
-                            r="4"/>
-
-                        <path
-                            d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
-
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
                     </svg>
-
                 </div>
 
                 <span>Profil</span>
@@ -1529,27 +1198,14 @@ body.dark .bottom-nav{
 </div>
 
 
-<div
-    class="toast"
-    id="toast">
-</div>
+<div class="toast" id="toast"></div>
 
 
 <script>
+
 /* =====================================================
    CONFIGURATION
 ===================================================== */
-
-/*
-   Quand le frontend et le backend seront hébergés
-   séparément, remplace cette valeur par l'adresse
-   publique du serveur backend.
-
-   Exemple :
-   https://api.ton-domaine.com
-
-   Pour le moment :
-*/
 
 const API_BASE = "https://dalzonmoney.onrender.com";
 
@@ -1596,17 +1252,14 @@ function toggleAuthMode(){
 
     if(authMode === "register"){
 
-        nameField.style.display =
-            "block";
+        nameField.style.display = "block";
 
-        title.textContent =
-            "Créer un compte";
+        title.textContent = "Créer un compte";
 
         description.textContent =
             "Créez votre espace personnel DALZON.";
 
-        button.textContent =
-            "Créer mon compte";
+        button.textContent = "Créer mon compte";
 
         switchText.textContent =
             "Vous avez déjà un compte ?";
@@ -1616,17 +1269,14 @@ function toggleAuthMode(){
 
     }else{
 
-        nameField.style.display =
-            "none";
+        nameField.style.display = "none";
 
-        title.textContent =
-            "Connexion";
+        title.textContent = "Connexion";
 
         description.textContent =
             "Accédez à votre espace DALZON.";
 
-        button.textContent =
-            "Se connecter";
+        button.textContent = "Se connecter";
 
         switchText.textContent =
             "Vous n'avez pas encore de compte ?";
@@ -1646,37 +1296,23 @@ async function submitAuth(){
     hideAuthError();
 
     const name =
-        document
-            .getElementById("nameInput")
-            .value
-            .trim();
+        document.getElementById("nameInput").value.trim();
 
     const email =
-        document
-            .getElementById("emailInput")
-            .value
-            .trim();
+        document.getElementById("emailInput").value.trim();
 
     const password =
-        document
-            .getElementById("passwordInput")
-            .value;
+        document.getElementById("passwordInput").value;
 
     if(authMode === "register" && !name){
 
-        showAuthError(
-            "Veuillez entrer votre nom."
-        );
-
+        showAuthError("Veuillez entrer votre nom.");
         return;
     }
 
     if(!email || !password){
 
-        showAuthError(
-            "Veuillez remplir tous les champs."
-        );
-
+        showAuthError("Veuillez remplir tous les champs.");
         return;
     }
 
@@ -1687,27 +1323,20 @@ async function submitAuth(){
 
     const body =
         authMode === "register"
-            ? {
-                name,
-                email,
-                password
-            }
-            : {
-                email,
-                password
-            };
+            ? {name,email,password}
+            : {email,password};
 
     const button =
-        document.getElementById(
-            "authButton"
-        );
+        document.getElementById("authButton");
 
     const oldText =
         button.textContent;
 
     button.disabled = true;
     button.textContent =
-        "Connexion...";
+        authMode === "register"
+            ? "Création..."
+            : "Connexion...";
 
     try{
 
@@ -1716,12 +1345,10 @@ async function submitAuth(){
                 API_BASE + endpoint,
                 {
                     method:"POST",
-
                     headers:{
                         "Content-Type":
                             "application/json"
                     },
-
                     body:
                         JSON.stringify(body)
                 }
@@ -1738,16 +1365,9 @@ async function submitAuth(){
             );
         }
 
-        /*
-          Le token sert uniquement à
-          authentifier les requêtes.
-        */
+        authToken = data.token;
 
-        authToken =
-            data.token;
-
-        currentUser =
-            data.user;
+        currentUser = data.user;
 
         showApp();
 
@@ -1761,8 +1381,61 @@ async function submitAuth(){
     }finally{
 
         button.disabled = false;
-        button.textContent =
-            oldText;
+        button.textContent = oldText;
+    }
+}
+
+
+/* =====================================================
+   CHARGEMENT DU COMPTE SERVEUR
+===================================================== */
+
+async function loadAccount(){
+
+    if(!authToken){
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE + "/api/account",
+                {
+                    method:"GET",
+                    headers:{
+                        "Authorization":
+                            "Bearer " + authToken
+                    }
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Impossible de charger le compte."
+            );
+        }
+
+        currentUser = data.user;
+
+        renderUser(currentUser);
+
+    }catch(error){
+
+        console.error(
+            "Erreur compte:",
+            error
+        );
+
+        showToast(
+            error.message ||
+            "Impossible de charger le compte."
+        );
     }
 }
 
@@ -1771,24 +1444,20 @@ async function submitAuth(){
    APPLICATION
 ===================================================== */
 
-function showApp(){
+async function showApp(){
 
-    document
-        .getElementById("authScreen")
+    document.getElementById("authScreen")
         .style.display = "none";
 
-    document
-        .getElementById("app")
+    document.getElementById("app")
         .style.display = "block";
-
-    renderUser(currentUser);
 
     navigate(
         "homePage",
-        document.querySelector(
-            ".nav-btn"
-        )
+        document.querySelector(".nav-btn")
     );
+
+    await loadAccount();
 }
 
 
@@ -1800,133 +1469,89 @@ function renderUser(user){
 
     if(!user) return;
 
-    document.getElementById(
-        "headerName"
-    ).textContent =
-        user.name;
+    document.getElementById("headerName")
+        .textContent = user.name || "DALZON";
 
-    document.getElementById(
-        "headerId"
-    ).textContent =
-        user.id;
+    document.getElementById("headerId")
+        .textContent = user.id || "—";
 
 
     const cdf =
-        Number(
-            user.wallet?.CDF || 0
-        );
+        Number(user.wallet?.CDF || 0);
 
     const usd =
-        Number(
-            user.wallet?.USD || 0
-        );
+        Number(user.wallet?.USD || 0);
 
 
-    document.getElementById(
-        "cdfBalance"
-    ).textContent =
-        formatCDF(cdf);
+    document.getElementById("cdfBalance")
+        .textContent = formatCDF(cdf);
 
-    document.getElementById(
-        "usdBalance"
-    ).textContent =
-        formatUSD(usd);
+    document.getElementById("usdBalance")
+        .textContent = formatUSD(usd);
 
 
-    /*
-       On affiche séparément CDF/USD.
-       Il n'y a volontairement pas de
-       conversion automatique entre les deux
-       devises.
-    */
+    document.getElementById("totalBalance")
+        .textContent = formatUSD(usd);
 
-    document.getElementById(
-        "totalBalance"
-    ).textContent =
-        formatUSD(usd);
-
-
-    /* CARTE */
 
     if(user.card){
 
-        document.getElementById(
-            "cardNumber"
-        ).textContent =
-            user.card.number;
+        document.getElementById("cardNumber")
+            .textContent =
+            user.card.number || "DLZ •••• •••• ••••";
 
-        document.getElementById(
-            "cardExpiry"
-        ).textContent =
-            user.card.expiry;
+        document.getElementById("cardExpiry")
+            .textContent =
+            user.card.expiry || "--/--";
     }
 
-    document.getElementById(
-        "cardHolder"
-    ).textContent =
-        user.name
-            .toUpperCase();
+    document.getElementById("cardHolder")
+        .textContent =
+        (user.name || "DALZON").toUpperCase();
 
 
-    /* PROFIL */
+    document.getElementById("profileName")
+        .textContent = user.name || "—";
 
-    document.getElementById(
-        "profileName"
-    ).textContent =
-        user.name;
+    document.getElementById("profileEmail")
+        .textContent = user.email || "—";
 
-    document.getElementById(
-        "profileEmail"
-    ).textContent =
-        user.email;
+    document.getElementById("profileId")
+        .textContent = user.id || "—";
 
-    document.getElementById(
-        "profileId"
-    ).textContent =
-        user.id;
-
-    document.getElementById(
-        "profileStatus"
-    ).textContent =
+    document.getElementById("profileStatus")
+        .textContent =
         user.status === "active"
             ? "Actif"
             : "Bloqué";
 
-    document.getElementById(
-        "profileRole"
-    ).textContent =
+    document.getElementById("profileRole")
+        .textContent =
         user.role === "admin"
             ? "Administrateur"
             : "Utilisateur";
 
 
     const firstLetter =
-        user.name
+        (user.name || "D")
             .trim()
             .charAt(0)
             .toUpperCase();
 
-    document.getElementById(
-        "profileAvatar"
-    ).textContent =
+    document.getElementById("profileAvatar")
+        .textContent =
         firstLetter || "D";
 
 
-    /* ADMIN */
-
     if(user.role === "admin"){
 
-        document.getElementById(
-            "adminEntry"
-        ).style.display =
-            "block";
+        document.getElementById("adminEntry")
+            .style.display = "block";
 
     }else{
 
-        document.getElementById(
-            "adminEntry"
-        ).style.display =
-            "none";
+        document.getElementById("adminEntry")
+            .style.display = "none";
     }
 
 
@@ -1940,17 +1565,11 @@ function renderUser(user){
    TRANSACTIONS
 ===================================================== */
 
-function renderTransactions(
-    transactions
-){
+function renderTransactions(transactions){
 
     const containers = [
-        document.getElementById(
-            "homeTransactions"
-        ),
-        document.getElementById(
-            "transactionsList"
-        )
+        document.getElementById("homeTransactions"),
+        document.getElementById("transactionsList")
     ];
 
     containers.forEach(container => {
@@ -1977,34 +1596,24 @@ function renderTransactions(
 
             const amount =
                 transaction.currency === "USD"
-                    ? formatUSD(
-                        transaction.amount
-                    )
-                    : formatCDF(
-                        transaction.amount
-                    );
+                    ? formatUSD(transaction.amount)
+                    : formatCDF(transaction.amount);
 
             const sign =
-                positive
-                    ? "+"
-                    : "-";
+                positive ? "+" : "-";
 
             const element =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
-            element.className =
-                "transaction";
+            element.className = "transaction";
 
             element.innerHTML = `
 
                 <div class="transaction-icon">
 
-                    <svg
-                        class="icon"
-                        viewBox="0 0 24 24"
-                        fill="none">
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none">
 
                         ${
                             positive
@@ -2026,8 +1635,8 @@ function renderTransactions(
 
                     <div class="transaction-title">
                         ${escapeHTML(
-                            transaction.description
-                            || "Opération"
+                            transaction.description ||
+                            "Opération"
                         )}
                     </div>
 
@@ -2051,9 +1660,7 @@ function renderTransactions(
                 </div>
             `;
 
-            container.appendChild(
-                element
-            );
+            container.appendChild(element);
         });
     });
 }
@@ -2063,47 +1670,27 @@ function renderTransactions(
    NAVIGATION
 ===================================================== */
 
-function navigate(
-    pageId,
-    button
-){
+function navigate(pageId,button){
 
-    document
-        .querySelectorAll(".page")
+    document.querySelectorAll(".page")
         .forEach(page => {
-
-            page.classList.remove(
-                "active"
-            );
+            page.classList.remove("active");
         });
 
     const page =
-        document.getElementById(
-            pageId
-        );
+        document.getElementById(pageId);
 
     if(page){
-
-        page.classList.add(
-            "active"
-        );
+        page.classList.add("active");
     }
 
-
-    document
-        .querySelectorAll(".nav-btn")
+    document.querySelectorAll(".nav-btn")
         .forEach(btn => {
-
-            btn.classList.remove(
-                "active"
-            );
+            btn.classList.remove("active");
         });
 
     if(button){
-
-        button.classList.add(
-            "active"
-        );
+        button.classList.add("active");
     }
 
     window.scrollTo({
@@ -2131,17 +1718,12 @@ async function openAdmin(){
         return;
     }
 
-    document
-        .querySelectorAll(".page")
+    document.querySelectorAll(".page")
         .forEach(page => {
-
-            page.classList.remove(
-                "active"
-            );
+            page.classList.remove("active");
         });
 
-    document
-        .getElementById("adminPage")
+    document.getElementById("adminPage")
         .classList.add("active");
 
     await loadAdminUsers();
@@ -2151,9 +1733,7 @@ async function openAdmin(){
 async function loadAdminUsers(){
 
     const container =
-        document.getElementById(
-            "adminUsers"
-        );
+        document.getElementById("adminUsers");
 
     container.innerHTML = `
         <div class="empty">
@@ -2165,13 +1745,11 @@ async function loadAdminUsers(){
 
         const response =
             await fetch(
-                API_BASE +
-                "/api/admin/users",
+                API_BASE + "/api/admin/users",
                 {
                     headers:{
                         Authorization:
-                            "Bearer " +
-                            authToken
+                            "Bearer " + authToken
                     }
                 }
             );
@@ -2203,12 +1781,9 @@ async function loadAdminUsers(){
         data.users.forEach(user => {
 
             const item =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
-            item.className =
-                "admin-user";
+            item.className = "admin-user";
 
             item.innerHTML = `
 
@@ -2217,15 +1792,11 @@ async function loadAdminUsers(){
                     <div>
 
                         <div class="admin-user-name">
-                            ${escapeHTML(
-                                user.name
-                            )}
+                            ${escapeHTML(user.name)}
                         </div>
 
                         <div class="admin-user-id">
-                            ${escapeHTML(
-                                user.id
-                            )}
+                            ${escapeHTML(user.id)}
                         </div>
 
                     </div>
@@ -2250,32 +1821,24 @@ async function loadAdminUsers(){
                 <div class="admin-balances">
 
                     <span>
-                        ${formatCDF(
-                            user.wallet.CDF
-                        )}
+                        ${formatCDF(user.wallet.CDF)}
                     </span>
 
                     <span>
-                        ${formatUSD(
-                            user.wallet.USD
-                        )}
+                        ${formatUSD(user.wallet.USD)}
                     </span>
 
                 </div>
             `;
 
-            container.appendChild(
-                item
-            );
+            container.appendChild(item);
         });
 
     }catch(error){
 
         container.innerHTML = `
             <div class="empty">
-                ${escapeHTML(
-                    error.message
-                )}
+                ${escapeHTML(error.message)}
             </div>
         `;
     }
@@ -2314,27 +1877,16 @@ function openPayment(){
 
 function toggleTheme(){
 
-    document.body.classList.toggle(
-        "dark"
-    );
+    document.body.classList.toggle("dark");
 
     const dark =
-        document.body.classList.contains(
-            "dark"
-        );
-
-    /*
-       Seul le thème est conservé localement.
-       Aucun compte, solde ou transaction.
-    */
+        document.body.classList.contains("dark");
 
     try{
 
         localStorage.setItem(
             "dalzon_theme",
-            dark
-                ? "dark"
-                : "light"
+            dark ? "dark" : "light"
         );
 
     }catch(error){}
@@ -2346,15 +1898,11 @@ function loadTheme(){
     try{
 
         const theme =
-            localStorage.getItem(
-                "dalzon_theme"
-            );
+            localStorage.getItem("dalzon_theme");
 
         if(theme === "dark"){
 
-            document.body.classList.add(
-                "dark"
-            );
+            document.body.classList.add("dark");
         }
 
     }catch(error){}
@@ -2367,24 +1915,16 @@ function loadTheme(){
 
 function logout(){
 
-    /*
-       Le token est uniquement conservé
-       en mémoire pendant cette session.
-    */
-
     authToken = null;
     currentUser = null;
 
-    document
-        .getElementById("app")
+    document.getElementById("app")
         .style.display = "none";
 
-    document
-        .getElementById("authScreen")
+    document.getElementById("authScreen")
         .style.display = "flex";
 
-    document
-        .getElementById("passwordInput")
+    document.getElementById("passwordInput")
         .value = "";
 
     showToast(
@@ -2399,11 +1939,8 @@ function logout(){
 
 function formatCDF(amount){
 
-    return new Intl.NumberFormat(
-        "fr-FR"
-    ).format(
-        Number(amount || 0)
-    ) + " CDF";
+    return new Intl.NumberFormat("fr-FR")
+        .format(Number(amount || 0)) + " CDF";
 }
 
 
@@ -2415,9 +1952,7 @@ function formatUSD(amount){
             style:"currency",
             currency:"USD"
         }
-    ).format(
-        Number(amount || 0)
-    );
+    ).format(Number(amount || 0));
 }
 
 
@@ -2425,15 +1960,9 @@ function formatDate(value){
 
     if(!value) return "—";
 
-    const date =
-        new Date(value);
+    const date = new Date(value);
 
-    if(
-        Number.isNaN(
-            date.getTime()
-        )
-    ){
-
+    if(Number.isNaN(date.getTime())){
         return value;
     }
 
@@ -2468,29 +1997,20 @@ function escapeHTML(value){
 function showAuthError(message){
 
     const error =
-        document.getElementById(
-            "authError"
-        );
+        document.getElementById("authError");
 
-    error.textContent =
-        message;
-
-    error.style.display =
-        "block";
+    error.textContent = message;
+    error.style.display = "block";
 }
 
 
 function hideAuthError(){
 
     const error =
-        document.getElementById(
-            "authError"
-        );
+        document.getElementById("authError");
 
     error.textContent = "";
-
-    error.style.display =
-        "none";
+    error.style.display = "none";
 }
 
 
@@ -2499,27 +2019,18 @@ let toastTimer;
 function showToast(message){
 
     const toast =
-        document.getElementById(
-            "toast"
-        );
+        document.getElementById("toast");
 
-    toast.textContent =
-        message;
+    toast.textContent = message;
 
-    toast.classList.add(
-        "show"
-    );
+    toast.classList.add("show");
 
-    clearTimeout(
-        toastTimer
-    );
+    clearTimeout(toastTimer);
 
     toastTimer =
         setTimeout(() => {
 
-            toast.classList.remove(
-                "show"
-            );
+            toast.classList.remove("show");
 
         },2500);
 }
