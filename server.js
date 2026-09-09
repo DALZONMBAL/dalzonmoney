@@ -1,2329 +1,2005 @@
 "use strict";
 
-/*
-============================================================
- DALZON WALLET v2.2
- Backend — Express + SQLite + JWT
- Simulation éducative CDF / USD
-============================================================
-*/
-
 const express = require("express");
 const Database = require("better-sqlite3");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const path = require("path");
 
 /* =========================================================
-   CONFIGURATION
-========================================================= */
+   DALZON WALLET
+   SERVER v3.0
+   Création du premier administrateur depuis l'application
+   ========================================================= */
 
 const app = express();
 
-const PORT =
-    Number(process.env.PORT) || 3000;
+const PORT = process.env.PORT || 3000;
 
 const JWT_SECRET =
-    process.env.JWT_SECRET ||
-    "DALZON_WALLET_CHANGE_THIS_SECRET_2026";
-
-const JWT_EXPIRES =
-    process.env.JWT_EXPIRES ||
-    "7d";
+  process.env.JWT_SECRET ||
+  "CHANGE-ME-DALZON-WALLET-JWT-SECRET";
 
 const DB_PATH =
-    process.env.DB_PATH ||
-    path.join(__dirname, "dalzon.db");
-
+  process.env.DB_PATH || "./dalzon.db";
 
 /* =========================================================
-   EXPRESS
-========================================================= */
+   MIDDLEWARE
+   ========================================================= */
 
-app.disable("x-powered-by");
+app.use(express.json({ limit: "1mb" }));
 
-app.use(
-    express.json({
-        limit: "100kb"
-    })
-);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
 
-app.use(
-    express.urlencoded({
-        extended: false,
-        limit: "100kb"
-    })
-);
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
 
-
-/* =========================================================
-   CORS
-========================================================= */
-
-app.use(
-    (req, res, next) => {
-
-        res.setHeader(
-            "Access-Control-Allow-Origin",
-            "*"
-        );
-
-        res.setHeader(
-            "Access-Control-Allow-Methods",
-            "GET,POST,PUT,PATCH,DELETE,OPTIONS"
-        );
-
-        res.setHeader(
-            "Access-Control-Allow-Headers",
-            "Content-Type, Authorization"
-        );
-
-        if(req.method === "OPTIONS"){
-            return res.sendStatus(204);
-        }
-
-        next();
-    }
-);
-
+  next();
+});
 
 /* =========================================================
-   SQLITE
-========================================================= */
+   DATABASE
+   ========================================================= */
 
-const db =
-    new Database(DB_PATH);
+const db = new Database(DB_PATH);
 
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
-db.pragma("busy_timeout = 5000");
-
 
 /* =========================================================
    TABLES
-========================================================= */
+   ========================================================= */
 
 db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'user',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
 
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+  CREATE TABLE IF NOT EXISTS wallets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER UNIQUE NOT NULL,
+    cdf INTEGER NOT NULL DEFAULT 0,
+    usd_cents INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY (user_id)
+      REFERENCES users(id)
+      ON DELETE CASCADE
+  );
 
-        account_id TEXT NOT NULL UNIQUE,
+  CREATE TABLE IF NOT EXISTS cards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER UNIQUE NOT NULL,
+    card_number TEXT UNIQUE NOT NULL,
+    expiry TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active',
+    FOREIGN KEY (user_id)
+      REFERENCES users(id)
+      ON DELETE CASCADE
+  );
 
-        name TEXT NOT NULL,
-
-        email TEXT NOT NULL UNIQUE,
-
-        password_hash TEXT NOT NULL,
-
-        role TEXT NOT NULL DEFAULT 'user',
-
-        status TEXT NOT NULL DEFAULT 'active',
-
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-
-    );
-
-
-    CREATE TABLE IF NOT EXISTS wallets (
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        user_id INTEGER NOT NULL UNIQUE,
-
-        cdf INTEGER NOT NULL DEFAULT 0,
-
-        usd_cents INTEGER NOT NULL DEFAULT 0,
-
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY(user_id)
-            REFERENCES users(id)
-            ON DELETE CASCADE
-
-    );
-
-
-    CREATE TABLE IF NOT EXISTS cards (
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        user_id INTEGER NOT NULL UNIQUE,
-
-        card_number TEXT NOT NULL UNIQUE,
-
-        expiry TEXT NOT NULL,
-
-        status TEXT NOT NULL DEFAULT 'active',
-
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY(user_id)
-            REFERENCES users(id)
-            ON DELETE CASCADE
-
-    );
-
-
-    CREATE TABLE IF NOT EXISTS transactions (
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        user_id INTEGER NOT NULL,
-
-        type TEXT NOT NULL,
-
-        currency TEXT NOT NULL,
-
-        amount_cdf INTEGER NOT NULL DEFAULT 0,
-
-        amount_usd_cents INTEGER NOT NULL DEFAULT 0,
-
-        description TEXT,
-
-        reference TEXT,
-
-        related_user_id INTEGER,
-
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY(user_id)
-            REFERENCES users(id)
-            ON DELETE CASCADE,
-
-        FOREIGN KEY(related_user_id)
-            REFERENCES users(id)
-            ON DELETE SET NULL
-
-    );
-
-
-    CREATE INDEX IF NOT EXISTS
-        idx_transactions_user
-    ON transactions(user_id);
-
-
-    CREATE INDEX IF NOT EXISTS
-        idx_transactions_created
-    ON transactions(created_at);
-
-
-    CREATE INDEX IF NOT EXISTS
-        idx_users_account
-    ON users(account_id);
-
-
-    CREATE INDEX IF NOT EXISTS
-        idx_users_email
-    ON users(email);
+  CREATE TABLE IF NOT EXISTS transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    currency TEXT NOT NULL,
+    amount_cdf INTEGER DEFAULT 0,
+    amount_usd_cents INTEGER DEFAULT 0,
+    description TEXT,
+    reference TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id)
+      REFERENCES users(id)
+      ON DELETE CASCADE
+  );
 `);
 
-
 /* =========================================================
-   MIGRATION DE SÉCURITÉ
-========================================================= */
+   HELPERS
+   ========================================================= */
 
-/*
- Si une ancienne version utilisait amount_usd,
- on ne la lit jamais.
- La v2.2 utilise uniquement :
+function generateAccountId() {
+  let accountId;
 
- amount_cdf
- amount_usd_cents
-*/
+  do {
+    const year = new Date().getFullYear();
 
+    accountId =
+      `DLZ-${year}-` +
+      crypto.randomInt(100000, 1000000);
 
-/* =========================================================
-   OUTILS
-========================================================= */
+  } while (
+    db.prepare(
+      "SELECT id FROM users WHERE account_id = ?"
+    ).get(accountId)
+  );
 
-function cleanText(
-    value,
-    maxLength = 200
-){
-
-    if(value === undefined || value === null){
-        return "";
-    }
-
-    return String(value)
-        .trim()
-        .slice(0, maxLength);
+  return accountId;
 }
 
+function generateCardNumber() {
+  let cardNumber;
 
-function normalizeEmail(email){
+  do {
+    const p1 = crypto.randomInt(1000, 10000);
+    const p2 = crypto.randomInt(1000, 10000);
+    const p3 = crypto.randomInt(1000, 10000);
+    const p4 = crypto.randomInt(1000, 10000);
 
-    return cleanText(
-        email,
-        160
-    ).toLowerCase();
+    cardNumber =
+      `${p1} ${p2} ${p3} ${p4}`;
+
+  } while (
+    db.prepare(
+      "SELECT id FROM cards WHERE card_number = ?"
+    ).get(cardNumber)
+  );
+
+  return cardNumber;
 }
 
+function generateExpiry() {
+  const date = new Date();
 
-function isValidEmail(email){
+  date.setFullYear(
+    date.getFullYear() + 4
+  );
 
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        .test(email);
+  const month =
+    String(date.getMonth() + 1)
+      .padStart(2, "0");
+
+  const year =
+    String(date.getFullYear())
+      .slice(-2);
+
+  return `${month}/${year}`;
 }
 
-
-function generateAccountId(){
-
-    let accountId;
-
-    do{
-
-        accountId =
-            "DLZ-" +
-            new Date().getFullYear() +
-            "-" +
-            crypto
-                .randomInt(
-                    100000,
-                    999999
-                );
-
-    }while(
-        db.prepare(`
-            SELECT id
-            FROM users
-            WHERE account_id = ?
-        `).get(accountId)
-    );
-
-    return accountId;
+function generateReference(prefix = "DLZ") {
+  return (
+    `${prefix}-` +
+    Date.now() +
+    "-" +
+    crypto.randomBytes(4)
+      .toString("hex")
+      .toUpperCase()
+  );
 }
 
-
-function generateCardNumber(){
-
-    let cardNumber;
-
-    do{
-
-        const a =
-            crypto.randomInt(
-                1000,
-                9999
-            );
-
-        const b =
-            crypto.randomInt(
-                1000,
-                9999
-            );
-
-        const c =
-            crypto.randomInt(
-                1000,
-                9999
-            );
-
-        cardNumber =
-            `DLZ ${a} ${b} ${c}`;
-
-    }while(
-        db.prepare(`
-            SELECT id
-            FROM cards
-            WHERE card_number = ?
-        `).get(cardNumber)
-    );
-
-    return cardNumber;
+function normalizeEmail(email) {
+  return String(email || "")
+    .trim()
+    .toLowerCase();
 }
 
-
-function generateExpiry(){
-
-    const now =
-        new Date();
-
-    const year =
-        now.getFullYear() + 4;
-
-    const month =
-        String(
-            now.getMonth() + 1
-        ).padStart(2,"0");
-
-    return `${month}/${String(year).slice(-2)}`;
+function cleanName(name) {
+  return String(name || "")
+    .trim()
+    .replace(/\s+/g, " ");
 }
 
-
-/*
- USD :
-
- frontend envoie par exemple :
-
- 25.50
-
- serveur convertit :
-
- 2550 cents
-*/
-
-function usdToCents(value){
-
-    const number =
-        Number(value);
-
-    if(
-        !Number.isFinite(number) ||
-        number <= 0
-    ){
-        return null;
-    }
-
-    const cents =
-        Math.round(
-            number * 100
-        );
-
-    if(cents <= 0){
-        return null;
-    }
-
-    return cents;
+function isPositiveInteger(value) {
+  return (
+    Number.isInteger(value) &&
+    value > 0
+  );
 }
 
-
-/*
- CDF :
-
- on travaille avec des nombres entiers.
-*/
-
-function cdfAmount(value){
-
-    const number =
-        Number(value);
-
-    if(
-        !Number.isFinite(number) ||
-        number <= 0
-    ){
-        return null;
-    }
-
-    const amount =
-        Math.round(number);
-
-    if(amount <= 0){
-        return null;
-    }
-
-    return amount;
+function isValidMoney(value) {
+  return (
+    Number.isInteger(value) &&
+    value > 0
+  );
 }
 
+function publicUser(user) {
+  if (!user) return null;
 
-function normalizeCurrency(currency){
-
-    const value =
-        String(
-            currency || ""
-        )
-        .trim()
-        .toUpperCase();
-
-    if(
-        value !== "CDF" &&
-        value !== "USD"
-    ){
-        return null;
-    }
-
-    return value;
+  return {
+    id: user.id,
+    account_id: user.account_id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    status: user.status,
+    created_at: user.created_at
+  };
 }
 
+function getUserById(id) {
+  return db.prepare(`
+    SELECT *
+    FROM users
+    WHERE id = ?
+  `).get(id);
+}
 
-/* =========================================================
-   JWT
-========================================================= */
+function getWallet(userId) {
+  return db.prepare(`
+    SELECT *
+    FROM wallets
+    WHERE user_id = ?
+  `).get(userId);
+}
 
-function createToken(user){
+function getCard(userId) {
+  return db.prepare(`
+    SELECT *
+    FROM cards
+    WHERE user_id = ?
+  `).get(userId);
+}
 
-    return jwt.sign(
-        {
-            id: user.id,
-            account_id: user.account_id,
-            role: user.role
-        },
-        JWT_SECRET,
-        {
-            expiresIn: JWT_EXPIRES
+function getAccountData(userId) {
+  const user = getUserById(userId);
+
+  if (!user) {
+    return null;
+  }
+
+  const wallet = getWallet(userId);
+  const card = getCard(userId);
+
+  return {
+    id: user.id,
+    account_id: user.account_id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    status: user.status,
+    created_at: user.created_at,
+
+    wallet: {
+      CDF: wallet ? wallet.cdf : 0,
+      USD: wallet
+        ? wallet.usd_cents / 100
+        : 0
+    },
+
+    card: card
+      ? {
+          id: card.id,
+          number: card.card_number,
+          expiry: card.expiry,
+          status: card.status
         }
-    );
+      : null
+  };
 }
-
 
 /* =========================================================
-   AUTH MIDDLEWARE
-========================================================= */
+   AUTHENTICATION
+   ========================================================= */
 
-function authenticate(
-    req,
-    res,
-    next
-){
-
-    const header =
-        req.headers.authorization || "";
-
-    if(
-        !header.startsWith("Bearer ")
-    ){
-
-        return res.status(401).json({
-            error:
-                "Authentification requise."
-        });
+function createToken(user) {
+  return jwt.sign(
+    {
+      id: user.id,
+      role: user.role,
+      account_id: user.account_id
+    },
+    JWT_SECRET,
+    {
+      expiresIn: "30d"
     }
-
-    const token =
-        header.slice(7).trim();
-
-    if(!token){
-
-        return res.status(401).json({
-            error:
-                "Session invalide."
-        });
-    }
-
-    try{
-
-        const decoded =
-            jwt.verify(
-                token,
-                JWT_SECRET
-            );
-
-        const user =
-            db.prepare(`
-                SELECT
-                    id,
-                    account_id,
-                    name,
-                    email,
-                    role,
-                    status,
-                    created_at
-                FROM users
-                WHERE id = ?
-            `).get(decoded.id);
-
-        if(!user){
-
-            return res.status(401).json({
-                error:
-                    "Compte introuvable."
-            });
-        }
-
-        if(
-            user.status !== "active"
-        ){
-
-            return res.status(403).json({
-                error:
-                    "Votre compte est bloqué."
-            });
-        }
-
-        req.user = user;
-
-        next();
-
-    }catch(error){
-
-        return res.status(401).json({
-            error:
-                "Session invalide ou expirée."
-        });
-    }
+  );
 }
 
+function authenticateToken(req, res, next) {
+  const header =
+    req.headers.authorization || "";
 
-/* =========================================================
-   ADMIN MIDDLEWARE
-========================================================= */
+  if (!header.startsWith("Bearer ")) {
+    return res.status(401).json({
+      ok: false,
+      message: "Authentification requise."
+    });
+  }
 
-function requireAdmin(
-    req,
-    res,
-    next
-){
+  const token =
+    header.substring(7);
 
-    if(
-        !req.user ||
-        req.user.role !== "admin"
-    ){
-
-        return res.status(403).json({
-            error:
-                "Accès administrateur refusé."
-        });
-    }
-
-    next();
-}
-
-
-/* =========================================================
-   WALLET
-========================================================= */
-
-function getWallet(
-    userId
-){
-
-    return db.prepare(`
-        SELECT
-            cdf,
-            usd_cents
-        FROM wallets
-        WHERE user_id = ?
-    `).get(userId);
-}
-
-
-function getCard(
-    userId
-){
-
-    return db.prepare(`
-        SELECT
-            card_number,
-            expiry,
-            status
-        FROM cards
-        WHERE user_id = ?
-    `).get(userId);
-}
-
-
-/* =========================================================
-   UTILISATEUR POUR FRONTEND
-========================================================= */
-
-function publicUser(
-    userId
-){
+  try {
+    const decoded =
+      jwt.verify(token, JWT_SECRET);
 
     const user =
-        db.prepare(`
-            SELECT
-                id,
-                account_id,
-                name,
-                email,
-                role,
-                status,
-                created_at
-            FROM users
-            WHERE id = ?
-        `).get(userId);
+      getUserById(decoded.id);
 
-    if(!user){
-        return null;
+    if (!user) {
+      return res.status(401).json({
+        ok: false,
+        message: "Compte introuvable."
+      });
     }
 
-    const wallet =
-        getWallet(userId);
+    if (user.status !== "active") {
+      return res.status(403).json({
+        ok: false,
+        message: "Ce compte est bloqué."
+      });
+    }
 
-    const card =
-        getCard(userId);
+    req.user = user;
 
-    return {
+    next();
 
-        id:
-            user.id,
-
-        account_id:
-            user.account_id,
-
-        name:
-            user.name,
-
-        email:
-            user.email,
-
-        role:
-            user.role,
-
-        status:
-            user.status,
-
-        created_at:
-            user.created_at,
-
-        wallet:{
-            CDF:
-                wallet
-                    ? wallet.cdf
-                    : 0,
-
-            USD:
-                wallet
-                    ? wallet.usd_cents / 100
-                    : 0
-        },
-
-        card:
-            card
-                ? {
-                    number:
-                        card.card_number,
-
-                    expiry:
-                        card.expiry,
-
-                    status:
-                        card.status
-                  }
-                : null
-    };
+  } catch (error) {
+    return res.status(401).json({
+      ok: false,
+      message: "Session invalide ou expirée."
+    });
+  }
 }
 
+function requireAdmin(req, res, next) {
+  if (!req.user) {
+    return res.status(401).json({
+      ok: false,
+      message: "Authentification requise."
+    });
+  }
+
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      ok: false,
+      message: "Accès administrateur refusé."
+    });
+  }
+
+  next();
+}
 
 /* =========================================================
-   HEALTH
-========================================================= */
+   ROOT / HEALTH
+   ========================================================= */
 
-app.get(
-    "/api/health",
-    (req,res) => {
+app.get("/", (req, res) => {
+  res.json({
+    ok: true,
+    name: "DALZON Wallet",
+    version: "3.0.0",
+    mode: "educational-simulation",
+    message: "DALZON Wallet API opérationnelle."
+  });
+});
 
-        res.json({
-
-            ok:true,
-
-            app:
-                "DALZON Wallet",
-
-            version:
-                "2.2",
-
-            mode:
-                "educational-simulation",
-
-            database:
-                "sqlite",
-
-            time:
-                new Date().toISOString()
-        });
-    }
-);
-
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "DALZON Wallet",
+    version: "3.0.0",
+    database: "connected",
+    time: new Date().toISOString()
+  });
+});
 
 /* =========================================================
-   ROOT
-========================================================= */
+   ADMIN SETUP
+   ========================================================= */
 
-app.get(
-    "/",
-    (req,res) => {
+/*
+  Vérifie si le premier administrateur existe déjà.
 
-        res.json({
+  Cette route est publique afin que l'application puisse
+  savoir si elle doit afficher l'écran de configuration.
+*/
 
-            app:
-                "DALZON Wallet",
+app.get("/api/setup/status", (req, res) => {
+  const admin =
+    db.prepare(`
+      SELECT id
+      FROM users
+      WHERE role = 'admin'
+      LIMIT 1
+    `).get();
 
-            version:
-                "2.2",
+  res.json({
+    ok: true,
+    adminExists: !!admin,
+    setupRequired: !admin
+  });
+});
 
-            status:
-                "online",
+/*
+  CRÉATION DU PREMIER ADMINISTRATEUR.
 
-            message:
-                "DALZON Wallet API opérationnelle."
-        });
+  Important :
+  - fonctionne uniquement s'il n'existe AUCUN admin ;
+  - la vérification + création se fait dans une transaction ;
+  - après création, cette route refuse toute nouvelle création.
+*/
+
+const createFirstAdmin = db.transaction(
+  ({
+    name,
+    email,
+    password
+  }) => {
+
+    const existingAdmin =
+      db.prepare(`
+        SELECT id
+        FROM users
+        WHERE role = 'admin'
+        LIMIT 1
+      `).get();
+
+    if (existingAdmin) {
+      throw new Error(
+        "ADMIN_ALREADY_EXISTS"
+      );
     }
+
+    const accountId =
+      generateAccountId();
+
+    const passwordHash =
+      bcrypt.hashSync(password, 12);
+
+    const result =
+      db.prepare(`
+        INSERT INTO users (
+          account_id,
+          name,
+          email,
+          password_hash,
+          role,
+          status
+        )
+        VALUES (?, ?, ?, ?, 'admin', 'active')
+      `).run(
+        accountId,
+        name,
+        email,
+        passwordHash
+      );
+
+    const userId =
+      result.lastInsertRowid;
+
+    db.prepare(`
+      INSERT INTO wallets (
+        user_id,
+        cdf,
+        usd_cents
+      )
+      VALUES (?, 0, 0)
+    `).run(userId);
+
+    db.prepare(`
+      INSERT INTO cards (
+        user_id,
+        card_number,
+        expiry,
+        status
+      )
+      VALUES (?, ?, ?, 'active')
+    `).run(
+      userId,
+      generateCardNumber(),
+      generateExpiry()
+    );
+
+    return getUserById(userId);
+  }
 );
 
+app.post("/api/setup/admin", (req, res) => {
+  const name =
+    cleanName(req.body.name);
 
-/* =========================================================
-   REGISTER
-========================================================= */
+  const email =
+    normalizeEmail(req.body.email);
 
-app.post(
-    "/api/auth/register",
-    async (req,res) => {
+  const password =
+    String(req.body.password || "");
 
-        try{
+  if (name.length < 2) {
+    return res.status(400).json({
+      ok: false,
+      message: "Le nom est invalide."
+    });
+  }
 
-            const name =
-                cleanText(
-                    req.body.name,
-                    100
-                );
+  if (
+    !email ||
+    !email.includes("@") ||
+    email.length < 5
+  ) {
+    return res.status(400).json({
+      ok: false,
+      message: "Adresse e-mail invalide."
+    });
+  }
 
-            const email =
-                normalizeEmail(
-                    req.body.email
-                );
+  if (password.length < 8) {
+    return res.status(400).json({
+      ok: false,
+      message:
+        "Le mot de passe doit contenir au moins 8 caractères."
+    });
+  }
 
-            const password =
-                String(
-                    req.body.password || ""
-                );
+  try {
+    const admin =
+      createFirstAdmin({
+        name,
+        email,
+        password
+      });
 
-            if(
-                !name ||
-                !email ||
-                !password
-            ){
+    const token =
+      createToken(admin);
 
-                return res.status(400).json({
-                    error:
-                        "Tous les champs sont obligatoires."
-                });
-            }
+    return res.status(201).json({
+      ok: true,
+      message:
+        "Administrateur créé avec succès.",
+      token,
+      user: getAccountData(admin.id)
+    });
 
-            if(
-                name.length < 2
-            ){
+  } catch (error) {
 
-                return res.status(400).json({
-                    error:
-                        "Nom invalide."
-                });
-            }
-
-            if(
-                !isValidEmail(email)
-            ){
-
-                return res.status(400).json({
-                    error:
-                        "Adresse email invalide."
-                });
-            }
-
-            if(
-                password.length < 6
-            ){
-
-                return res.status(400).json({
-                    error:
-                        "Le mot de passe doit contenir au moins 6 caractères."
-                });
-            }
-
-            const exists =
-                db.prepare(`
-                    SELECT id
-                    FROM users
-                    WHERE email = ?
-                `).get(email);
-
-            if(exists){
-
-                return res.status(409).json({
-                    error:
-                        "Cette adresse email est déjà utilisée."
-                });
-            }
-
-            const passwordHash =
-                await bcrypt.hash(
-                    password,
-                    12
-                );
-
-            const accountId =
-                generateAccountId();
-
-            const cardNumber =
-                generateCardNumber();
-
-            const expiry =
-                generateExpiry();
-
-            const createUser =
-                db.transaction(() => {
-
-                    const result =
-                        db.prepare(`
-                            INSERT INTO users (
-                                account_id,
-                                name,
-                                email,
-                                password_hash,
-                                role,
-                                status
-                            )
-                            VALUES (
-                                ?,
-                                ?,
-                                ?,
-                                ?,
-                                'user',
-                                'active'
-                            )
-                        `).run(
-                            accountId,
-                            name,
-                            email,
-                            passwordHash
-                        );
-
-                    const userId =
-                        Number(
-                            result.lastInsertRowid
-                        );
-
-                    db.prepare(`
-                        INSERT INTO wallets (
-                            user_id,
-                            cdf,
-                            usd_cents
-                        )
-                        VALUES (
-                            ?,
-                            0,
-                            0
-                        )
-                    `).run(userId);
-
-                    db.prepare(`
-                        INSERT INTO cards (
-                            user_id,
-                            card_number,
-                            expiry,
-                            status
-                        )
-                        VALUES (
-                            ?,
-                            ?,
-                            ?,
-                            'active'
-                        )
-                    `).run(
-                        userId,
-                        cardNumber,
-                        expiry
-                    );
-
-                    return userId;
-                });
-
-            const userId =
-                createUser();
-
-            const user =
-                db.prepare(`
-                    SELECT
-                        id,
-                        account_id,
-                        name,
-                        email,
-                        role,
-                        status,
-                        created_at
-                    FROM users
-                    WHERE id = ?
-                `).get(userId);
-
-            const token =
-                createToken(user);
-
-            return res.status(201).json({
-
-                message:
-                    "Compte créé avec succès.",
-
-                token,
-
-                user:
-                    publicUser(userId)
-            });
-
-        }catch(error){
-
-            console.error(
-                "REGISTER ERROR:",
-                error
-            );
-
-            return res.status(500).json({
-                error:
-                    "Impossible de créer le compte."
-            });
-        }
+    if (
+      error.message ===
+      "ADMIN_ALREADY_EXISTS"
+    ) {
+      return res.status(409).json({
+        ok: false,
+        message:
+          "Un administrateur existe déjà. La création d'un autre administrateur est désactivée."
+      });
     }
-);
 
+    if (
+      String(error.message)
+        .includes("UNIQUE")
+    ) {
+      return res.status(409).json({
+        ok: false,
+        message:
+          "Cette adresse e-mail est déjà utilisée."
+      });
+    }
+
+    console.error(
+      "Erreur création admin :",
+      error
+    );
+
+    return res.status(500).json({
+      ok: false,
+      message:
+        "Impossible de créer l'administrateur."
+    });
+  }
+});
 
 /* =========================================================
    LOGIN
-========================================================= */
+   ========================================================= */
 
-app.post(
-    "/api/auth/login",
-    async (req,res) => {
+app.post("/api/auth/login", (req, res) => {
+  const identifier =
+    String(
+      req.body.identifier ||
+      req.body.email ||
+      req.body.account_id ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
 
-        try{
+  const password =
+    String(req.body.password || "");
 
-            const email =
-                normalizeEmail(
-                    req.body.email
-                );
+  if (!identifier || !password) {
+    return res.status(400).json({
+      ok: false,
+      message:
+        "Identifiant et mot de passe requis."
+    });
+  }
 
-            const password =
-                String(
-                    req.body.password || ""
-                );
+  const user =
+    db.prepare(`
+      SELECT *
+      FROM users
+      WHERE LOWER(email) = ?
+         OR LOWER(account_id) = ?
+      LIMIT 1
+    `).get(
+      identifier,
+      identifier
+    );
 
-            if(
-                !email ||
-                !password
-            ){
+  if (!user) {
+    return res.status(401).json({
+      ok: false,
+      message:
+        "Identifiants incorrects."
+    });
+  }
 
-                return res.status(400).json({
-                    error:
-                        "Email et mot de passe requis."
-                });
-            }
+  const valid =
+    bcrypt.compareSync(
+      password,
+      user.password_hash
+    );
 
-            const user =
-                db.prepare(`
-                    SELECT *
-                    FROM users
-                    WHERE email = ?
-                `).get(email);
+  if (!valid) {
+    return res.status(401).json({
+      ok: false,
+      message:
+        "Identifiants incorrects."
+    });
+  }
 
-            if(!user){
+  if (user.status !== "active") {
+    return res.status(403).json({
+      ok: false,
+      message:
+        "Ce compte est bloqué."
+    });
+  }
 
-                return res.status(401).json({
-                    error:
-                        "Email ou mot de passe incorrect."
-                });
-            }
+  const token =
+    createToken(user);
 
-            const valid =
-                await bcrypt.compare(
-                    password,
-                    user.password_hash
-                );
-
-            if(!valid){
-
-                return res.status(401).json({
-                    error:
-                        "Email ou mot de passe incorrect."
-                });
-            }
-
-            if(
-                user.status !== "active"
-            ){
-
-                return res.status(403).json({
-                    error:
-                        "Votre compte est bloqué."
-                });
-            }
-
-            const token =
-                createToken(user);
-
-            return res.json({
-
-                message:
-                    "Connexion réussie.",
-
-                token,
-
-                user:
-                    publicUser(
-                        user.id
-                    )
-            });
-
-        }catch(error){
-
-            console.error(
-                "LOGIN ERROR:",
-                error
-            );
-
-            return res.status(500).json({
-                error:
-                    "Connexion impossible."
-            });
-        }
-    }
-);
-
+  res.json({
+    ok: true,
+    token,
+    user: getAccountData(user.id)
+  });
+});
 
 /* =========================================================
-   ACCOUNT
-========================================================= */
+   REGISTER USER
+   ========================================================= */
+
+app.post("/api/auth/register", (req, res) => {
+  const name =
+    cleanName(req.body.name);
+
+  const email =
+    normalizeEmail(req.body.email);
+
+  const password =
+    String(req.body.password || "");
+
+  if (name.length < 2) {
+    return res.status(400).json({
+      ok: false,
+      message:
+        "Le nom est invalide."
+    });
+  }
+
+  if (
+    !email ||
+    !email.includes("@")
+  ) {
+    return res.status(400).json({
+      ok: false,
+      message:
+        "Adresse e-mail invalide."
+    });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({
+      ok: false,
+      message:
+        "Le mot de passe doit contenir au moins 8 caractères."
+    });
+  }
+
+  const existing =
+    db.prepare(`
+      SELECT id
+      FROM users
+      WHERE email = ?
+      LIMIT 1
+    `).get(email);
+
+  if (existing) {
+    return res.status(409).json({
+      ok: false,
+      message:
+        "Cette adresse e-mail est déjà utilisée."
+    });
+  }
+
+  try {
+    const createUser =
+      db.transaction(() => {
+
+        const accountId =
+          generateAccountId();
+
+        const passwordHash =
+          bcrypt.hashSync(
+            password,
+            12
+          );
+
+        const result =
+          db.prepare(`
+            INSERT INTO users (
+              account_id,
+              name,
+              email,
+              password_hash,
+              role,
+              status
+            )
+            VALUES (?, ?, ?, ?, 'user', 'active')
+          `).run(
+            accountId,
+            name,
+            email,
+            passwordHash
+          );
+
+        const userId =
+          result.lastInsertRowid;
+
+        db.prepare(`
+          INSERT INTO wallets (
+            user_id,
+            cdf,
+            usd_cents
+          )
+          VALUES (?, 0, 0)
+        `).run(userId);
+
+        db.prepare(`
+          INSERT INTO cards (
+            user_id,
+            card_number,
+            expiry,
+            status
+          )
+          VALUES (?, ?, ?, 'active')
+        `).run(
+          userId,
+          generateCardNumber(),
+          generateExpiry()
+        );
+
+        return getUserById(userId);
+      });
+
+    const user =
+      createUser();
+
+    const token =
+      createToken(user);
+
+    res.status(201).json({
+      ok: true,
+      message:
+        "Compte créé avec succès.",
+      token,
+      user: getAccountData(user.id)
+    });
+
+  } catch (error) {
+    console.error(
+      "Erreur inscription :",
+      error
+    );
+
+    res.status(500).json({
+      ok: false,
+      message:
+        "Impossible de créer le compte."
+    });
+  }
+});
+
+/* =========================================================
+   CURRENT ACCOUNT
+   ========================================================= */
 
 app.get(
-    "/api/account",
-    authenticate,
-    (req,res) => {
+  "/api/account",
+  authenticateToken,
+  (req, res) => {
 
-        const user =
-            publicUser(
-                req.user.id
-            );
+    const data =
+      getAccountData(req.user.id);
 
-        if(!user){
-
-            return res.status(404).json({
-                error:
-                    "Compte introuvable."
-            });
-        }
-
-        res.json({
-            user
-        });
+    if (!data) {
+      return res.status(404).json({
+        ok: false,
+        message:
+          "Compte introuvable."
+      });
     }
-);
 
+    res.json({
+      ok: true,
+      user: data,
+
+      // Compatibilité avec certaines
+      // anciennes versions du frontend.
+      account: data
+    });
+  }
+);
 
 /* =========================================================
    TRANSACTIONS
-========================================================= */
+   ========================================================= */
 
 app.get(
-    "/api/transactions",
-    authenticate,
-    (req,res) => {
+  "/api/transactions",
+  authenticateToken,
+  (req, res) => {
 
-        try{
+    const limit =
+      Math.min(
+        Math.max(
+          Number(req.query.limit) || 50,
+          1
+        ),
+        100
+      );
 
-            const rows =
-                db.prepare(`
-                    SELECT
-                        id,
-                        type,
-                        currency,
-                        amount_cdf,
-                        amount_usd_cents,
-                        description,
-                        reference,
-                        related_user_id,
-                        created_at
-                    FROM transactions
-                    WHERE user_id = ?
-                    ORDER BY id DESC
-                    LIMIT 100
-                `).all(
-                    req.user.id
-                );
+    const transactions =
+      db.prepare(`
+        SELECT
+          id,
+          type,
+          currency,
+          amount_cdf,
+          amount_usd_cents,
+          description,
+          reference,
+          created_at
+        FROM transactions
+        WHERE user_id = ?
+        ORDER BY id DESC
+        LIMIT ?
+      `).all(
+        req.user.id,
+        limit
+      );
 
-            const transactions =
-                rows.map(
-                    row => ({
-
-                        id:
-                            row.id,
-
-                        type:
-                            row.type,
-
-                        currency:
-                            row.currency,
-
-                        amount_cdf:
-                            row.amount_cdf,
-
-                        amount_usd_cents:
-                            row.amount_usd_cents,
-
-                        description:
-                            row.description,
-
-                        reference:
-                            row.reference,
-
-                        related_user_id:
-                            row.related_user_id,
-
-                        created_at:
-                            row.created_at
-                    })
-                );
-
-            res.json({
-                transactions
-            });
-
-        }catch(error){
-
-            console.error(
-                "TRANSACTIONS ERROR:",
-                error
-            );
-
-            res.status(500).json({
-                error:
-                    "Impossible de charger l'historique."
-            });
-        }
-    }
+    res.json({
+      ok: true,
+      transactions
+    });
+  }
 );
 
-
 /* =========================================================
-   TRANSFERT
-========================================================= */
+   TRANSFER
+   ========================================================= */
 
 app.post(
-    "/api/transfer",
-    authenticate,
-    (req,res) => {
+  "/api/transfer",
+  authenticateToken,
+  (req, res) => {
 
-        try{
+    const recipientIdentifier =
+      String(
+        req.body.recipient ||
+        req.body.account_id ||
+        req.body.accountId ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
 
-            const recipientInput =
-                cleanText(
-                    req.body.recipient,
-                    100
-                );
+    const currency =
+      String(
+        req.body.currency ||
+        "CDF"
+      ).toUpperCase();
 
-            const currency =
-                normalizeCurrency(
-                    req.body.currency
-                );
+    const amount =
+      Number(req.body.amount);
 
-            const description =
-                cleanText(
-                    req.body.description,
-                    120
-                ) ||
-                "Transfert DALZON";
+    const description =
+      String(
+        req.body.description ||
+        "Transfert DALZON Wallet"
+      )
+        .trim()
+        .slice(0, 200);
 
-            if(
-                !recipientInput ||
-                !currency
-            ){
+    if (!recipientIdentifier) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Destinataire requis."
+      });
+    }
 
-                return res.status(400).json({
-                    error:
-                        "Informations de transfert invalides."
-                });
-            }
+    if (!["CDF", "USD"].includes(currency)) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Devise invalide."
+      });
+    }
 
-            let amount;
+    if (
+      !Number.isFinite(amount) ||
+      amount <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Montant invalide."
+      });
+    }
 
-            if(currency === "USD"){
+    const recipient =
+      db.prepare(`
+        SELECT *
+        FROM users
+        WHERE LOWER(email) = ?
+           OR LOWER(account_id) = ?
+        LIMIT 1
+      `).get(
+        recipientIdentifier,
+        recipientIdentifier
+      );
 
-                amount =
-                    usdToCents(
-                        req.body.amount
-                    );
+    if (!recipient) {
+      return res.status(404).json({
+        ok: false,
+        message:
+          "Destinataire introuvable."
+      });
+    }
 
-            }else{
+    if (
+      recipient.id ===
+      req.user.id
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Vous ne pouvez pas vous transférer de l'argent à vous-même."
+      });
+    }
 
-                amount =
-                    cdfAmount(
-                        req.body.amount
-                    );
-            }
+    if (recipient.status !== "active") {
+      return res.status(403).json({
+        ok: false,
+        message:
+          "Le compte destinataire est bloqué."
+      });
+    }
 
-            if(amount === null){
+    let amountCdf = 0;
+    let amountUsdCents = 0;
 
-                return res.status(400).json({
-                    error:
-                        "Montant invalide."
-                });
-            }
+    if (currency === "CDF") {
+      amountCdf =
+        Math.round(amount);
+    } else {
+      amountUsdCents =
+        Math.round(amount * 100);
+    }
 
-            const recipient =
-                db.prepare(`
-                    SELECT
-                        id,
-                        account_id,
-                        name,
-                        email,
-                        status
-                    FROM users
-                    WHERE
-                        account_id = ?
-                        OR email = ?
-                    LIMIT 1
-                `).get(
-                    recipientInput,
-                    recipientInput.toLowerCase()
-                );
+    if (
+      currency === "CDF" &&
+      amountCdf <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Montant CDF invalide."
+      });
+    }
 
-            if(!recipient){
+    if (
+      currency === "USD" &&
+      amountUsdCents <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Montant USD invalide."
+      });
+    }
 
-                return res.status(404).json({
-                    error:
-                        "Compte destinataire introuvable."
-                });
-            }
+    try {
 
-            if(
-                Number(recipient.id) ===
-                Number(req.user.id)
-            ){
+      const transfer =
+        db.transaction(() => {
 
-                return res.status(400).json({
-                    error:
-                        "Vous ne pouvez pas vous envoyer un transfert à vous-même."
-                });
-            }
-
-            if(
-                recipient.status !== "active"
-            ){
-
-                return res.status(400).json({
-                    error:
-                        "Le compte destinataire est bloqué."
-                });
-            }
-
-            const senderWallet =
-                getWallet(
-                    req.user.id
-                );
-
-            if(!senderWallet){
-
-                return res.status(404).json({
-                    error:
-                        "Portefeuille introuvable."
-                });
-            }
-
-            if(currency === "CDF"){
-
-                if(
-                    senderWallet.cdf <
-                    amount
-                ){
-
-                    return res.status(400).json({
-                        error:
-                            "Solde CDF insuffisant."
-                    });
-                }
-
-            }else{
-
-                if(
-                    senderWallet.usd_cents <
-                    amount
-                ){
-
-                    return res.status(400).json({
-                        error:
-                            "Solde USD insuffisant."
-                    });
-                }
-            }
-
-            const reference =
-                "TRF-" +
-                crypto
-                    .randomBytes(5)
-                    .toString("hex")
-                    .toUpperCase();
-
-            const transfer =
-                db.transaction(() => {
-
-                    if(currency === "CDF"){
-
-                        db.prepare(`
-                            UPDATE wallets
-                            SET
-                                cdf = cdf - ?,
-                                updated_at = CURRENT_TIMESTAMP
-                            WHERE user_id = ?
-                        `).run(
-                            amount,
-                            req.user.id
-                        );
-
-                        db.prepare(`
-                            UPDATE wallets
-                            SET
-                                cdf = cdf + ?,
-                                updated_at = CURRENT_TIMESTAMP
-                            WHERE user_id = ?
-                        `).run(
-                            amount,
-                            recipient.id
-                        );
-
-                    }else{
-
-                        db.prepare(`
-                            UPDATE wallets
-                            SET
-                                usd_cents =
-                                    usd_cents - ?,
-                                updated_at =
-                                    CURRENT_TIMESTAMP
-                            WHERE user_id = ?
-                        `).run(
-                            amount,
-                            req.user.id
-                        );
-
-                        db.prepare(`
-                            UPDATE wallets
-                            SET
-                                usd_cents =
-                                    usd_cents + ?,
-                                updated_at =
-                                    CURRENT_TIMESTAMP
-                            WHERE user_id = ?
-                        `).run(
-                            amount,
-                            recipient.id
-                        );
-                    }
-
-                    db.prepare(`
-                        INSERT INTO transactions (
-                            user_id,
-                            type,
-                            currency,
-                            amount_cdf,
-                            amount_usd_cents,
-                            description,
-                            reference,
-                            related_user_id
-                        )
-                        VALUES (
-                            ?,
-                            'debit',
-                            ?,
-                            ?,
-                            ?,
-                            ?,
-                            ?,
-                            ?
-                        )
-                    `).run(
-                        req.user.id,
-                        currency,
-                        currency === "CDF"
-                            ? amount
-                            : 0,
-                        currency === "USD"
-                            ? amount
-                            : 0,
-                        description,
-                        reference,
-                        recipient.id
-                    );
-
-                    db.prepare(`
-                        INSERT INTO transactions (
-                            user_id,
-                            type,
-                            currency,
-                            amount_cdf,
-                            amount_usd_cents,
-                            description,
-                            reference,
-                            related_user_id
-                        )
-                        VALUES (
-                            ?,
-                            'credit',
-                            ?,
-                            ?,
-                            ?,
-                            ?,
-                            ?,
-                            ?
-                        )
-                    `).run(
-                        recipient.id,
-                        currency,
-                        currency === "CDF"
-                            ? amount
-                            : 0,
-                        currency === "USD"
-                            ? amount
-                            : 0,
-                        "Réception de " +
-                            req.user.account_id,
-                        reference,
-                        req.user.id
-                    );
-                });
-
-            transfer();
-
-            res.json({
-
-                message:
-                    "Transfert effectué.",
-
-                reference,
-
-                recipient:{
-                    account_id:
-                        recipient.account_id,
-
-                    name:
-                        recipient.name
-                },
-
-                currency,
-
-                amount:
-                    currency === "USD"
-                        ? amount / 100
-                        : amount
-            });
-
-        }catch(error){
-
-            console.error(
-                "TRANSFER ERROR:",
-                error
+          const senderWallet =
+            getWallet(
+              req.user.id
             );
 
-            res.status(500).json({
-                error:
-                    "Impossible d'effectuer le transfert."
-            });
-        }
-    }
-);
-
-
-/* =========================================================
-   PAIEMENT SIMULÉ
-========================================================= */
-
-app.post(
-    "/api/payment",
-    authenticate,
-    (req,res) => {
-
-        try{
-
-            const merchant =
-                cleanText(
-                    req.body.merchant,
-                    100
-                );
-
-            const currency =
-                normalizeCurrency(
-                    req.body.currency
-                );
-
-            const referenceInput =
-                cleanText(
-                    req.body.reference,
-                    100
-                );
-
-            if(
-                !merchant ||
-                !currency
-            ){
-
-                return res.status(400).json({
-                    error:
-                        "Informations de paiement invalides."
-                });
-            }
-
-            let amount;
-
-            if(currency === "USD"){
-
-                amount =
-                    usdToCents(
-                        req.body.amount
-                    );
-
-            }else{
-
-                amount =
-                    cdfAmount(
-                        req.body.amount
-                    );
-            }
-
-            if(amount === null){
-
-                return res.status(400).json({
-                    error:
-                        "Montant invalide."
-                });
-            }
-
-            const wallet =
-                getWallet(
-                    req.user.id
-                );
-
-            if(!wallet){
-
-                return res.status(404).json({
-                    error:
-                        "Portefeuille introuvable."
-                });
-            }
-
-            if(currency === "CDF"){
-
-                if(
-                    wallet.cdf <
-                    amount
-                ){
-
-                    return res.status(400).json({
-                        error:
-                            "Solde CDF insuffisant."
-                    });
-                }
-
-            }else{
-
-                if(
-                    wallet.usd_cents <
-                    amount
-                ){
-
-                    return res.status(400).json({
-                        error:
-                            "Solde USD insuffisant."
-                    });
-                }
-            }
-
-            const reference =
-                referenceInput ||
-                (
-                    "PAY-" +
-                    crypto
-                        .randomBytes(5)
-                        .toString("hex")
-                        .toUpperCase()
-                );
-
-            db.transaction(() => {
-
-                if(currency === "CDF"){
-
-                    db.prepare(`
-                        UPDATE wallets
-                        SET
-                            cdf = cdf - ?,
-                            updated_at =
-                                CURRENT_TIMESTAMP
-                        WHERE user_id = ?
-                    `).run(
-                        amount,
-                        req.user.id
-                    );
-
-                }else{
-
-                    db.prepare(`
-                        UPDATE wallets
-                        SET
-                            usd_cents =
-                                usd_cents - ?,
-                            updated_at =
-                                CURRENT_TIMESTAMP
-                        WHERE user_id = ?
-                    `).run(
-                        amount,
-                        req.user.id
-                    );
-                }
-
-                db.prepare(`
-                    INSERT INTO transactions (
-                        user_id,
-                        type,
-                        currency,
-                        amount_cdf,
-                        amount_usd_cents,
-                        description,
-                        reference
-                    )
-                    VALUES (
-                        ?,
-                        'debit',
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?
-                    )
-                `).run(
-                    req.user.id,
-                    currency,
-                    currency === "CDF"
-                        ? amount
-                        : 0,
-                    currency === "USD"
-                        ? amount
-                        : 0,
-                    "Paiement — " + merchant,
-                    reference
-                );
-
-            })();
-
-            res.json({
-
-                message:
-                    "Paiement simulé effectué.",
-
-                reference,
-
-                merchant,
-
-                currency,
-
-                amount:
-                    currency === "USD"
-                        ? amount / 100
-                        : amount
-            });
-
-        }catch(error){
-
-            console.error(
-                "PAYMENT ERROR:",
-                error
+          const recipientWallet =
+            getWallet(
+              recipient.id
             );
 
-            res.status(500).json({
-                error:
-                    "Impossible d'effectuer le paiement."
-            });
-        }
-    }
-);
-
-
-/* =========================================================
-   ADMIN — UTILISATEURS
-========================================================= */
-
-app.get(
-    "/api/admin/users",
-    authenticate,
-    requireAdmin,
-    (req,res) => {
-
-        try{
-
-            const users =
-                db.prepare(`
-                    SELECT
-                        u.id,
-                        u.account_id,
-                        u.name,
-                        u.email,
-                        u.role,
-                        u.status,
-                        u.created_at,
-
-                        w.cdf,
-                        w.usd_cents
-
-                    FROM users u
-
-                    LEFT JOIN wallets w
-                        ON w.user_id = u.id
-
-                    ORDER BY
-                        u.id DESC
-                `).all();
-
-            const result =
-                users.map(
-                    user => ({
-
-                        id:
-                            user.id,
-
-                        account_id:
-                            user.account_id,
-
-                        name:
-                            user.name,
-
-                        email:
-                            user.email,
-
-                        role:
-                            user.role,
-
-                        status:
-                            user.status,
-
-                        created_at:
-                            user.created_at,
-
-                        cdf:
-                            Number(
-                                user.cdf || 0
-                            ),
-
-                        usd:
-                            Number(
-                                user.usd_cents || 0
-                            ) / 100
-                    })
-                );
-
-            res.json({
-                users:result
-            });
-
-        }catch(error){
-
-            console.error(
-                "ADMIN USERS ERROR:",
-                error
+          if (
+            !senderWallet ||
+            !recipientWallet
+          ) {
+            throw new Error(
+              "WALLET_NOT_FOUND"
             );
+          }
 
-            res.status(500).json({
-                error:
-                    "Impossible de charger les utilisateurs."
-            });
-        }
-    }
-);
-
-
-/* =========================================================
-   ADMIN — CRÉDITER
-========================================================= */
-
-app.post(
-    "/api/admin/credit",
-    authenticate,
-    requireAdmin,
-    (req,res) => {
-
-        try{
-
-            /*
-             Accepte :
-
-             userId
-             ou
-             user_id
-
-             pour compatibilité avec les anciennes versions.
-            */
-
-            const targetId =
-                Number(
-                    req.body.userId ??
-                    req.body.user_id
-                );
-
-            if(
-                !Number.isInteger(
-                    targetId
-                )
-            ){
-
-                return res.status(400).json({
-                    error:
-                        "Utilisateur invalide."
-                });
+          if (
+            currency === "CDF"
+          ) {
+            if (
+              senderWallet.cdf <
+              amountCdf
+            ) {
+              throw new Error(
+                "INSUFFICIENT_FUNDS"
+              );
             }
-
-            const target =
-                db.prepare(`
-                    SELECT
-                        id,
-                        account_id,
-                        name,
-                        status
-                    FROM users
-                    WHERE id = ?
-                `).get(targetId);
-
-            if(!target){
-
-                return res.status(404).json({
-                    error:
-                        "Utilisateur introuvable."
-                });
-            }
-
-            const currency =
-                normalizeCurrency(
-                    req.body.currency
-                );
-
-            if(!currency){
-
-                return res.status(400).json({
-                    error:
-                        "Devise invalide."
-                });
-            }
-
-            let amount;
-
-            if(currency === "USD"){
-
-                amount =
-                    usdToCents(
-                        req.body.amount
-                    );
-
-            }else{
-
-                amount =
-                    cdfAmount(
-                        req.body.amount
-                    );
-            }
-
-            if(amount === null){
-
-                return res.status(400).json({
-                    error:
-                        "Montant invalide."
-                });
-            }
-
-            const description =
-                cleanText(
-                    req.body.description,
-                    120
-                ) ||
-                "Crédit administratif";
-
-            const reference =
-                "ADM-" +
-                crypto
-                    .randomBytes(5)
-                    .toString("hex")
-                    .toUpperCase();
-
-            db.transaction(() => {
-
-                if(currency === "CDF"){
-
-                    db.prepare(`
-                        UPDATE wallets
-                        SET
-                            cdf = cdf + ?,
-                            updated_at =
-                                CURRENT_TIMESTAMP
-                        WHERE user_id = ?
-                    `).run(
-                        amount,
-                        targetId
-                    );
-
-                }else{
-
-                    db.prepare(`
-                        UPDATE wallets
-                        SET
-                            usd_cents =
-                                usd_cents + ?,
-                            updated_at =
-                                CURRENT_TIMESTAMP
-                        WHERE user_id = ?
-                    `).run(
-                        amount,
-                        targetId
-                    );
-                }
-
-                db.prepare(`
-                    INSERT INTO transactions (
-                        user_id,
-                        type,
-                        currency,
-                        amount_cdf,
-                        amount_usd_cents,
-                        description,
-                        reference,
-                        related_user_id
-                    )
-                    VALUES (
-                        ?,
-                        'credit',
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?
-                    )
-                `).run(
-                    targetId,
-                    currency,
-                    currency === "CDF"
-                        ? amount
-                        : 0,
-                    currency === "USD"
-                        ? amount
-                        : 0,
-                    description,
-                    reference,
-                    req.user.id
-                );
-
-            })();
-
-            res.json({
-
-                message:
-                    "Compte crédité.",
-
-                reference,
-
-                user:{
-                    id:
-                        target.id,
-
-                    account_id:
-                        target.account_id,
-
-                    name:
-                        target.name
-                },
-
-                currency,
-
-                amount:
-                    currency === "USD"
-                        ? amount / 100
-                        : amount
-            });
-
-        }catch(error){
-
-            console.error(
-                "ADMIN CREDIT ERROR:",
-                error
-            );
-
-            res.status(500).json({
-                error:
-                    "Impossible de créditer le compte."
-            });
-        }
-    }
-);
-
-
-/* =========================================================
-   ADMIN — BLOQUER / DÉBLOQUER
-========================================================= */
-
-app.post(
-    "/api/admin/block",
-    authenticate,
-    requireAdmin,
-    (req,res) => {
-
-        try{
-
-            const targetId =
-                Number(
-                    req.body.userId ??
-                    req.body.user_id
-                );
-
-            const blocked =
-                Boolean(
-                    req.body.blocked
-                );
-
-            if(
-                !Number.isInteger(
-                    targetId
-                )
-            ){
-
-                return res.status(400).json({
-                    error:
-                        "Utilisateur invalide."
-                });
-            }
-
-            if(
-                targetId ===
-                Number(req.user.id)
-            ){
-
-                return res.status(400).json({
-                    error:
-                        "Vous ne pouvez pas bloquer votre propre compte administrateur."
-                });
-            }
-
-            const target =
-                db.prepare(`
-                    SELECT
-                        id,
-                        role,
-                        status
-                    FROM users
-                    WHERE id = ?
-                `).get(targetId);
-
-            if(!target){
-
-                return res.status(404).json({
-                    error:
-                        "Utilisateur introuvable."
-                });
-            }
-
-            if(
-                target.role === "admin"
-            ){
-
-                return res.status(403).json({
-                    error:
-                        "Un administrateur ne peut pas être bloqué depuis cette interface."
-                });
-            }
-
-            const newStatus =
-                blocked
-                    ? "blocked"
-                    : "active";
 
             db.prepare(`
-                UPDATE users
-                SET
-                    status = ?,
-                    updated_at =
-                        CURRENT_TIMESTAMP
-                WHERE id = ?
+              UPDATE wallets
+              SET cdf = cdf - ?
+              WHERE user_id = ?
             `).run(
-                newStatus,
-                targetId
+              amountCdf,
+              req.user.id
             );
 
-            res.json({
-
-                message:
-                    blocked
-                        ? "Utilisateur bloqué."
-                        : "Utilisateur débloqué.",
-
-                status:
-                    newStatus
-            });
-
-        }catch(error){
-
-            console.error(
-                "ADMIN BLOCK ERROR:",
-                error
+            db.prepare(`
+              UPDATE wallets
+              SET cdf = cdf + ?
+              WHERE user_id = ?
+            `).run(
+              amountCdf,
+              recipient.id
             );
 
-            res.status(500).json({
-                error:
-                    "Impossible de modifier le statut."
-            });
-        }
+          } else {
+
+            if (
+              senderWallet.usd_cents <
+              amountUsdCents
+            ) {
+              throw new Error(
+                "INSUFFICIENT_FUNDS"
+              );
+            }
+
+            db.prepare(`
+              UPDATE wallets
+              SET usd_cents =
+                usd_cents - ?
+              WHERE user_id = ?
+            `).run(
+              amountUsdCents,
+              req.user.id
+            );
+
+            db.prepare(`
+              UPDATE wallets
+              SET usd_cents =
+                usd_cents + ?
+              WHERE user_id = ?
+            `).run(
+              amountUsdCents,
+              recipient.id
+            );
+          }
+
+          const reference =
+            generateReference(
+              "TRF"
+            );
+
+          db.prepare(`
+            INSERT INTO transactions (
+              user_id,
+              type,
+              currency,
+              amount_cdf,
+              amount_usd_cents,
+              description,
+              reference
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+          `).run(
+            req.user.id,
+            "transfer",
+            currency,
+            amountCdf,
+            amountUsdCents,
+            description ||
+              `Transfert vers ${recipient.account_id}`,
+            reference
+          );
+
+          db.prepare(`
+            INSERT INTO transactions (
+              user_id,
+              type,
+              currency,
+              amount_cdf,
+              amount_usd_cents,
+              description,
+              reference
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+          `).run(
+            recipient.id,
+            "receive",
+            currency,
+            amountCdf,
+            amountUsdCents,
+            description ||
+              `Réception de ${req.user.account_id}`,
+            reference
+          );
+
+          return reference;
+        });
+
+      const reference =
+        transfer();
+
+      res.json({
+        ok: true,
+        message:
+          "Transfert effectué.",
+        reference
+      });
+
+    } catch (error) {
+
+      if (
+        error.message ===
+        "INSUFFICIENT_FUNDS"
+      ) {
+        return res.status(400).json({
+          ok: false,
+          message:
+            "Solde insuffisant."
+        });
+      }
+
+      console.error(
+        "Erreur transfert :",
+        error
+      );
+
+      res.status(500).json({
+        ok: false,
+        message:
+          "Impossible d'effectuer le transfert."
+      });
     }
+  }
 );
 
+/* =========================================================
+   SIMULATED PAYMENT
+   ========================================================= */
+
+app.post(
+  "/api/payment",
+  authenticateToken,
+  (req, res) => {
+
+    const currency =
+      String(
+        req.body.currency ||
+        "CDF"
+      ).toUpperCase();
+
+    const amount =
+      Number(req.body.amount);
+
+    const merchant =
+      String(
+        req.body.merchant ||
+        req.body.description ||
+        "Paiement simulé"
+      )
+        .trim()
+        .slice(0, 200);
+
+    if (!["CDF", "USD"].includes(currency)) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Devise invalide."
+      });
+    }
+
+    if (
+      !Number.isFinite(amount) ||
+      amount <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Montant invalide."
+      });
+    }
+
+    let amountCdf = 0;
+    let amountUsdCents = 0;
+
+    if (currency === "CDF") {
+      amountCdf =
+        Math.round(amount);
+    } else {
+      amountUsdCents =
+        Math.round(amount * 100);
+    }
+
+    try {
+
+      const payment =
+        db.transaction(() => {
+
+          const wallet =
+            getWallet(
+              req.user.id
+            );
+
+          if (!wallet) {
+            throw new Error(
+              "WALLET_NOT_FOUND"
+            );
+          }
+
+          if (
+            currency === "CDF"
+          ) {
+
+            if (
+              wallet.cdf <
+              amountCdf
+            ) {
+              throw new Error(
+                "INSUFFICIENT_FUNDS"
+              );
+            }
+
+            db.prepare(`
+              UPDATE wallets
+              SET cdf = cdf - ?
+              WHERE user_id = ?
+            `).run(
+              amountCdf,
+              req.user.id
+            );
+
+          } else {
+
+            if (
+              wallet.usd_cents <
+              amountUsdCents
+            ) {
+              throw new Error(
+                "INSUFFICIENT_FUNDS"
+              );
+            }
+
+            db.prepare(`
+              UPDATE wallets
+              SET usd_cents =
+                usd_cents - ?
+              WHERE user_id = ?
+            `).run(
+              amountUsdCents,
+              req.user.id
+            );
+          }
+
+          const reference =
+            generateReference(
+              "PAY"
+            );
+
+          db.prepare(`
+            INSERT INTO transactions (
+              user_id,
+              type,
+              currency,
+              amount_cdf,
+              amount_usd_cents,
+              description,
+              reference
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+          `).run(
+            req.user.id,
+            "payment",
+            currency,
+            amountCdf,
+            amountUsdCents,
+            merchant,
+            reference
+          );
+
+          return reference;
+        });
+
+      res.json({
+        ok: true,
+        message:
+          "Paiement simulé effectué.",
+        reference: payment
+      });
+
+    } catch (error) {
+
+      if (
+        error.message ===
+        "INSUFFICIENT_FUNDS"
+      ) {
+        return res.status(400).json({
+          ok: false,
+          message:
+            "Solde insuffisant."
+        });
+      }
+
+      console.error(
+        "Erreur paiement :",
+        error
+      );
+
+      res.status(500).json({
+        ok: false,
+        message:
+          "Impossible d'effectuer le paiement."
+      });
+    }
+  }
+);
 
 /* =========================================================
-   ADMIN — STATISTIQUES
-========================================================= */
+   ADMIN DASHBOARD
+   ========================================================= */
 
 app.get(
-    "/api/admin/stats",
-    authenticate,
-    requireAdmin,
-    (req,res) => {
+  "/api/admin/dashboard",
+  authenticateToken,
+  requireAdmin,
+  (req, res) => {
 
-        try{
+    const totalUsers =
+      db.prepare(`
+        SELECT COUNT(*) AS count
+        FROM users
+        WHERE role = 'user'
+      `).get().count;
 
-            const totalUsers =
-                db.prepare(`
-                    SELECT COUNT(*) AS total
-                    FROM users
-                `).get().total;
+    const activeUsers =
+      db.prepare(`
+        SELECT COUNT(*) AS count
+        FROM users
+        WHERE role = 'user'
+          AND status = 'active'
+      `).get().count;
 
-            const activeUsers =
-                db.prepare(`
-                    SELECT COUNT(*) AS total
-                    FROM users
-                    WHERE status = 'active'
-                `).get().total;
+    const blockedUsers =
+      db.prepare(`
+        SELECT COUNT(*) AS count
+        FROM users
+        WHERE role = 'user'
+          AND status = 'blocked'
+      `).get().count;
 
-            const blockedUsers =
-                db.prepare(`
-                    SELECT COUNT(*) AS total
-                    FROM users
-                    WHERE status = 'blocked'
-                `).get().total;
+    const totalTransactions =
+      db.prepare(`
+        SELECT COUNT(*) AS count
+        FROM transactions
+      `).get().count;
 
-            const balances =
-                db.prepare(`
-                    SELECT
+    const totalCdf =
+      db.prepare(`
+        SELECT COALESCE(
+          SUM(cdf),
+          0
+        ) AS total
+        FROM wallets
+      `).get().total;
 
-                        COALESCE(
-                            SUM(cdf),
-                            0
-                        ) AS total_cdf,
+    const totalUsdCents =
+      db.prepare(`
+        SELECT COALESCE(
+          SUM(usd_cents),
+          0
+        ) AS total
+        FROM wallets
+      `).get().total;
 
-                        COALESCE(
-                            SUM(usd_cents),
-                            0
-                        ) AS total_usd_cents
+    res.json({
+      ok: true,
+      stats: {
+        totalUsers,
+        activeUsers,
+        blockedUsers,
+        totalTransactions,
+        totalCdf,
+        totalUsd:
+          totalUsdCents / 100
+      }
+    });
+  }
+);
 
-                    FROM wallets
-                `).get();
+/* =========================================================
+   ADMIN USERS
+   ========================================================= */
 
-            res.json({
+app.get(
+  "/api/admin/users",
+  authenticateToken,
+  requireAdmin,
+  (req, res) => {
 
-                users:{
-                    total:
-                        totalUsers,
+    const users =
+      db.prepare(`
+        SELECT
+          u.id,
+          u.account_id,
+          u.name,
+          u.email,
+          u.role,
+          u.status,
+          u.created_at,
+          COALESCE(w.cdf, 0) AS cdf,
+          COALESCE(
+            w.usd_cents,
+            0
+          ) AS usd_cents
+        FROM users u
+        LEFT JOIN wallets w
+          ON w.user_id = u.id
+        ORDER BY u.id DESC
+      `).all();
 
-                    active:
-                        activeUsers,
+    res.json({
+      ok: true,
+      users: users.map(
+        (user) => ({
+          id: user.id,
+          account_id:
+            user.account_id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          status: user.status,
+          created_at:
+            user.created_at,
 
-                    blocked:
-                        blockedUsers
-                },
+          wallet: {
+            CDF: user.cdf,
+            USD:
+              user.usd_cents / 100
+          }
+        })
+      )
+    });
+  }
+);
 
-                balances:{
-                    CDF:
-                        Number(
-                            balances.total_cdf
-                        ),
+/* =========================================================
+   ADMIN CREDIT
+   ========================================================= */
 
-                    USD:
-                        Number(
-                            balances.total_usd_cents
-                        ) / 100
-                }
-            });
+app.post(
+  "/api/admin/credit",
+  authenticateToken,
+  requireAdmin,
+  (req, res) => {
 
-        }catch(error){
+    const userId =
+      Number(
+        req.body.userId ||
+        req.body.user_id
+      );
 
-            console.error(
-                "ADMIN STATS ERROR:",
-                error
+    const currency =
+      String(
+        req.body.currency ||
+        "CDF"
+      ).toUpperCase();
+
+    const amount =
+      Number(req.body.amount);
+
+    const description =
+      String(
+        req.body.description ||
+        "Crédit administrateur"
+      )
+        .trim()
+        .slice(0, 200);
+
+    if (
+      !Number.isInteger(userId) ||
+      userId <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Utilisateur invalide."
+      });
+    }
+
+    if (!["CDF", "USD"].includes(currency)) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Devise invalide."
+      });
+    }
+
+    if (
+      !Number.isFinite(amount) ||
+      amount <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Montant invalide."
+      });
+    }
+
+    const targetUser =
+      getUserById(userId);
+
+    if (!targetUser) {
+      return res.status(404).json({
+        ok: false,
+        message:
+          "Utilisateur introuvable."
+      });
+    }
+
+    let amountCdf = 0;
+    let amountUsdCents = 0;
+
+    if (currency === "CDF") {
+      amountCdf =
+        Math.round(amount);
+    } else {
+      amountUsdCents =
+        Math.round(amount * 100);
+    }
+
+    try {
+
+      const credit =
+        db.transaction(() => {
+
+          const wallet =
+            getWallet(userId);
+
+          if (!wallet) {
+            throw new Error(
+              "WALLET_NOT_FOUND"
+            );
+          }
+
+          if (currency === "CDF") {
+
+            db.prepare(`
+              UPDATE wallets
+              SET cdf = cdf + ?
+              WHERE user_id = ?
+            `).run(
+              amountCdf,
+              userId
             );
 
-            res.status(500).json({
-                error:
-                    "Impossible de charger les statistiques."
-            });
-        }
+          } else {
+
+            db.prepare(`
+              UPDATE wallets
+              SET usd_cents =
+                usd_cents + ?
+              WHERE user_id = ?
+            `).run(
+              amountUsdCents,
+              userId
+            );
+          }
+
+          const reference =
+            generateReference(
+              "ADM"
+            );
+
+          db.prepare(`
+            INSERT INTO transactions (
+              user_id,
+              type,
+              currency,
+              amount_cdf,
+              amount_usd_cents,
+              description,
+              reference
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+          `).run(
+            userId,
+            "credit",
+            currency,
+            amountCdf,
+            amountUsdCents,
+            description,
+            reference
+          );
+
+          return reference;
+        });
+
+      res.json({
+        ok: true,
+        message:
+          "Solde ajouté avec succès.",
+        reference: credit
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Erreur crédit admin :",
+        error
+      );
+
+      res.status(500).json({
+        ok: false,
+        message:
+          "Impossible d'ajouter le solde."
+      });
     }
+  }
 );
 
+/* =========================================================
+   ADMIN BLOCK / UNBLOCK
+   ========================================================= */
+
+app.post(
+  "/api/admin/block",
+  authenticateToken,
+  requireAdmin,
+  (req, res) => {
+
+    const userId =
+      Number(
+        req.body.userId ||
+        req.body.user_id
+      );
+
+    if (
+      !Number.isInteger(userId) ||
+      userId <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Utilisateur invalide."
+      });
+    }
+
+    const target =
+      getUserById(userId);
+
+    if (!target) {
+      return res.status(404).json({
+        ok: false,
+        message:
+          "Utilisateur introuvable."
+      });
+    }
+
+    if (target.role === "admin") {
+      return res.status(403).json({
+        ok: false,
+        message:
+          "Le compte administrateur ne peut pas être bloqué depuis cette interface."
+      });
+    }
+
+    db.prepare(`
+      UPDATE users
+      SET status = 'blocked'
+      WHERE id = ?
+    `).run(userId);
+
+    res.json({
+      ok: true,
+      message:
+        "Compte bloqué."
+    });
+  }
+);
+
+app.post(
+  "/api/admin/unblock",
+  authenticateToken,
+  requireAdmin,
+  (req, res) => {
+
+    const userId =
+      Number(
+        req.body.userId ||
+        req.body.user_id
+      );
+
+    if (
+      !Number.isInteger(userId) ||
+      userId <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          "Utilisateur invalide."
+      });
+    }
+
+    const target =
+      getUserById(userId);
+
+    if (!target) {
+      return res.status(404).json({
+        ok: false,
+        message:
+          "Utilisateur introuvable."
+      });
+    }
+
+    db.prepare(`
+      UPDATE users
+      SET status = 'active'
+      WHERE id = ?
+    `).run(userId);
+
+    res.json({
+      ok: true,
+      message:
+        "Compte débloqué."
+    });
+  }
+);
 
 /* =========================================================
-   404 API
-========================================================= */
+   ADMIN SINGLE USER
+   ========================================================= */
+
+app.get(
+  "/api/admin/users/:id",
+  authenticateToken,
+  requireAdmin,
+  (req, res) => {
+
+    const userId =
+      Number(req.params.id);
+
+    const data =
+      getAccountData(userId);
+
+    if (!data) {
+      return res.status(404).json({
+        ok: false,
+        message:
+          "Utilisateur introuvable."
+      });
+    }
+
+    res.json({
+      ok: true,
+      user: data
+    });
+  }
+);
+
+/* =========================================================
+   ADMIN TRANSACTIONS
+   ========================================================= */
+
+app.get(
+  "/api/admin/transactions",
+  authenticateToken,
+  requireAdmin,
+  (req, res) => {
+
+    const limit =
+      Math.min(
+        Math.max(
+          Number(req.query.limit) || 100,
+          1
+        ),
+        500
+      );
+
+    const transactions =
+      db.prepare(`
+        SELECT
+          t.id,
+          t.user_id,
+          t.type,
+          t.currency,
+          t.amount_cdf,
+          t.amount_usd_cents,
+          t.description,
+          t.reference,
+          t.created_at,
+          u.account_id,
+          u.name,
+          u.email
+        FROM transactions t
+        JOIN users u
+          ON u.id = t.user_id
+        ORDER BY t.id DESC
+        LIMIT ?
+      `).all(limit);
+
+    res.json({
+      ok: true,
+      transactions
+    });
+  }
+);
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+app.post(
+  "/api/auth/logout",
+  authenticateToken,
+  (req, res) => {
+
+    /*
+      JWT stateless :
+      le frontend supprime simplement le token.
+    */
+
+    res.json({
+      ok: true,
+      message:
+        "Déconnexion effectuée."
+    });
+  }
+);
+
+/* =========================================================
+   404
+   ========================================================= */
+
+app.use((req, res) => {
+  res.status(404).json({
+    ok: false,
+    message:
+      "Route API introuvable."
+  });
+});
+
+/* =========================================================
+   ERROR HANDLER
+   ========================================================= */
 
 app.use(
-    "/api",
-    (req,res) => {
+  (error, req, res, next) => {
 
-        res.status(404).json({
-            error:
-                "Route API introuvable."
-        });
+    console.error(
+      "Erreur serveur :",
+      error
+    );
+
+    if (res.headersSent) {
+      return next(error);
     }
+
+    res.status(500).json({
+      ok: false,
+      message:
+        "Erreur interne du serveur."
+    });
+  }
 );
 
-
 /* =========================================================
-   ERREUR EXPRESS
-========================================================= */
-
-app.use(
-    (error,req,res,next) => {
-
-        console.error(
-            "SERVER ERROR:",
-            error
-        );
-
-        if(
-            error instanceof SyntaxError &&
-            error.status === 400 &&
-            "body" in error
-        ){
-
-            return res.status(400).json({
-                error:
-                    "JSON invalide."
-            });
-        }
-
-        res.status(500).json({
-            error:
-                "Erreur interne du serveur."
-        });
-    }
-);
-
-
-/* =========================================================
-   DÉMARRAGE
-========================================================= */
+   START
+   ========================================================= */
 
 app.listen(
-    PORT,
-    "0.0.0.0",
-    () => {
+  PORT,
+  "0.0.0.0",
+  () => {
 
-        console.log("");
-        console.log(
-            "=========================================="
-        );
-        console.log(
-            "       DALZON WALLET v2.2"
-        );
-        console.log(
-            "=========================================="
-        );
-        console.log(
-            "Mode       : Simulation éducative"
-        );
-        console.log(
-            "Port       : " + PORT
-        );
-        console.log(
-            "Database   : " + DB_PATH
-        );
-        console.log(
-            "API        : opérationnelle"
-        );
-        console.log(
-            "=========================================="
-        );
-        console.log("");
-    }
+    console.log("");
+    console.log(
+      "======================================"
+    );
+
+    console.log(
+      "       DALZON WALLET v3.0"
+    );
+
+    console.log(
+      "======================================"
+    );
+
+    console.log(
+      `Port       : ${PORT}`
+    );
+
+    console.log(
+      `Database   : ${DB_PATH}`
+    );
+
+    console.log(
+      "Admin setup: application"
+    );
+
+    console.log(
+      "Mode       : simulation éducative"
+    );
+
+    console.log(
+      "======================================"
+    );
+
+    console.log("");
+  }
+);
+
+/* =========================================================
+   GRACEFUL SHUTDOWN
+   ========================================================= */
+
+function shutdown() {
+  console.log(
+    "Arrêt de DALZON Wallet..."
+  );
+
+  try {
+    db.close();
+  } catch (error) {
+    console.error(error);
+  }
+
+  process.exit(0);
+}
+
+process.on(
+  "SIGINT",
+  shutdown
+);
+
+process.on(
+  "SIGTERM",
+  shutdown
 );
