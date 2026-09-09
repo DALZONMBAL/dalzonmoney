@@ -2,45 +2,42 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
 
 <title>DALZON Wallet</title>
 
-<meta name="description" content="DALZON Wallet - plateforme de gestion de comptes et de soldes CDF et USD.">
+<meta name="description"
+      content="DALZON Wallet — plateforme de simulation éducative de comptes CDF et USD.">
+
 <meta name="theme-color" content="#0b0f14">
+
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <style>
+/* =========================================================
+   VARIABLES
+========================================================= */
+
 :root{
     --bg:#f5f7fa;
-    --surface:#fff;
+    --surface:#ffffff;
     --surface2:#eef1f5;
     --text:#101418;
     --muted:#737b86;
     --border:#e3e7ec;
+
     --accent:#111827;
     --accent2:#2563eb;
+
     --success:#15803d;
     --danger:#dc2626;
+    --warning:#b45309;
+
     --shadow:0 15px 40px rgba(0,0,0,.08);
-}
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    -webkit-tap-highlight-color:transparent;
-}
-
-html{scroll-behavior:smooth}
-
-body{
-    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    overflow-x:hidden;
 }
 
 body.dark{
@@ -50,9 +47,60 @@ body.dark{
     --text:#f5f7fa;
     --muted:#98a1ad;
     --border:#252c35;
+
     --accent:#f5f7fa;
     --accent2:#60a5fa;
-    --shadow:0 20px 50px rgba(0,0,0,.3);
+
+    --shadow:0 20px 50px rgba(0,0,0,.30);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:var(--bg);
+    color:var(--text);
+
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    -webkit-user-select:none;
+    user-select:none;
+}
+
+svg{
+    stroke:currentColor;
+    stroke-width:1.8;
+    stroke-linecap:round;
+    stroke-linejoin:round;
 }
 
 .icon{
@@ -67,51 +115,67 @@ body.dark{
     height:25px;
 }
 
-svg{
-    stroke:currentColor;
-    stroke-width:1.8;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-}
 
-/* AUTH */
+/* =========================================================
+   AUTHENTIFICATION
+========================================================= */
 
 .auth-screen{
     min-height:100vh;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     padding:22px;
+
     background:
-        radial-gradient(circle at 15% 15%,rgba(37,99,235,.13),transparent 32%),
-        radial-gradient(circle at 85% 85%,rgba(0,0,0,.08),transparent 32%),
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(37,99,235,.13),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 85% 85%,
+            rgba(0,0,0,.08),
+            transparent 32%
+        ),
         var(--bg);
 }
 
 .auth-card{
     width:100%;
     max-width:430px;
+
     background:var(--surface);
+
     border:1px solid var(--border);
     border-radius:30px;
+
     padding:28px;
+
     box-shadow:var(--shadow);
-    animation:appear .5s ease;
+
+    animation:appear .45s ease;
 }
 
 .brand{
     display:flex;
     align-items:center;
     gap:12px;
+
     margin-bottom:28px;
 }
 
 .brand-mark{
     width:48px;
     height:48px;
+
     border-radius:16px;
+
     background:var(--accent);
     color:var(--bg);
+
     display:grid;
     place-items:center;
 }
@@ -122,107 +186,164 @@ svg{
 }
 
 .brand-name{
-    font-weight:800;
     font-size:19px;
+    font-weight:800;
     letter-spacing:.8px;
 }
 
 .brand-sub{
-    font-size:12px;
-    color:var(--muted);
     margin-top:2px;
+
+    color:var(--muted);
+
+    font-size:12px;
 }
 
 .auth-title{
+    margin-bottom:8px;
+
     font-size:29px;
     font-weight:800;
+
     letter-spacing:-1px;
-    margin-bottom:8px;
 }
 
 .auth-description{
+    margin-bottom:24px;
+
     color:var(--muted);
+
     font-size:14px;
     line-height:1.6;
-    margin-bottom:24px;
 }
 
-.field{margin-bottom:15px}
+.field{
+    margin-bottom:15px;
+}
 
 .field label{
     display:block;
+
+    margin-bottom:7px;
+
     font-size:12px;
     font-weight:700;
-    margin-bottom:7px;
 }
 
-.field input,
-.field select{
+.field input{
     width:100%;
+
+    padding:14px 15px;
+
     border:1px solid var(--border);
+    border-radius:15px;
+
+    outline:none;
+
     background:var(--surface2);
     color:var(--text);
-    padding:14px 15px;
-    border-radius:15px;
-    outline:none;
+
     font-size:14px;
+
+    transition:.2s;
 }
 
-.field input:focus,
-.field select:focus{
+.field input:focus{
     border-color:var(--accent2);
-    box-shadow:0 0 0 3px rgba(37,99,235,.1);
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.10);
 }
 
 .primary-btn{
     width:100%;
-    border:none;
+
+    border:0;
+    border-radius:16px;
+
+    padding:15px;
+
     background:var(--accent);
     color:var(--bg);
-    padding:15px;
-    border-radius:16px;
+
     font-size:14px;
     font-weight:800;
+
     cursor:pointer;
+
+    transition:.2s;
 }
 
-.primary-btn:active{transform:scale(.98)}
+.primary-btn:active{
+    transform:scale(.98);
+}
 
 .primary-btn:disabled{
-    opacity:.6;
+    opacity:.55;
     cursor:not-allowed;
 }
 
+.secondary-btn{
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    padding:11px 13px;
+
+    background:var(--surface2);
+    color:var(--text);
+
+    font-size:12px;
+    font-weight:800;
+
+    cursor:pointer;
+}
+
 .auth-switch{
-    text-align:center;
     margin-top:18px;
+
+    text-align:center;
+
     color:var(--muted);
+
     font-size:13px;
 }
 
 .auth-switch button{
-    border:none;
+    border:0;
     background:none;
+
     color:var(--accent2);
+
     font-weight:800;
+
     cursor:pointer;
 }
 
 .auth-error{
     display:none;
+
     margin-bottom:15px;
     padding:12px;
+
     border-radius:13px;
+
     background:rgba(220,38,38,.09);
     color:var(--danger);
+
     font-size:13px;
 }
 
-/* APP */
+
+/* =========================================================
+   APPLICATION
+========================================================= */
 
 .app{
     display:none;
+
     min-height:100vh;
+
     padding-bottom:95px;
 }
 
@@ -230,13 +351,19 @@ svg{
     position:sticky;
     top:0;
     z-index:20;
+
     height:72px;
+
     padding:0 18px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     background:rgba(245,247,250,.86);
+
     backdrop-filter:blur(18px);
+
     border-bottom:1px solid var(--border);
 }
 
@@ -247,18 +374,27 @@ body.dark .app-header{
 .header-left{
     display:flex;
     align-items:center;
+
     gap:11px;
+
+    min-width:0;
 }
 
 .header-title{
     font-size:17px;
     font-weight:800;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .header-id{
-    color:var(--muted);
-    font-size:10px;
     margin-top:2px;
+
+    color:var(--muted);
+
+    font-size:10px;
 }
 
 .header-actions{
@@ -269,60 +405,87 @@ body.dark .app-header{
 .circle-btn{
     width:40px;
     height:40px;
-    border-radius:13px;
+
     border:1px solid var(--border);
+    border-radius:13px;
+
     background:var(--surface);
     color:var(--text);
+
     display:grid;
     place-items:center;
+
     cursor:pointer;
 }
 
-/* CONTENT */
+
+/* =========================================================
+   CONTENU
+========================================================= */
 
 .content{
     width:100%;
-    max-width:720px;
+    max-width:760px;
+
     margin:auto;
+
     padding:20px 16px;
 }
 
 .page{
     display:none;
+
     animation:pageIn .3s ease;
 }
 
-.page.active{display:block}
-
-.section-title{
-    font-size:20px;
-    font-weight:800;
-    letter-spacing:-.5px;
-    margin-bottom:15px;
+.page.active{
+    display:block;
 }
 
-/* BALANCE */
+.section-title{
+    margin-bottom:15px;
+
+    font-size:20px;
+    font-weight:800;
+
+    letter-spacing:-.5px;
+}
+
+
+/* =========================================================
+   SOLDE
+========================================================= */
 
 .balance-card{
+    position:relative;
+
+    overflow:hidden;
+
+    margin-bottom:18px;
+    padding:23px;
+
+    border-radius:28px;
+
     background:var(--accent);
     color:var(--bg);
-    border-radius:28px;
-    padding:23px;
-    position:relative;
-    overflow:hidden;
-    margin-bottom:18px;
+
     box-shadow:var(--shadow);
 }
 
 .balance-card::after{
     content:"";
+
     position:absolute;
+
     width:180px;
     height:180px;
-    border-radius:50%;
-    border:1px solid rgba(255,255,255,.09);
+
     right:-55px;
     top:-65px;
+
+    border:1px solid rgba(255,255,255,.09);
+
+    border-radius:50%;
 }
 
 .balance-label{
@@ -331,28 +494,35 @@ body.dark .app-header{
 }
 
 .balance-total{
+    margin:6px 0 22px;
+
     font-size:31px;
     font-weight:800;
+
     letter-spacing:-1px;
-    margin:6px 0 22px;
 }
 
 .balance-grid{
     display:grid;
+
     grid-template-columns:1fr 1fr;
+
     gap:10px;
 }
 
 .currency-box{
     padding:13px;
+
     border-radius:17px;
+
     background:rgba(255,255,255,.08);
 }
 
 .currency-label{
+    margin-bottom:4px;
+
     font-size:10px;
     opacity:.6;
-    margin-bottom:4px;
 }
 
 .currency-value{
@@ -360,38 +530,57 @@ body.dark .app-header{
     font-weight:800;
 }
 
-/* ACTIONS */
+
+/* =========================================================
+   ACTIONS
+========================================================= */
 
 .actions{
     display:grid;
+
     grid-template-columns:repeat(3,1fr);
+
     gap:10px;
+
     margin-bottom:24px;
 }
 
 .action{
-    border:1px solid var(--border);
-    background:var(--surface);
-    border-radius:20px;
     min-height:92px;
+
+    border:1px solid var(--border);
+    border-radius:20px;
+
+    background:var(--surface);
+    color:var(--text);
+
     display:flex;
     flex-direction:column;
+
     align-items:center;
     justify-content:center;
+
     gap:9px;
-    color:var(--text);
+
     cursor:pointer;
+
+    transition:.2s;
 }
 
-.action:active{transform:scale(.97)}
+.action:active{
+    transform:scale(.97);
+}
 
 .action-icon{
     width:39px;
     height:39px;
+
     border-radius:13px;
+
+    background:var(--surface2);
+
     display:grid;
     place-items:center;
-    background:var(--surface2);
 }
 
 .action span{
@@ -399,29 +588,42 @@ body.dark .app-header{
     font-weight:700;
 }
 
-/* TRANSACTIONS */
+
+/* =========================================================
+   LISTES
+========================================================= */
 
 .list{
     display:flex;
     flex-direction:column;
+
     gap:9px;
 }
 
 .transaction{
     display:flex;
     align-items:center;
+
     gap:12px;
+
     padding:14px;
+
     border:1px solid var(--border);
-    background:var(--surface);
     border-radius:18px;
+
+    background:var(--surface);
 }
 
 .transaction-icon{
     width:42px;
     height:42px;
+
+    flex:none;
+
     border-radius:14px;
+
     background:var(--surface2);
+
     display:grid;
     place-items:center;
 }
@@ -434,69 +636,111 @@ body.dark .app-header{
 .transaction-title{
     font-size:13px;
     font-weight:750;
+
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
 .transaction-date{
-    color:var(--muted);
-    font-size:10px;
     margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:10px;
 }
 
 .transaction-amount{
     font-size:13px;
     font-weight:800;
+
+    white-space:nowrap;
 }
 
-.amount-positive{color:var(--success)}
-.amount-negative{color:var(--danger)}
+.amount-positive{
+    color:var(--success);
+}
+
+.amount-negative{
+    color:var(--danger);
+}
 
 .empty{
-    text-align:center;
     padding:35px 15px;
+
+    text-align:center;
+
     color:var(--muted);
+
     font-size:13px;
 }
 
-/* CARD */
+
+/* =========================================================
+   CARTE
+========================================================= */
 
 .dalzon-card{
-    min-height:215px;
-    border-radius:27px;
-    padding:24px;
-    color:#fff;
-    background:linear-gradient(135deg,#10151c,#28313c);
     position:relative;
+
     overflow:hidden;
-    box-shadow:0 20px 45px rgba(0,0,0,.22);
+
+    min-height:220px;
+
     margin-bottom:22px;
+    padding:24px;
+
+    border-radius:27px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #10151c,
+            #28313c
+        );
+
+    color:#fff;
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.22);
 }
 
 .dalzon-card::before{
     content:"";
+
     position:absolute;
+
     width:240px;
     height:240px;
-    border:1px solid rgba(255,255,255,.09);
-    border-radius:50%;
+
     right:-90px;
     top:-80px;
+
+    border:1px solid rgba(255,255,255,.09);
+
+    border-radius:50%;
 }
 
 .dalzon-card::after{
     content:"";
+
     position:absolute;
+
     width:160px;
     height:160px;
-    border:1px solid rgba(255,255,255,.07);
-    border-radius:50%;
+
     left:-80px;
     bottom:-100px;
+
+    border:1px solid rgba(255,255,255,.07);
+
+    border-radius:50%;
 }
 
 .card-top{
+    position:relative;
+    z-index:2;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -505,32 +749,46 @@ body.dark .app-header{
 .card-brand{
     font-size:19px;
     font-weight:900;
+
     letter-spacing:2px;
 }
 
 .card-type{
     font-size:9px;
+
     letter-spacing:2px;
+
     opacity:.6;
 }
 
 .card-number{
-    font-size:20px;
-    letter-spacing:2px;
+    position:relative;
+    z-index:2;
+
     margin-top:45px;
+
+    font-size:20px;
     font-weight:600;
+
+    letter-spacing:2px;
 }
 
 .card-bottom{
+    position:relative;
+    z-index:2;
+
     display:flex;
     justify-content:space-between;
+
     margin-top:25px;
 }
 
 .card-small{
-    font-size:8px;
-    opacity:.55;
     margin-bottom:3px;
+
+    font-size:8px;
+
+    opacity:.55;
 }
 
 .card-value{
@@ -538,31 +796,42 @@ body.dark .app-header{
     font-weight:700;
 }
 
-/* PROFILE */
+
+/* =========================================================
+   PROFIL
+========================================================= */
 
 .profile-card{
-    border:1px solid var(--border);
-    background:var(--surface);
-    border-radius:24px;
-    padding:20px;
     margin-bottom:15px;
+    padding:20px;
+
+    border:1px solid var(--border);
+    border-radius:24px;
+
+    background:var(--surface);
 }
 
 .profile-head{
     display:flex;
     align-items:center;
+
     gap:13px;
+
     margin-bottom:20px;
 }
 
 .profile-avatar{
     width:54px;
     height:54px;
+
     border-radius:17px;
+
     background:var(--accent);
     color:var(--bg);
+
     display:grid;
     place-items:center;
+
     font-size:19px;
     font-weight:800;
 }
@@ -573,42 +842,142 @@ body.dark .app-header{
 }
 
 .profile-email{
-    font-size:11px;
-    color:var(--muted);
     margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:11px;
 }
 
 .profile-row{
     display:flex;
     justify-content:space-between;
+
     gap:15px;
+
     padding:13px 0;
+
     border-top:1px solid var(--border);
+
     font-size:13px;
 }
 
-.profile-row span:first-child{color:var(--muted)}
+.profile-row span:first-child{
+    color:var(--muted);
+}
 
-/* ADMIN */
 
-.admin-card{
-    border:1px solid var(--border);
-    background:var(--surface);
-    border-radius:24px;
-    padding:18px;
+/* =========================================================
+   ADMINISTRATION
+========================================================= */
+
+.admin-header{
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+
     margin-bottom:15px;
 }
 
+.admin-header .section-title{
+    margin:0;
+}
+
+.admin-actions{
+    display:flex;
+    gap:7px;
+}
+
+.admin-stats{
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:10px;
+
+    margin-bottom:15px;
+}
+
+.admin-stat{
+    padding:16px;
+
+    border:1px solid var(--border);
+    border-radius:20px;
+
+    background:var(--surface);
+}
+
+.admin-stat-label{
+    color:var(--muted);
+
+    font-size:10px;
+    font-weight:700;
+
+    text-transform:uppercase;
+}
+
+.admin-stat-value{
+    margin-top:7px;
+
+    font-size:20px;
+    font-weight:900;
+}
+
+.admin-search{
+    margin-bottom:15px;
+}
+
+.admin-search input{
+    width:100%;
+
+    padding:14px 15px;
+
+    border:1px solid var(--border);
+    border-radius:15px;
+
+    outline:none;
+
+    background:var(--surface);
+    color:var(--text);
+
+    font-size:13px;
+}
+
+.admin-search input:focus{
+    border-color:var(--accent2);
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.10);
+}
+
+.admin-card{
+    margin-bottom:15px;
+    padding:18px;
+
+    border:1px solid var(--border);
+    border-radius:24px;
+
+    background:var(--surface);
+}
+
 .admin-user{
-    padding:14px 0;
+    padding:15px 0;
+
     border-bottom:1px solid var(--border);
 }
 
-.admin-user:last-child{border-bottom:none}
+.admin-user:last-child{
+    border-bottom:none;
+}
 
 .admin-user-head{
     display:flex;
     justify-content:space-between;
+    align-items:flex-start;
+
     gap:10px;
 }
 
@@ -618,25 +987,63 @@ body.dark .app-header{
 }
 
 .admin-user-id{
-    color:var(--muted);
-    font-size:10px;
     margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:10px;
+}
+
+.admin-user-email{
+    margin-top:4px;
+
+    color:var(--muted);
+
+    font-size:10px;
+
+    overflow-wrap:anywhere;
 }
 
 .admin-balances{
     display:flex;
-    gap:10px;
-    margin-top:10px;
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-top:12px;
+}
+
+.balance-chip{
+    padding:7px 9px;
+
+    border-radius:10px;
+
+    background:var(--surface2);
+
     font-size:11px;
+    font-weight:800;
+}
+
+.admin-user-actions{
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-top:12px;
 }
 
 .status{
-    font-size:9px;
+    height:max-content;
+
     padding:5px 8px;
+
     border-radius:8px;
+
     background:rgba(21,128,61,.1);
     color:var(--success);
-    height:max-content;
+
+    font-size:9px;
+    font-weight:800;
 }
 
 .status.blocked{
@@ -644,19 +1051,53 @@ body.dark .app-header{
     color:var(--danger);
 }
 
-/* NAV */
+.block-btn{
+    border:1px solid var(--border);
+
+    border-radius:11px;
+
+    padding:9px 11px;
+
+    background:var(--surface2);
+    color:var(--text);
+
+    font-size:11px;
+    font-weight:800;
+
+    cursor:pointer;
+}
+
+.block-btn.danger{
+    color:var(--danger);
+}
+
+.block-btn.success{
+    color:var(--success);
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
 .bottom-nav{
     position:fixed;
+
     bottom:0;
     left:0;
     right:0;
+
     z-index:30;
+
     height:78px;
+
     display:flex;
     justify-content:center;
+
     background:rgba(245,247,250,.92);
+
     backdrop-filter:blur(18px);
+
     border-top:1px solid var(--border);
 }
 
@@ -667,19 +1108,27 @@ body.dark .bottom-nav{
 .nav-inner{
     width:100%;
     max-width:620px;
+
     display:grid;
+
     grid-template-columns:repeat(4,1fr);
 }
 
 .nav-btn{
     border:none;
+
     background:none;
+
     color:var(--muted);
+
     display:flex;
     flex-direction:column;
+
     align-items:center;
     justify-content:center;
+
     gap:5px;
+
     cursor:pointer;
 }
 
@@ -688,7 +1137,9 @@ body.dark .bottom-nav{
     font-weight:700;
 }
 
-.nav-btn.active{color:var(--text)}
+.nav-btn.active{
+    color:var(--text);
+}
 
 .nav-btn.active .nav-icon{
     background:var(--surface2);
@@ -697,122 +1148,286 @@ body.dark .bottom-nav{
 .nav-icon{
     width:38px;
     height:32px;
+
     border-radius:12px;
+
     display:grid;
     place-items:center;
 }
 
-/* TOAST */
+
+/* =========================================================
+   TOAST
+========================================================= */
 
 .toast{
     position:fixed;
+
     left:50%;
     bottom:92px;
-    transform:translate(-50%,20px);
+
+    z-index:100;
+
+    max-width:calc(100vw - 30px);
+
+    padding:12px 17px;
+
+    border-radius:13px;
+
     background:#111827;
     color:#fff;
-    padding:12px 17px;
-    border-radius:13px;
+
     font-size:12px;
-    opacity:0;
-    pointer-events:none;
-    transition:.25s;
-    z-index:100;
+
     white-space:nowrap;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:translate(-50%,20px);
+
+    transition:.25s;
 }
 
 .toast.show{
     opacity:1;
+
     transform:translate(-50%,0);
 }
 
-/* ANIMATIONS */
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
 
 @keyframes appear{
-    from{opacity:0;transform:translateY(15px)}
-    to{opacity:1;transform:none}
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
 }
 
 @keyframes pageIn{
-    from{opacity:0;transform:translateY(8px)}
-    to{opacity:1;transform:none}
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:520px){
+
+    .admin-stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .admin-header{
+        align-items:flex-start;
+    }
+
+    .admin-actions{
+        flex-shrink:0;
+    }
 }
 
 @media(max-width:360px){
-    .auth-card{padding:22px}
-    .balance-total{font-size:27px}
-    .card-number{font-size:17px}
+
+    .auth-card{
+        padding:22px;
+    }
+
+    .balance-total{
+        font-size:27px;
+    }
+
+    .card-number{
+        font-size:17px;
+    }
+
+    .admin-stats{
+        grid-template-columns:1fr;
+    }
 }
 </style>
 </head>
 
+
 <body>
+
+
+<!-- =======================================================
+     AUTHENTIFICATION
+======================================================= -->
 
 <section class="auth-screen" id="authScreen">
 
     <div class="auth-card">
 
         <div class="brand">
+
             <div class="brand-mark">
-                <svg class="icon" viewBox="0 0 24 24" fill="none">
-                    <rect x="3" y="5" width="18" height="14" rx="3"/>
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none">
+
+                    <rect x="3"
+                          y="5"
+                          width="18"
+                          height="14"
+                          rx="3"/>
+
                     <path d="M3 10h18"/>
+
                     <path d="M7 15h3"/>
+
                 </svg>
+
             </div>
 
             <div>
-                <div class="brand-name">DALZON</div>
-                <div class="brand-sub">Wallet</div>
+
+                <div class="brand-name">
+                    DALZON
+                </div>
+
+                <div class="brand-sub">
+                    Wallet
+                </div>
+
             </div>
+
         </div>
 
-        <h1 class="auth-title" id="authTitle">Connexion</h1>
 
-        <p class="auth-description" id="authDescription">
+        <h1 class="auth-title"
+            id="authTitle">
+
+            Connexion
+
+        </h1>
+
+
+        <p class="auth-description"
+           id="authDescription">
+
             Accédez à votre espace DALZON.
+
         </p>
 
-        <div class="auth-error" id="authError"></div>
 
-        <div class="field" id="nameField" style="display:none">
-            <label>Nom complet</label>
-            <input type="text" id="nameInput" placeholder="Votre nom">
+        <div class="auth-error"
+             id="authError">
         </div>
+
+
+        <div class="field"
+             id="nameField"
+             style="display:none">
+
+            <label for="nameInput">
+                Nom complet
+            </label>
+
+            <input
+                type="text"
+                id="nameInput"
+                placeholder="Votre nom"
+                autocomplete="name"
+                maxlength="100">
+
+        </div>
+
 
         <div class="field">
-            <label>Email</label>
-            <input type="email" id="emailInput"
-                   placeholder="exemple@email.com"
-                   autocomplete="email">
+
+            <label for="emailInput">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="emailInput"
+                placeholder="exemple@email.com"
+                autocomplete="email"
+                maxlength="160">
+
         </div>
+
 
         <div class="field">
-            <label>Mot de passe</label>
-            <input type="password" id="passwordInput"
-                   placeholder="Votre mot de passe"
-                   autocomplete="current-password">
+
+            <label for="passwordInput">
+                Mot de passe
+            </label>
+
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Votre mot de passe"
+                autocomplete="current-password"
+                maxlength="128">
+
         </div>
 
-        <button class="primary-btn" id="authButton" onclick="submitAuth()">
+
+        <button class="primary-btn"
+                id="authButton"
+                type="button"
+                onclick="submitAuth()">
+
             Se connecter
+
         </button>
 
+
         <div class="auth-switch">
+
             <span id="switchText">
                 Vous n'avez pas encore de compte ?
             </span>
 
-            <button onclick="toggleAuthMode()" id="switchButton">
+            <button
+                type="button"
+                onclick="toggleAuthMode()"
+                id="switchButton">
+
                 Créer un compte
+
             </button>
+
         </div>
 
     </div>
+
 </section>
 
 
-<div class="app" id="app">
+
+<!-- =======================================================
+     APPLICATION
+======================================================= -->
+
+<div class="app"
+     id="app">
+
+
+    <!-- HEADER -->
 
     <header class="app-header">
 
@@ -821,37 +1436,75 @@ body.dark .bottom-nav{
             <div class="brand-mark"
                  style="width:42px;height:42px;border-radius:13px">
 
-                <svg class="icon" viewBox="0 0 24 24" fill="none">
-                    <rect x="3" y="5" width="18" height="14" rx="3"/>
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none">
+
+                    <rect x="3"
+                          y="5"
+                          width="18"
+                          height="14"
+                          rx="3"/>
+
                     <path d="M3 10h18"/>
+
                     <path d="M7 15h3"/>
+
                 </svg>
 
             </div>
 
+
             <div>
-                <div class="header-title" id="headerName">DALZON</div>
-                <div class="header-id" id="headerId">—</div>
+
+                <div class="header-title"
+                     id="headerName">
+
+                    DALZON
+
+                </div>
+
+                <div class="header-id"
+                     id="headerId">
+
+                    —
+
+                </div>
+
             </div>
 
         </div>
 
+
         <div class="header-actions">
 
             <button class="circle-btn"
+                    type="button"
                     onclick="toggleTheme()"
                     aria-label="Changer le thème">
 
-                <svg class="icon" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="4"/>
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none">
+
+                    <circle cx="12"
+                            cy="12"
+                            r="4"/>
+
                     <path d="M12 2v2"/>
                     <path d="M12 20v2"/>
+
                     <path d="m4.93 4.93 1.41 1.41"/>
+
                     <path d="m17.66 17.66 1.41 1.41"/>
+
                     <path d="M2 12h2"/>
                     <path d="M20 12h2"/>
+
                     <path d="m6.34 17.66-1.41 1.41"/>
+
                     <path d="m19.07 4.93-1.41 1.41"/>
+
                 </svg>
 
             </button>
@@ -861,13 +1514,21 @@ body.dark .bottom-nav{
     </header>
 
 
+
     <main class="content">
 
-        <section class="page active" id="homePage">
+
+        <!-- =================================================
+             ACCUEIL
+        ================================================== -->
+
+        <section class="page active"
+                 id="homePage">
 
             <div class="section-title">
                 Vue d'ensemble
             </div>
+
 
             <div class="balance-card">
 
@@ -875,24 +1536,45 @@ body.dark .bottom-nav{
                     Solde total
                 </div>
 
-                <div class="balance-total" id="totalBalance">
+                <div class="balance-total"
+                     id="totalBalance">
+
                     $0.00
+
                 </div>
+
 
                 <div class="balance-grid">
 
                     <div class="currency-box">
-                        <div class="currency-label">CDF</div>
-                        <div class="currency-value" id="cdfBalance">
-                            0 CDF
+
+                        <div class="currency-label">
+                            CDF
                         </div>
+
+                        <div class="currency-value"
+                             id="cdfBalance">
+
+                            0 CDF
+
+                        </div>
+
                     </div>
 
+
                     <div class="currency-box">
-                        <div class="currency-label">USD</div>
-                        <div class="currency-value" id="usdBalance">
-                            $0.00
+
+                        <div class="currency-label">
+                            USD
                         </div>
+
+                        <div class="currency-value"
+                             id="usdBalance">
+
+                            $0.00
+
+                        </div>
+
                     </div>
 
                 </div>
@@ -900,85 +1582,145 @@ body.dark .bottom-nav{
             </div>
 
 
+
             <div class="actions">
 
-                <button class="action" onclick="openTransfer()">
+                <button class="action"
+                        type="button"
+                        onclick="openTransfer()">
 
                     <div class="action-icon">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none">
+
+                        <svg class="icon"
+                             viewBox="0 0 24 24"
+                             fill="none">
+
                             <path d="M5 12h14"/>
+
                             <path d="m13 6 6 6-6 6"/>
+
                         </svg>
+
                     </div>
 
-                    <span>Envoyer</span>
+                    <span>
+                        Envoyer
+                    </span>
 
                 </button>
 
 
-                <button class="action" onclick="openReceive()">
+                <button class="action"
+                        type="button"
+                        onclick="openReceive()">
 
                     <div class="action-icon">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none">
+
+                        <svg class="icon"
+                             viewBox="0 0 24 24"
+                             fill="none">
+
                             <path d="M12 5v14"/>
+
                             <path d="m18 13-6 6-6-6"/>
+
                         </svg>
+
                     </div>
 
-                    <span>Recevoir</span>
+                    <span>
+                        Recevoir
+                    </span>
 
                 </button>
 
 
-                <button class="action" onclick="openPayment()">
+                <button class="action"
+                        type="button"
+                        onclick="openPayment()">
 
                     <div class="action-icon">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none">
-                            <rect x="3" y="5" width="18" height="14" rx="3"/>
+
+                        <svg class="icon"
+                             viewBox="0 0 24 24"
+                             fill="none">
+
+                            <rect x="3"
+                                  y="5"
+                                  width="18"
+                                  height="14"
+                                  rx="3"/>
+
                             <path d="M3 10h18"/>
+
                         </svg>
+
                     </div>
 
-                    <span>Paiement</span>
+                    <span>
+                        Paiement
+                    </span>
 
                 </button>
 
             </div>
+
 
 
             <div class="section-title">
                 Activité récente
             </div>
 
-            <div class="list" id="homeTransactions">
+
+            <div class="list"
+                 id="homeTransactions">
+
                 <div class="empty">
                     Aucune opération pour le moment.
                 </div>
+
             </div>
 
         </section>
 
 
-        <section class="page" id="activityPage">
+
+        <!-- =================================================
+             ACTIVITÉ
+        ================================================== -->
+
+        <section class="page"
+                 id="activityPage">
 
             <div class="section-title">
                 Activité
             </div>
 
-            <div class="list" id="transactionsList">
+
+            <div class="list"
+                 id="transactionsList">
+
                 <div class="empty">
                     Aucune opération.
                 </div>
+
             </div>
 
         </section>
 
 
-        <section class="page" id="cardPage">
+
+        <!-- =================================================
+             CARTE
+        ================================================== -->
+
+        <section class="page"
+                 id="cardPage">
 
             <div class="section-title">
                 Ma carte
             </div>
+
 
             <div class="dalzon-card">
 
@@ -989,41 +1731,96 @@ body.dark .bottom-nav{
                     </div>
 
                     <div class="card-type">
-                        CARD
+                        SIMULATION
                     </div>
 
                 </div>
 
-                <div class="card-number" id="cardNumber">
+
+                <div class="card-number"
+                     id="cardNumber">
+
                     DLZ •••• •••• ••••
+
                 </div>
+
 
                 <div class="card-bottom">
 
                     <div>
-                        <div class="card-small">TITULAIRE</div>
-                        <div class="card-value" id="cardHolder">—</div>
+
+                        <div class="card-small">
+                            TITULAIRE
+                        </div>
+
+                        <div class="card-value"
+                             id="cardHolder">
+
+                            —
+
+                        </div>
+
                     </div>
 
+
                     <div>
-                        <div class="card-small">EXP</div>
-                        <div class="card-value" id="cardExpiry">--/--</div>
+
+                        <div class="card-small">
+                            EXP
+                        </div>
+
+                        <div class="card-value"
+                             id="cardExpiry">
+
+                            --/--
+
+                        </div>
+
                     </div>
 
                 </div>
 
             </div>
 
+
             <div class="profile-card">
 
                 <div class="profile-row">
-                    <span>Type</span>
-                    <strong>DALZON CARD</strong>
+
+                    <span>
+                        Type
+                    </span>
+
+                    <strong>
+                        DALZON CARD
+                    </strong>
+
                 </div>
 
+
                 <div class="profile-row">
-                    <span>Statut</span>
-                    <strong>Active</strong>
+
+                    <span>
+                        Statut
+                    </span>
+
+                    <strong>
+                        Active
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <span>
+                        Nature
+                    </span>
+
+                    <strong>
+                        Simulation
+                    </strong>
+
                 </div>
 
             </div>
@@ -1031,67 +1828,120 @@ body.dark .bottom-nav{
         </section>
 
 
-        <section class="page" id="profilePage">
+
+        <!-- =================================================
+             PROFIL
+        ================================================== -->
+
+        <section class="page"
+                 id="profilePage">
 
             <div class="section-title">
                 Profil
             </div>
 
+
             <div class="profile-card">
 
                 <div class="profile-head">
 
-                    <div class="profile-avatar" id="profileAvatar">
+                    <div class="profile-avatar"
+                         id="profileAvatar">
+
                         D
+
                     </div>
+
 
                     <div>
 
-                        <div class="profile-name" id="profileName">
+                        <div class="profile-name"
+                             id="profileName">
+
                             —
+
                         </div>
 
-                        <div class="profile-email" id="profileEmail">
+                        <div class="profile-email"
+                             id="profileEmail">
+
                             —
+
                         </div>
 
                     </div>
 
                 </div>
 
-                <div class="profile-row">
-                    <span>Identifiant</span>
-                    <strong id="profileId">—</strong>
-                </div>
 
                 <div class="profile-row">
-                    <span>Statut</span>
-                    <strong id="profileStatus">—</strong>
+
+                    <span>
+                        Identifiant
+                    </span>
+
+                    <strong id="profileId">
+                        —
+                    </strong>
+
                 </div>
 
+
                 <div class="profile-row">
-                    <span>Type de compte</span>
-                    <strong id="profileRole">—</strong>
+
+                    <span>
+                        Statut
+                    </span>
+
+                    <strong id="profileStatus">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <span>
+                        Type de compte
+                    </span>
+
+                    <strong id="profileRole">
+                        —
+                    </strong>
+
                 </div>
 
             </div>
 
+
+
+            <!-- ADMIN -->
 
             <div class="profile-card"
                  id="adminEntry"
                  style="display:none">
 
-                <button class="primary-btn" onclick="openAdmin()">
+                <button class="primary-btn"
+                        type="button"
+                        onclick="openAdmin()">
+
                     Administration
+
                 </button>
 
             </div>
 
 
+
             <div class="profile-card">
 
-                <button class="primary-btn" onclick="logout()">
+                <button class="primary-btn"
+                        type="button"
+                        onclick="logout()">
+
                     Se déconnecter
+
                 </button>
 
             </div>
@@ -1099,23 +1949,161 @@ body.dark .bottom-nav{
         </section>
 
 
-        <section class="page" id="adminPage">
 
-            <div class="section-title">
-                Administration
+        <!-- =================================================
+             ADMINISTRATION
+        ================================================== -->
+
+        <section class="page"
+                 id="adminPage">
+
+
+            <div class="admin-header">
+
+                <div class="section-title">
+                    Administration
+                </div>
+
+
+                <div class="admin-actions">
+
+                    <button class="secondary-btn"
+                            type="button"
+                            onclick="navigate('profilePage',null)">
+
+                        Retour
+
+                    </button>
+
+
+                    <button class="secondary-btn"
+                            type="button"
+                            onclick="loadAdminDashboard()">
+
+                        Actualiser
+
+                    </button>
+
+                </div>
+
             </div>
+
+
+
+            <!-- STATISTIQUES -->
+
+            <div class="admin-stats">
+
+
+                <div class="admin-stat">
+
+                    <div class="admin-stat-label">
+                        Utilisateurs
+                    </div>
+
+                    <div class="admin-stat-value"
+                         id="adminTotalUsers">
+
+                        0
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat">
+
+                    <div class="admin-stat-label">
+                        Actifs
+                    </div>
+
+                    <div class="admin-stat-value"
+                         id="adminActiveUsers">
+
+                        0
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat">
+
+                    <div class="admin-stat-label">
+                        Bloqués
+                    </div>
+
+                    <div class="admin-stat-value"
+                         id="adminBlockedUsers">
+
+                        0
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat">
+
+                    <div class="admin-stat-label">
+                        Total CDF
+                    </div>
+
+                    <div class="admin-stat-value"
+                         id="adminTotalCDF">
+
+                        0 CDF
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat">
+
+                    <div class="admin-stat-label">
+                        Total USD
+                    </div>
+
+                    <div class="admin-stat-value"
+                         id="adminTotalUSD">
+
+                        $0.00
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RECHERCHE -->
+
+            <div class="admin-search">
+
+                <input
+                    type="search"
+                    id="adminSearch"
+                    placeholder="Rechercher un utilisateur..."
+                    autocomplete="off"
+                    maxlength="100"
+                    oninput="filterAdminUsers()">
+
+            </div>
+
+
+
+            <!-- LISTE -->
 
             <div class="admin-card">
 
-                <div class="section-title"
-                     style="font-size:15px">
-                    Utilisateurs
-                </div>
-
                 <div id="adminUsers">
+
                     <div class="empty">
                         Chargement...
                     </div>
+
                 </div>
 
             </div>
@@ -1125,69 +2113,127 @@ body.dark .bottom-nav{
     </main>
 
 
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
     <nav class="bottom-nav">
 
         <div class="nav-inner">
 
+
             <button class="nav-btn active"
+                    type="button"
                     onclick="navigate('homePage',this)">
 
                 <div class="nav-icon">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none">
+
                         <path d="m3 10 9-7 9 7"/>
+
                         <path d="M5 9v11h14V9"/>
+
                         <path d="M9 20v-6h6v6"/>
+
                     </svg>
+
                 </div>
 
-                <span>Accueil</span>
+                <span>
+                    Accueil
+                </span>
 
             </button>
 
 
+
             <button class="nav-btn"
+                    type="button"
                     onclick="navigate('activityPage',this)">
 
                 <div class="nav-icon">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none">
+
                         <path d="M4 19V5"/>
+
                         <path d="M4 19h16"/>
+
                         <path d="m7 15 4-4 3 2 5-6"/>
+
                     </svg>
+
                 </div>
 
-                <span>Activité</span>
+                <span>
+                    Activité
+                </span>
 
             </button>
 
 
+
             <button class="nav-btn"
+                    type="button"
                     onclick="navigate('cardPage',this)">
 
                 <div class="nav-icon">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none">
-                        <rect x="3" y="5" width="18" height="14" rx="3"/>
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none">
+
+                        <rect x="3"
+                              y="5"
+                              width="18"
+                              height="14"
+                              rx="3"/>
+
                         <path d="M3 10h18"/>
+
                         <path d="M7 15h4"/>
+
                     </svg>
+
                 </div>
 
-                <span>Carte</span>
+                <span>
+                    Carte
+                </span>
 
             </button>
 
 
+
             <button class="nav-btn"
+                    type="button"
                     onclick="navigate('profilePage',this)">
 
                 <div class="nav-icon">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="8" r="4"/>
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none">
+
+                        <circle cx="12"
+                                cy="8"
+                                r="4"/>
+
                         <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+
                     </svg>
+
                 </div>
 
-                <span>Profil</span>
+                <span>
+                    Profil
+                </span>
 
             </button>
 
@@ -1198,30 +2244,127 @@ body.dark .bottom-nav{
 </div>
 
 
-<div class="toast" id="toast"></div>
+
+<div class="toast"
+     id="toast">
+</div>
+
 
 
 <script>
+"use strict";
 
-/* =====================================================
+/* =========================================================
    CONFIGURATION
-===================================================== */
+========================================================= */
 
-const API_BASE = "https://dalzonmoney.onrender.com";
+const API_BASE =
+    "https://dalzonmoney.onrender.com";
 
 
-/* =====================================================
-   VARIABLES
-===================================================== */
+/* =========================================================
+   ÉTAT DE SESSION
+   Le token reste uniquement en mémoire.
+   Aucun mot de passe ou solde n'est enregistré localement.
+========================================================= */
 
 let currentUser = null;
 let authMode = "login";
 let authToken = null;
 
+let adminUsersCache = [];
 
-/* =====================================================
-   AUTH MODE
-===================================================== */
+let toastTimer = null;
+
+
+/* =========================================================
+   REQUÊTE API CENTRALISÉE
+========================================================= */
+
+async function apiRequest(endpoint, options = {}){
+
+    const headers = {
+        ...(options.headers || {})
+    };
+
+
+    if(
+        options.body &&
+        typeof options.body !== "string"
+    ){
+
+        headers["Content-Type"] =
+            "application/json";
+
+        options.body =
+            JSON.stringify(options.body);
+    }
+
+
+    if(authToken){
+
+        headers["Authorization"] =
+            "Bearer " + authToken;
+    }
+
+
+    const response =
+        await fetch(
+            API_BASE + endpoint,
+            {
+                ...options,
+                headers
+            }
+        );
+
+
+    let data = null;
+
+    try{
+
+        data = await response.json();
+
+    }catch(error){
+
+        data = {};
+    }
+
+
+    if(
+        response.status === 401 ||
+        response.status === 403
+    ){
+
+        if(authToken){
+
+            authToken = null;
+            currentUser = null;
+
+            hideApp();
+
+            showAuthError(
+                "Votre session a expiré. Veuillez vous reconnecter."
+            );
+        }
+    }
+
+
+    if(!response.ok){
+
+        throw new Error(
+            data.message ||
+            "Une erreur est survenue."
+        );
+    }
+
+
+    return data;
+}
+
+
+/* =========================================================
+   MODE CONNEXION / INSCRIPTION
+========================================================= */
 
 function toggleAuthMode(){
 
@@ -1229,6 +2372,7 @@ function toggleAuthMode(){
         authMode === "login"
             ? "register"
             : "login";
+
 
     const nameField =
         document.getElementById("nameField");
@@ -1248,18 +2392,23 @@ function toggleAuthMode(){
     const switchButton =
         document.getElementById("switchButton");
 
+
     hideAuthError();
+
 
     if(authMode === "register"){
 
-        nameField.style.display = "block";
+        nameField.style.display =
+            "block";
 
-        title.textContent = "Créer un compte";
+        title.textContent =
+            "Créer un compte";
 
         description.textContent =
             "Créez votre espace personnel DALZON.";
 
-        button.textContent = "Créer mon compte";
+        button.textContent =
+            "Créer mon compte";
 
         switchText.textContent =
             "Vous avez déjà un compte ?";
@@ -1269,14 +2418,17 @@ function toggleAuthMode(){
 
     }else{
 
-        nameField.style.display = "none";
+        nameField.style.display =
+            "none";
 
-        title.textContent = "Connexion";
+        title.textContent =
+            "Connexion";
 
         description.textContent =
             "Accédez à votre espace DALZON.";
 
-        button.textContent = "Se connecter";
+        button.textContent =
+            "Se connecter";
 
         switchText.textContent =
             "Vous n'avez pas encore de compte ?";
@@ -1287,89 +2439,137 @@ function toggleAuthMode(){
 }
 
 
-/* =====================================================
-   AUTH
-===================================================== */
+/* =========================================================
+   AUTHENTIFICATION
+========================================================= */
 
 async function submitAuth(){
 
     hideAuthError();
 
+
     const name =
-        document.getElementById("nameInput").value.trim();
+        document
+            .getElementById("nameInput")
+            .value
+            .trim();
+
 
     const email =
-        document.getElementById("emailInput").value.trim();
+        document
+            .getElementById("emailInput")
+            .value
+            .trim()
+            .toLowerCase();
+
 
     const password =
-        document.getElementById("passwordInput").value;
+        document
+            .getElementById("passwordInput")
+            .value;
 
-    if(authMode === "register" && !name){
 
-        showAuthError("Veuillez entrer votre nom.");
+    if(
+        authMode === "register" &&
+        !name
+    ){
+
+        showAuthError(
+            "Veuillez entrer votre nom."
+        );
+
         return;
     }
+
 
     if(!email || !password){
 
-        showAuthError("Veuillez remplir tous les champs.");
+        showAuthError(
+            "Veuillez remplir tous les champs."
+        );
+
         return;
     }
+
+
+    if(
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    ){
+
+        showAuthError(
+            "Veuillez entrer une adresse email valide."
+        );
+
+        return;
+    }
+
 
     const endpoint =
         authMode === "register"
             ? "/api/auth/register"
             : "/api/auth/login";
 
+
     const body =
         authMode === "register"
-            ? {name,email,password}
-            : {email,password};
+            ? {
+                name,
+                email,
+                password
+              }
+            : {
+                email,
+                password
+              };
+
 
     const button =
         document.getElementById("authButton");
 
+
     const oldText =
         button.textContent;
 
+
     button.disabled = true;
+
+
     button.textContent =
         authMode === "register"
             ? "Création..."
             : "Connexion...";
 
+
     try{
 
-        const response =
-            await fetch(
-                API_BASE + endpoint,
+        const data =
+            await apiRequest(
+                endpoint,
                 {
                     method:"POST",
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    },
-                    body:
-                        JSON.stringify(body)
+                    body
                 }
             );
 
-        const data =
-            await response.json();
 
-        if(!response.ok){
+        if(!data.token){
 
             throw new Error(
-                data.message ||
-                "Une erreur est survenue."
+                "Réponse serveur invalide."
             );
         }
 
-        authToken = data.token;
 
-        currentUser = data.user;
+        authToken =
+            data.token;
 
-        showApp();
+
+        currentUser =
+            data.user || null;
+
+
+        await showApp();
+
 
     }catch(error){
 
@@ -1381,14 +2581,16 @@ async function submitAuth(){
     }finally{
 
         button.disabled = false;
-        button.textContent = oldText;
+
+        button.textContent =
+            oldText;
     }
 }
 
 
-/* =====================================================
-   CHARGEMENT DU COMPTE SERVEUR
-===================================================== */
+/* =========================================================
+   CHARGEMENT DU COMPTE
+========================================================= */
 
 async function loadAccount(){
 
@@ -1396,34 +2598,29 @@ async function loadAccount(){
         return;
     }
 
+
     try{
 
-        const response =
-            await fetch(
-                API_BASE + "/api/account",
+        const data =
+            await apiRequest(
+                "/api/account",
                 {
-                    method:"GET",
-                    headers:{
-                        "Authorization":
-                            "Bearer " + authToken
-                    }
+                    method:"GET"
                 }
             );
 
-        const data =
-            await response.json();
 
-        if(!response.ok){
+        currentUser =
+            data.user || null;
 
-            throw new Error(
-                data.message ||
-                "Impossible de charger le compte."
-            );
-        }
 
-        currentUser = data.user;
+        renderUser(
+            currentUser
+        );
 
-        renderUser(currentUser);
+
+        await loadTransactions();
+
 
     }catch(error){
 
@@ -1431,6 +2628,7 @@ async function loadAccount(){
             "Erreur compte:",
             error
         );
+
 
         showToast(
             error.message ||
@@ -1440,130 +2638,281 @@ async function loadAccount(){
 }
 
 
-/* =====================================================
-   APPLICATION
-===================================================== */
+/* =========================================================
+   TRANSACTIONS
+========================================================= */
+
+async function loadTransactions(){
+
+    if(!authToken){
+        return;
+    }
+
+
+    try{
+
+        const data =
+            await apiRequest(
+                "/api/transactions",
+                {
+                    method:"GET"
+                }
+            );
+
+
+        renderTransactions(
+            Array.isArray(data.transactions)
+                ? data.transactions
+                : []
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Erreur transactions:",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   AFFICHAGE APPLICATION
+========================================================= */
 
 async function showApp(){
 
-    document.getElementById("authScreen")
+    document
+        .getElementById("authScreen")
         .style.display = "none";
 
-    document.getElementById("app")
+
+    document
+        .getElementById("app")
         .style.display = "block";
+
 
     navigate(
         "homePage",
         document.querySelector(".nav-btn")
     );
 
+
     await loadAccount();
 }
 
 
-/* =====================================================
+/* =========================================================
+   MASQUER APPLICATION
+========================================================= */
+
+function hideApp(){
+
+    document
+        .getElementById("app")
+        .style.display = "none";
+
+
+    document
+        .getElementById("authScreen")
+        .style.display = "flex";
+}
+
+
+/* =========================================================
    AFFICHAGE UTILISATEUR
-===================================================== */
+========================================================= */
 
 function renderUser(user){
 
-    if(!user) return;
+    if(!user){
+        return;
+    }
 
-    document.getElementById("headerName")
-        .textContent = user.name || "DALZON";
 
-    document.getElementById("headerId")
-        .textContent = user.id || "—";
+    const accountId =
+        user.account_id ||
+        user.accountId ||
+        user.id ||
+        "—";
+
+
+    document
+        .getElementById("headerName")
+        .textContent =
+            user.name || "DALZON";
+
+
+    document
+        .getElementById("headerId")
+        .textContent =
+            accountId;
 
 
     const cdf =
-        Number(user.wallet?.CDF || 0);
+        Number(
+            user.wallet?.CDF ??
+            user.cdf ??
+            0
+        );
+
 
     const usd =
-        Number(user.wallet?.USD || 0);
+        Number(
+            user.wallet?.USD ??
+            user.usd ??
+            0
+        );
 
 
-    document.getElementById("cdfBalance")
-        .textContent = formatCDF(cdf);
+    document
+        .getElementById("cdfBalance")
+        .textContent =
+            formatCDF(cdf);
 
-    document.getElementById("usdBalance")
-        .textContent = formatUSD(usd);
+
+    document
+        .getElementById("usdBalance")
+        .textContent =
+            formatUSD(usd);
 
 
-    document.getElementById("totalBalance")
-        .textContent = formatUSD(usd);
+    document
+        .getElementById("totalBalance")
+        .textContent =
+            formatUSD(usd);
 
 
     if(user.card){
 
-        document.getElementById("cardNumber")
+        document
+            .getElementById("cardNumber")
             .textContent =
-            user.card.number || "DLZ •••• •••• ••••";
+                user.card.number ||
+                "DLZ •••• •••• ••••";
 
-        document.getElementById("cardExpiry")
+
+        document
+            .getElementById("cardExpiry")
             .textContent =
-            user.card.expiry || "--/--";
+                user.card.expiry ||
+                "--/--";
     }
 
-    document.getElementById("cardHolder")
+
+    document
+        .getElementById("cardHolder")
         .textContent =
-        (user.name || "DALZON").toUpperCase();
+            String(
+                user.name ||
+                "DALZON"
+            )
+            .toUpperCase();
 
 
-    document.getElementById("profileName")
-        .textContent = user.name || "—";
-
-    document.getElementById("profileEmail")
-        .textContent = user.email || "—";
-
-    document.getElementById("profileId")
-        .textContent = user.id || "—";
-
-    document.getElementById("profileStatus")
+    document
+        .getElementById("profileName")
         .textContent =
-        user.status === "active"
-            ? "Actif"
-            : "Bloqué";
+            user.name || "—";
 
-    document.getElementById("profileRole")
+
+    document
+        .getElementById("profileEmail")
         .textContent =
-        user.role === "admin"
-            ? "Administrateur"
-            : "Utilisateur";
+            user.email || "—";
+
+
+    document
+        .getElementById("profileId")
+        .textContent =
+            accountId;
+
+
+    document
+        .getElementById("profileStatus")
+        .textContent =
+            user.status === "active"
+                ? "Actif"
+                : "Bloqué";
+
+
+    document
+        .getElementById("profileRole")
+        .textContent =
+            user.role === "admin"
+                ? "Administrateur"
+                : "Utilisateur";
 
 
     const firstLetter =
-        (user.name || "D")
-            .trim()
-            .charAt(0)
-            .toUpperCase();
+        String(
+            user.name || "D"
+        )
+        .trim()
+        .charAt(0)
+        .toUpperCase();
 
-    document.getElementById("profileAvatar")
+
+    document
+        .getElementById("profileAvatar")
         .textContent =
-        firstLetter || "D";
+            firstLetter || "D";
 
 
-    if(user.role === "admin"){
+    const adminEntry =
+        document.getElementById("adminEntry");
 
-        document.getElementById("adminEntry")
-            .style.display = "block";
+
+    if(
+        user.role === "admin"
+    ){
+
+        adminEntry.style.display =
+            "block";
 
     }else{
 
-        document.getElementById("adminEntry")
-            .style.display = "none";
+        adminEntry.style.display =
+            "none";
     }
-
-
-    renderTransactions(
-        user.transactions || []
-    );
 }
 
 
-/* =====================================================
-   TRANSACTIONS
-===================================================== */
+/* =========================================================
+   TRANSACTIONS — AFFICHAGE SÉCURISÉ
+========================================================= */
+
+function getTransactionAmount(transaction){
+
+    if(
+        transaction.amount !== undefined &&
+        transaction.amount !== null
+    ){
+
+        return Number(
+            transaction.amount
+        );
+    }
+
+
+    if(
+        transaction.currency === "USD"
+    ){
+
+        return (
+            Number(
+                transaction.amount_usd_cents || 0
+            ) / 100
+        );
+    }
+
+
+    return Number(
+        transaction.amount_cdf || 0
+    );
+}
+
 
 function renderTransactions(transactions){
 
@@ -1572,126 +2921,221 @@ function renderTransactions(transactions){
         document.getElementById("transactionsList")
     ];
 
-    containers.forEach(container => {
 
-        if(!container) return;
+    containers.forEach(
+        container => {
 
-        container.innerHTML = "";
+            if(!container){
+                return;
+            }
 
-        if(!transactions.length){
 
-            container.innerHTML = `
-                <div class="empty">
-                    Aucune opération pour le moment.
-                </div>
-            `;
+            container.innerHTML = "";
 
-            return;
-        }
 
-        transactions.forEach(transaction => {
+            if(!Array.isArray(transactions) ||
+               transactions.length === 0){
 
-            const positive =
-                transaction.type === "credit";
+                container.innerHTML =
+                    '<div class="empty">Aucune opération pour le moment.</div>';
 
-            const amount =
-                transaction.currency === "USD"
-                    ? formatUSD(transaction.amount)
-                    : formatCDF(transaction.amount);
+                return;
+            }
 
-            const sign =
-                positive ? "+" : "-";
 
-            const element =
-                document.createElement("div");
+            transactions.forEach(
+                transaction => {
 
-            element.className = "transaction";
+                    const positive =
+                        transaction.type === "credit";
 
-            element.innerHTML = `
 
-                <div class="transaction-icon">
+                    const amount =
+                        getTransactionAmount(
+                            transaction
+                        );
 
-                    <svg class="icon"
-                         viewBox="0 0 24 24"
-                         fill="none">
 
-                        ${
-                            positive
+                    const formattedAmount =
+                        transaction.currency === "USD"
+                            ? formatUSD(amount)
+                            : formatCDF(amount);
+
+
+                    const sign =
+                        positive
+                            ? "+"
+                            : "-";
+
+
+                    const element =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    element.className =
+                        "transaction";
+
+
+                    const icon =
+                        document.createElement(
+                            "div"
+                        );
+
+                    icon.className =
+                        "transaction-icon";
+
+
+                    icon.innerHTML =
+                        positive
                             ? `
-                                <path d="M12 19V5"/>
-                                <path d="m6 11 6-6 6 6"/>
+                                <svg class="icon"
+                                     viewBox="0 0 24 24"
+                                     fill="none">
+
+                                    <path d="M12 19V5"/>
+                                    <path d="m6 11 6-6 6 6"/>
+
+                                </svg>
                               `
                             : `
-                                <path d="M12 5v14"/>
-                                <path d="m18 13-6 6-6-6"/>
-                              `
-                        }
+                                <svg class="icon"
+                                     viewBox="0 0 24 24"
+                                     fill="none">
 
-                    </svg>
+                                    <path d="M12 5v14"/>
+                                    <path d="m18 13-6 6-6-6"/>
 
-                </div>
+                                </svg>
+                              `;
 
-                <div class="transaction-info">
 
-                    <div class="transaction-title">
-                        ${escapeHTML(
-                            transaction.description ||
-                            "Opération"
-                        )}
-                    </div>
+                    const info =
+                        document.createElement(
+                            "div"
+                        );
 
-                    <div class="transaction-date">
-                        ${formatDate(
+                    info.className =
+                        "transaction-info";
+
+
+                    const title =
+                        document.createElement(
+                            "div"
+                        );
+
+                    title.className =
+                        "transaction-title";
+
+
+                    title.textContent =
+                        transaction.description ||
+                        "Opération";
+
+
+                    const date =
+                        document.createElement(
+                            "div"
+                        );
+
+                    date.className =
+                        "transaction-date";
+
+
+                    date.textContent =
+                        formatDate(
                             transaction.created_at
-                        )}
-                    </div>
+                        );
 
-                </div>
 
-                <div class="
-                    transaction-amount
-                    ${
-                        positive
-                            ? "amount-positive"
-                            : "amount-negative"
-                    }
-                ">
-                    ${sign}${amount}
-                </div>
-            `;
+                    info.appendChild(title);
+                    info.appendChild(date);
 
-            container.appendChild(element);
-        });
-    });
+
+                    const amountElement =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    amountElement.className =
+                        "transaction-amount " +
+                        (
+                            positive
+                                ? "amount-positive"
+                                : "amount-negative"
+                        );
+
+
+                    amountElement.textContent =
+                        sign + formattedAmount;
+
+
+                    element.appendChild(icon);
+                    element.appendChild(info);
+                    element.appendChild(amountElement);
+
+
+                    container.appendChild(
+                        element
+                    );
+                }
+            );
+        }
+    );
 }
 
 
-/* =====================================================
+/* =========================================================
    NAVIGATION
-===================================================== */
+========================================================= */
 
-function navigate(pageId,button){
+function navigate(pageId, button){
 
-    document.querySelectorAll(".page")
-        .forEach(page => {
-            page.classList.remove("active");
-        });
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page => {
+                page.classList.remove(
+                    "active"
+                );
+            }
+        );
+
 
     const page =
-        document.getElementById(pageId);
+        document.getElementById(
+            pageId
+        );
+
 
     if(page){
-        page.classList.add("active");
+
+        page.classList.add(
+            "active"
+        );
     }
 
-    document.querySelectorAll(".nav-btn")
-        .forEach(btn => {
-            btn.classList.remove("active");
-        });
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(
+            btn => {
+                btn.classList.remove(
+                    "active"
+                );
+            }
+        );
+
 
     if(button){
-        button.classList.add("active");
+
+        button.classList.add(
+            "active"
+        );
     }
+
 
     window.scrollTo({
         top:0,
@@ -1700,11 +3144,17 @@ function navigate(pageId,button){
 }
 
 
-/* =====================================================
-   ADMIN
-===================================================== */
+/* =========================================================
+   ADMINISTRATION
+========================================================= */
 
 async function openAdmin(){
+
+    /*
+       IMPORTANT :
+       Ceci améliore l'interface seulement.
+       Le serveur doit TOUJOURS vérifier le rôle admin.
+    */
 
     if(
         !currentUser ||
@@ -1718,136 +3168,556 @@ async function openAdmin(){
         return;
     }
 
-    document.querySelectorAll(".page")
-        .forEach(page => {
-            page.classList.remove("active");
-        });
 
-    document.getElementById("adminPage")
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page => {
+                page.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+
+    document
+        .getElementById("adminPage")
         .classList.add("active");
 
-    await loadAdminUsers();
+
+    await loadAdminDashboard();
 }
 
 
-async function loadAdminUsers(){
+/* =========================================================
+   CHARGEMENT ADMIN
+========================================================= */
+
+async function loadAdminDashboard(){
 
     const container =
-        document.getElementById("adminUsers");
+        document.getElementById(
+            "adminUsers"
+        );
 
-    container.innerHTML = `
-        <div class="empty">
-            Chargement...
-        </div>
-    `;
+
+    container.innerHTML =
+        '<div class="empty">Chargement...</div>';
+
 
     try{
 
-        const response =
-            await fetch(
-                API_BASE + "/api/admin/users",
+        const data =
+            await apiRequest(
+                "/api/admin/users",
                 {
-                    headers:{
-                        Authorization:
-                            "Bearer " + authToken
-                    }
+                    method:"GET"
                 }
             );
 
-        const data =
-            await response.json();
 
-        if(!response.ok){
+        adminUsersCache =
+            Array.isArray(data.users)
+                ? data.users
+                : [];
 
-            throw new Error(
-                data.message ||
-                "Erreur."
-            );
-        }
 
-        container.innerHTML = "";
+        renderAdminStats(
+            adminUsersCache
+        );
 
-        if(!data.users.length){
 
-            container.innerHTML = `
-                <div class="empty">
-                    Aucun utilisateur.
-                </div>
-            `;
+        renderAdminUsers(
+            adminUsersCache
+        );
 
-            return;
-        }
-
-        data.users.forEach(user => {
-
-            const item =
-                document.createElement("div");
-
-            item.className = "admin-user";
-
-            item.innerHTML = `
-
-                <div class="admin-user-head">
-
-                    <div>
-
-                        <div class="admin-user-name">
-                            ${escapeHTML(user.name)}
-                        </div>
-
-                        <div class="admin-user-id">
-                            ${escapeHTML(user.id)}
-                        </div>
-
-                    </div>
-
-                    <div class="
-                        status
-                        ${
-                            user.status === "blocked"
-                                ? "blocked"
-                                : ""
-                        }
-                    ">
-                        ${
-                            user.status === "blocked"
-                                ? "Bloqué"
-                                : "Actif"
-                        }
-                    </div>
-
-                </div>
-
-                <div class="admin-balances">
-
-                    <span>
-                        ${formatCDF(user.wallet.CDF)}
-                    </span>
-
-                    <span>
-                        ${formatUSD(user.wallet.USD)}
-                    </span>
-
-                </div>
-            `;
-
-            container.appendChild(item);
-        });
 
     }catch(error){
 
-        container.innerHTML = `
-            <div class="empty">
-                ${escapeHTML(error.message)}
-            </div>
-        `;
+        container.innerHTML =
+            `
+                <div class="empty">
+                    ${escapeHTML(
+                        error.message ||
+                        "Impossible de charger les utilisateurs."
+                    )}
+                </div>
+            `;
     }
 }
 
 
-/* =====================================================
+/* =========================================================
+   STATISTIQUES ADMIN
+========================================================= */
+
+function renderAdminStats(users){
+
+    const total =
+        users.length;
+
+
+    const active =
+        users.filter(
+            user =>
+                user.status === "active"
+        ).length;
+
+
+    const blocked =
+        users.filter(
+            user =>
+                user.status === "blocked"
+        ).length;
+
+
+    const totalCDF =
+        users.reduce(
+            (sum,user) =>
+                sum +
+                Number(
+                    user.cdf ||
+                    user.wallet?.CDF ||
+                    0
+                ),
+            0
+        );
+
+
+    const totalUSD =
+        users.reduce(
+            (sum,user) =>
+                sum +
+                Number(
+                    user.usd ||
+                    user.wallet?.USD ||
+                    0
+                ),
+            0
+        );
+
+
+    document
+        .getElementById("adminTotalUsers")
+        .textContent =
+            total;
+
+
+    document
+        .getElementById("adminActiveUsers")
+        .textContent =
+            active;
+
+
+    document
+        .getElementById("adminBlockedUsers")
+        .textContent =
+            blocked;
+
+
+    document
+        .getElementById("adminTotalCDF")
+        .textContent =
+            formatCDF(totalCDF);
+
+
+    document
+        .getElementById("adminTotalUSD")
+        .textContent =
+            formatUSD(totalUSD);
+}
+
+
+/* =========================================================
+   AFFICHAGE UTILISATEURS ADMIN
+========================================================= */
+
+function renderAdminUsers(users){
+
+    const container =
+        document.getElementById(
+            "adminUsers"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if(!users.length){
+
+        container.innerHTML =
+            '<div class="empty">Aucun utilisateur trouvé.</div>';
+
+        return;
+    }
+
+
+    users.forEach(
+        user => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "admin-user";
+
+
+            const accountId =
+                user.account_id ||
+                user.accountId ||
+                user.id ||
+                "—";
+
+
+            const cdf =
+                Number(
+                    user.cdf ??
+                    user.wallet?.CDF ??
+                    0
+                );
+
+
+            const usd =
+                Number(
+                    user.usd ??
+                    user.wallet?.USD ??
+                    0
+                );
+
+
+            const head =
+                document.createElement(
+                    "div"
+                );
+
+
+            head.className =
+                "admin-user-head";
+
+
+            const identity =
+                document.createElement(
+                    "div"
+                );
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+
+            name.className =
+                "admin-user-name";
+
+
+            name.textContent =
+                user.name ||
+                "Utilisateur";
+
+
+            const id =
+                document.createElement(
+                    "div"
+                );
+
+
+            id.className =
+                "admin-user-id";
+
+
+            id.textContent =
+                accountId;
+
+
+            const email =
+                document.createElement(
+                    "div"
+                );
+
+
+            email.className =
+                "admin-user-email";
+
+
+            email.textContent =
+                user.email ||
+                "—";
+
+
+            identity.appendChild(name);
+            identity.appendChild(id);
+            identity.appendChild(email);
+
+
+            const status =
+                document.createElement(
+                    "div"
+                );
+
+
+            status.className =
+                "status";
+
+
+            if(
+                user.status === "blocked"
+            ){
+
+                status.classList.add(
+                    "blocked"
+                );
+
+                status.textContent =
+                    "Bloqué";
+
+            }else{
+
+                status.textContent =
+                    "Actif";
+            }
+
+
+            head.appendChild(identity);
+            head.appendChild(status);
+
+
+            const balances =
+                document.createElement(
+                    "div"
+                );
+
+
+            balances.className =
+                "admin-balances";
+
+
+            const cdfChip =
+                document.createElement(
+                    "span"
+                );
+
+
+            cdfChip.className =
+                "balance-chip";
+
+
+            cdfChip.textContent =
+                formatCDF(cdf);
+
+
+            const usdChip =
+                document.createElement(
+                    "span"
+                );
+
+
+            usdChip.className =
+                "balance-chip";
+
+
+            usdChip.textContent =
+                formatUSD(usd);
+
+
+            balances.appendChild(cdfChip);
+            balances.appendChild(usdChip);
+
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+
+            actions.className =
+                "admin-user-actions";
+
+
+            /*
+               Un administrateur ne peut pas être bloqué
+               depuis cette interface.
+            */
+
+            if(user.role !== "admin"){
+
+                const blockButton =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                blockButton.type =
+                    "button";
+
+
+                blockButton.className =
+                    "block-btn " +
+                    (
+                        user.status === "blocked"
+                            ? "success"
+                            : "danger"
+                    );
+
+
+                blockButton.textContent =
+                    user.status === "blocked"
+                        ? "Débloquer"
+                        : "Bloquer";
+
+
+                blockButton.addEventListener(
+                    "click",
+                    () =>
+                        toggleAdminBlock(
+                            user.id,
+                            user.status !== "blocked"
+                        )
+                );
+
+
+                actions.appendChild(
+                    blockButton
+                );
+            }
+
+
+            item.appendChild(head);
+            item.appendChild(balances);
+            item.appendChild(actions);
+
+
+            container.appendChild(
+                item
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   RECHERCHE ADMIN
+========================================================= */
+
+function filterAdminUsers(){
+
+    const input =
+        document.getElementById(
+            "adminSearch"
+        );
+
+
+    const query =
+        input.value
+            .trim()
+            .toLowerCase();
+
+
+    if(!query){
+
+        renderAdminUsers(
+            adminUsersCache
+        );
+
+        return;
+    }
+
+
+    const filtered =
+        adminUsersCache.filter(
+            user => {
+
+                const text =
+                    [
+                        user.name,
+                        user.email,
+                        user.account_id,
+                        user.accountId,
+                        user.id,
+                        user.status,
+                        user.role
+                    ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+
+                return text.includes(
+                    query
+                );
+            }
+        );
+
+
+    renderAdminUsers(
+        filtered
+    );
+}
+
+
+/* =========================================================
+   BLOQUER / DÉBLOQUER
+========================================================= */
+
+async function toggleAdminBlock(
+    userId,
+    blocked
+){
+
+    if(
+        !Number.isInteger(
+            Number(userId)
+        )
+    ){
+
+        showToast(
+            "Utilisateur invalide."
+        );
+
+        return;
+    }
+
+
+    try{
+
+        await apiRequest(
+            "/api/admin/block",
+            {
+                method:"POST",
+                body:{
+                    user_id:Number(userId),
+                    blocked:Boolean(blocked)
+                }
+            }
+        );
+
+
+        showToast(
+            blocked
+                ? "Utilisateur bloqué."
+                : "Utilisateur débloqué."
+        );
+
+
+        await loadAdminDashboard();
+
+
+    }catch(error){
+
+        showToast(
+            error.message ||
+            "Opération impossible."
+        );
+    }
+}
+
+
+/* =========================================================
    ACTIONS
-===================================================== */
+========================================================= */
 
 function openTransfer(){
 
@@ -1856,12 +3726,14 @@ function openTransfer(){
     );
 }
 
+
 function openReceive(){
 
     showToast(
         "La réception sera activée à l'étape suivante."
     );
 }
+
 
 function openPayment(){
 
@@ -1871,22 +3743,32 @@ function openPayment(){
 }
 
 
-/* =====================================================
+/* =========================================================
    THÈME
-===================================================== */
+========================================================= */
 
 function toggleTheme(){
 
-    document.body.classList.toggle("dark");
+    document
+        .body
+        .classList
+        .toggle("dark");
+
 
     const dark =
-        document.body.classList.contains("dark");
+        document
+            .body
+            .classList
+            .contains("dark");
+
 
     try{
 
         localStorage.setItem(
             "dalzon_theme",
-            dark ? "dark" : "light"
+            dark
+                ? "dark"
+                : "light"
         );
 
     }catch(error){}
@@ -1898,34 +3780,47 @@ function loadTheme(){
     try{
 
         const theme =
-            localStorage.getItem("dalzon_theme");
+            localStorage.getItem(
+                "dalzon_theme"
+            );
+
 
         if(theme === "dark"){
 
-            document.body.classList.add("dark");
+            document
+                .body
+                .classList
+                .add("dark");
         }
 
     }catch(error){}
 }
 
 
-/* =====================================================
+/* =========================================================
    DÉCONNEXION
-===================================================== */
+========================================================= */
 
 function logout(){
 
     authToken = null;
     currentUser = null;
 
-    document.getElementById("app")
-        .style.display = "none";
+    adminUsersCache = [];
 
-    document.getElementById("authScreen")
-        .style.display = "flex";
 
-    document.getElementById("passwordInput")
+    hideApp();
+
+
+    document
+        .getElementById("passwordInput")
         .value = "";
+
+
+    document
+        .getElementById("nameInput")
+        .value = "";
+
 
     showToast(
         "Vous êtes déconnecté."
@@ -1933,18 +3828,37 @@ function logout(){
 }
 
 
-/* =====================================================
-   OUTILS
-===================================================== */
+/* =========================================================
+   FORMATAGE
+========================================================= */
 
 function formatCDF(amount){
 
-    return new Intl.NumberFormat("fr-FR")
-        .format(Number(amount || 0)) + " CDF";
+    const value =
+        Number(amount);
+
+
+    if(!Number.isFinite(value)){
+        return "0 CDF";
+    }
+
+
+    return new Intl.NumberFormat(
+        "fr-FR"
+    ).format(value) + " CDF";
 }
 
 
 function formatUSD(amount){
+
+    const value =
+        Number(amount);
+
+
+    if(!Number.isFinite(value)){
+        return "$0.00";
+    }
+
 
     return new Intl.NumberFormat(
         "en-US",
@@ -1952,19 +3866,30 @@ function formatUSD(amount){
             style:"currency",
             currency:"USD"
         }
-    ).format(Number(amount || 0));
+    ).format(value);
 }
 
 
 function formatDate(value){
 
-    if(!value) return "—";
-
-    const date = new Date(value);
-
-    if(Number.isNaN(date.getTime())){
-        return value;
+    if(!value){
+        return "—";
     }
+
+
+    const date =
+        new Date(value);
+
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    ){
+
+        return String(value);
+    }
+
 
     return new Intl.DateTimeFormat(
         "fr-FR",
@@ -1979,66 +3904,102 @@ function formatDate(value){
 }
 
 
+/* =========================================================
+   ÉCHAPPEMENT HTML
+   Utilisé uniquement lorsqu'une valeur est placée
+   dans du HTML.
+========================================================= */
+
 function escapeHTML(value){
 
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    return String(
+        value ?? ""
+    )
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
 
-/* =====================================================
+/* =========================================================
    MESSAGES
-===================================================== */
+========================================================= */
 
 function showAuthError(message){
 
     const error =
-        document.getElementById("authError");
+        document.getElementById(
+            "authError"
+        );
 
-    error.textContent = message;
-    error.style.display = "block";
+
+    error.textContent =
+        String(message || "Erreur");
+
+
+    error.style.display =
+        "block";
 }
 
 
 function hideAuthError(){
 
     const error =
-        document.getElementById("authError");
+        document.getElementById(
+            "authError"
+        );
 
-    error.textContent = "";
-    error.style.display = "none";
+
+    error.textContent =
+        "";
+
+
+    error.style.display =
+        "none";
 }
 
-
-let toastTimer;
 
 function showToast(message){
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
 
-    toast.textContent = message;
 
-    toast.classList.add("show");
+    toast.textContent =
+        String(message || "");
 
-    clearTimeout(toastTimer);
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
 
     toastTimer =
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            toast.classList.remove("show");
+                toast.classList.remove(
+                    "show"
+                );
 
-        },2500);
+            },
+            2500
+        );
 }
 
 
-/* =====================================================
+/* =========================================================
    INITIALISATION
-===================================================== */
+========================================================= */
 
 loadTheme();
 
