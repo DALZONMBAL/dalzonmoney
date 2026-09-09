@@ -17,6 +17,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
+<!-- PWA : ajout uniquement -->
+<link rel="manifest" href="/manifest.json">
+
 <style>
 :root{
     --bg:#f5f7fa;
@@ -108,16 +111,8 @@ svg{
     justify-content:center;
     padding:22px;
     background:
-        radial-gradient(
-            circle at 15% 15%,
-            rgba(37,99,235,.13),
-            transparent 32%
-        ),
-        radial-gradient(
-            circle at 85% 85%,
-            rgba(0,0,0,.08),
-            transparent 32%
-        ),
+        radial-gradient(circle at 15% 15%,rgba(37,99,235,.13),transparent 32%),
+        radial-gradient(circle at 85% 85%,rgba(0,0,0,.08),transparent 32%),
         var(--bg);
 }
 
@@ -533,12 +528,7 @@ body.dark .app-header{
     margin-bottom:22px;
     padding:24px;
     border-radius:27px;
-    background:
-        linear-gradient(
-            135deg,
-            #10151c,
-            #28313c
-        );
+    background:linear-gradient(135deg,#10151c,#28313c);
     color:#fff;
     box-shadow:0 20px 45px rgba(0,0,0,.22);
 }
@@ -1862,13 +1852,6 @@ async function apiRequest(endpoint, options = {}){
         data = {};
     }
 
-
-    /*
-       401 = session/token invalide.
-       403 = accès refusé, mais le token peut
-       toujours être valide (ex: compte bloqué).
-    */
-
     if(response.status === 401){
 
         authToken = null;
@@ -1884,7 +1867,6 @@ async function apiRequest(endpoint, options = {}){
         );
     }
 
-
     if(!response.ok){
 
         throw new Error(
@@ -1893,7 +1875,6 @@ async function apiRequest(endpoint, options = {}){
             "Une erreur est survenue."
         );
     }
-
 
     return data;
 }
@@ -1909,7 +1890,6 @@ function toggleAuthMode(){
         authMode === "login"
             ? "register"
             : "login";
-
 
     const nameField =
         document.getElementById("nameField");
@@ -1929,9 +1909,7 @@ function toggleAuthMode(){
     const switchButton =
         document.getElementById("switchButton");
 
-
     hideAuthError();
-
 
     if(authMode === "register"){
 
@@ -1984,13 +1962,11 @@ async function submitAuth(){
 
     hideAuthError();
 
-
     const name =
         document
             .getElementById("nameInput")
             .value
             .trim();
-
 
     const email =
         document
@@ -1999,12 +1975,10 @@ async function submitAuth(){
             .trim()
             .toLowerCase();
 
-
     const password =
         document
             .getElementById("passwordInput")
             .value;
-
 
     if(
         authMode === "register" &&
@@ -2018,7 +1992,6 @@ async function submitAuth(){
         return;
     }
 
-
     if(!email || !password){
 
         showAuthError(
@@ -2027,7 +2000,6 @@ async function submitAuth(){
 
         return;
     }
-
 
     if(
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -2039,7 +2011,6 @@ async function submitAuth(){
 
         return;
     }
-
 
     if(
         authMode === "register" &&
@@ -2053,12 +2024,10 @@ async function submitAuth(){
         return;
     }
 
-
     const endpoint =
         authMode === "register"
             ? "/api/auth/register"
             : "/api/auth/login";
-
 
     const body =
         authMode === "register"
@@ -2072,23 +2041,18 @@ async function submitAuth(){
                 password
               };
 
-
     const button =
         document.getElementById("authButton");
-
 
     const oldText =
         button.textContent;
 
-
     button.disabled = true;
-
 
     button.textContent =
         authMode === "register"
             ? "Création..."
             : "Connexion...";
-
 
     try{
 
@@ -2101,7 +2065,6 @@ async function submitAuth(){
                 }
             );
 
-
         if(!data.token){
 
             throw new Error(
@@ -2109,17 +2072,13 @@ async function submitAuth(){
             );
         }
 
-
         authToken =
             data.token;
-
 
         currentUser =
             data.user || null;
 
-
         await showApp();
-
 
     }catch(error){
 
@@ -2148,7 +2107,6 @@ async function loadAccount(){
         return;
     }
 
-
     try{
 
         const data =
@@ -2159,12 +2117,10 @@ async function loadAccount(){
                 }
             );
 
-
         currentUser =
             data.user ||
             data.account ||
             null;
-
 
         if(!currentUser){
 
@@ -2173,14 +2129,11 @@ async function loadAccount(){
             );
         }
 
-
         renderUser(
             currentUser
         );
 
-
         await loadTransactions();
-
 
     }catch(error){
 
@@ -2188,7 +2141,6 @@ async function loadAccount(){
             "Erreur compte:",
             error
         );
-
 
         if(authToken){
 
@@ -2211,7 +2163,6 @@ async function loadTransactions(){
         return;
     }
 
-
     try{
 
         const data =
@@ -2222,13 +2173,11 @@ async function loadTransactions(){
                 }
             );
 
-
         renderTransactions(
             Array.isArray(data.transactions)
                 ? data.transactions
                 : []
         );
-
 
     }catch(error){
 
@@ -2250,17 +2199,14 @@ async function showApp(){
         .getElementById("authScreen")
         .style.display = "none";
 
-
     document
         .getElementById("app")
         .style.display = "block";
-
 
     navigate(
         "homePage",
         document.querySelector(".nav-btn")
     );
-
 
     await loadAccount();
 }
@@ -2275,7 +2221,6 @@ function hideApp(){
     document
         .getElementById("app")
         .style.display = "none";
-
 
     document
         .getElementById("authScreen")
@@ -2293,25 +2238,21 @@ function renderUser(user){
         return;
     }
 
-
     const accountId =
         user.account_id ||
         user.accountId ||
         user.id ||
         "—";
 
-
     document
         .getElementById("headerName")
         .textContent =
             user.name || "DALZON";
 
-
     document
         .getElementById("headerId")
         .textContent =
             accountId;
-
 
     const cdf =
         Number(
@@ -2320,7 +2261,6 @@ function renderUser(user){
             0
         );
 
-
     const usd =
         Number(
             user.wallet?.USD ??
@@ -2328,24 +2268,20 @@ function renderUser(user){
             0
         );
 
-
     document
         .getElementById("cdfBalance")
         .textContent =
             formatCDF(cdf);
-
 
     document
         .getElementById("usdBalance")
         .textContent =
             formatUSD(usd);
 
-
     document
         .getElementById("totalBalance")
         .textContent =
             formatUSD(usd);
-
 
     if(user.card){
 
@@ -2355,14 +2291,12 @@ function renderUser(user){
                 user.card.number ||
                 "DLZ •••• •••• ••••";
 
-
         document
             .getElementById("cardExpiry")
             .textContent =
                 user.card.expiry ||
                 "--/--";
     }
-
 
     document
         .getElementById("cardHolder")
@@ -2373,24 +2307,20 @@ function renderUser(user){
             )
             .toUpperCase();
 
-
     document
         .getElementById("profileName")
         .textContent =
             user.name || "—";
-
 
     document
         .getElementById("profileEmail")
         .textContent =
             user.email || "—";
 
-
     document
         .getElementById("profileId")
         .textContent =
             accountId;
-
 
     document
         .getElementById("profileStatus")
@@ -2399,14 +2329,12 @@ function renderUser(user){
                 ? "Actif"
                 : "Bloqué";
 
-
     document
         .getElementById("profileRole")
         .textContent =
             user.role === "admin"
                 ? "Administrateur"
                 : "Utilisateur";
-
 
     const firstLetter =
         String(
@@ -2416,16 +2344,13 @@ function renderUser(user){
         .charAt(0)
         .toUpperCase();
 
-
     document
         .getElementById("profileAvatar")
         .textContent =
             firstLetter || "D";
 
-
     const adminEntry =
         document.getElementById("adminEntry");
-
 
     if(
         user.role === "admin"
@@ -2458,7 +2383,6 @@ function getTransactionAmount(transaction){
         );
     }
 
-
     if(
         transaction.currency === "USD"
     ){
@@ -2469,7 +2393,6 @@ function getTransactionAmount(transaction){
             ) / 100
         );
     }
-
 
     return Number(
         transaction.amount_cdf || 0
@@ -2484,7 +2407,6 @@ function renderTransactions(transactions){
         document.getElementById("transactionsList")
     ];
 
-
     containers.forEach(
         container => {
 
@@ -2492,9 +2414,7 @@ function renderTransactions(transactions){
                 return;
             }
 
-
             container.innerHTML = "";
-
 
             if(
                 !Array.isArray(transactions) ||
@@ -2507,41 +2427,34 @@ function renderTransactions(transactions){
                 return;
             }
 
-
             transactions.forEach(
                 transaction => {
 
                     const positive =
                         transaction.type === "credit";
 
-
                     const amount =
                         getTransactionAmount(
                             transaction
                         );
-
 
                     const formattedAmount =
                         transaction.currency === "USD"
                             ? formatUSD(amount)
                             : formatCDF(amount);
 
-
                     const sign =
                         positive
                             ? "+"
                             : "-";
-
 
                     const element =
                         document.createElement(
                             "div"
                         );
 
-
                     element.className =
                         "transaction";
-
 
                     const icon =
                         document.createElement(
@@ -2550,7 +2463,6 @@ function renderTransactions(transactions){
 
                     icon.className =
                         "transaction-icon";
-
 
                     icon.innerHTML =
                         positive
@@ -2575,7 +2487,6 @@ function renderTransactions(transactions){
                                 </svg>
                               `;
 
-
                     const info =
                         document.createElement(
                             "div"
@@ -2583,7 +2494,6 @@ function renderTransactions(transactions){
 
                     info.className =
                         "transaction-info";
-
 
                     const title =
                         document.createElement(
@@ -2593,11 +2503,9 @@ function renderTransactions(transactions){
                     title.className =
                         "transaction-title";
 
-
                     title.textContent =
                         transaction.description ||
                         "Opération";
-
 
                     const date =
                         document.createElement(
@@ -2607,22 +2515,18 @@ function renderTransactions(transactions){
                     date.className =
                         "transaction-date";
 
-
                     date.textContent =
                         formatDate(
                             transaction.created_at
                         );
 
-
                     info.appendChild(title);
                     info.appendChild(date);
-
 
                     const amountElement =
                         document.createElement(
                             "div"
                         );
-
 
                     amountElement.className =
                         "transaction-amount " +
@@ -2632,15 +2536,12 @@ function renderTransactions(transactions){
                                 : "amount-negative"
                         );
 
-
                     amountElement.textContent =
                         sign + formattedAmount;
-
 
                     element.appendChild(icon);
                     element.appendChild(info);
                     element.appendChild(amountElement);
-
 
                     container.appendChild(
                         element
@@ -2668,12 +2569,10 @@ function navigate(pageId, button){
             }
         );
 
-
     const page =
         document.getElementById(
             pageId
         );
-
 
     if(page){
 
@@ -2681,7 +2580,6 @@ function navigate(pageId, button){
             "active"
         );
     }
-
 
     document
         .querySelectorAll(".nav-btn")
@@ -2693,14 +2591,12 @@ function navigate(pageId, button){
             }
         );
 
-
     if(button){
 
         button.classList.add(
             "active"
         );
     }
-
 
     window.scrollTo({
         top:0,
@@ -2727,7 +2623,6 @@ async function openAdmin(){
         return;
     }
 
-
     document
         .querySelectorAll(".page")
         .forEach(
@@ -2738,11 +2633,9 @@ async function openAdmin(){
             }
         );
 
-
     document
         .getElementById("adminPage")
         .classList.add("active");
-
 
     await loadAdminDashboard();
 }
@@ -2759,10 +2652,8 @@ async function loadAdminDashboard(){
             "adminUsers"
         );
 
-
     container.innerHTML =
         '<div class="empty">Chargement...</div>';
-
 
     try{
 
@@ -2774,22 +2665,18 @@ async function loadAdminDashboard(){
                 }
             );
 
-
         adminUsersCache =
             Array.isArray(data.users)
                 ? data.users
                 : [];
 
-
         renderAdminStats(
             adminUsersCache
         );
 
-
         renderAdminUsers(
             adminUsersCache
         );
-
 
     }catch(error){
 
@@ -2815,20 +2702,17 @@ function renderAdminStats(users){
     const total =
         users.length;
 
-
     const active =
         users.filter(
             user =>
                 user.status === "active"
         ).length;
 
-
     const blocked =
         users.filter(
             user =>
                 user.status === "blocked"
         ).length;
-
 
     const totalCDF =
         users.reduce(
@@ -2842,7 +2726,6 @@ function renderAdminStats(users){
             0
         );
 
-
     const totalUSD =
         users.reduce(
             (sum,user) =>
@@ -2855,30 +2738,25 @@ function renderAdminStats(users){
             0
         );
 
-
     document
         .getElementById("adminTotalUsers")
         .textContent =
             total;
-
 
     document
         .getElementById("adminActiveUsers")
         .textContent =
             active;
 
-
     document
         .getElementById("adminBlockedUsers")
         .textContent =
             blocked;
 
-
     document
         .getElementById("adminTotalCDF")
         .textContent =
             formatCDF(totalCDF);
-
 
     document
         .getElementById("adminTotalUSD")
@@ -2898,9 +2776,7 @@ function renderAdminUsers(users){
             "adminUsers"
         );
 
-
     container.innerHTML = "";
-
 
     if(!users.length){
 
@@ -2910,7 +2786,6 @@ function renderAdminUsers(users){
         return;
     }
 
-
     users.forEach(
         user => {
 
@@ -2919,17 +2794,14 @@ function renderAdminUsers(users){
                     "div"
                 );
 
-
             item.className =
                 "admin-user";
-
 
             const accountId =
                 user.account_id ||
                 user.accountId ||
                 user.id ||
                 "—";
-
 
             const cdf =
                 Number(
@@ -2938,7 +2810,6 @@ function renderAdminUsers(users){
                     0
                 );
 
-
             const usd =
                 Number(
                     user.usd ??
@@ -2946,81 +2817,65 @@ function renderAdminUsers(users){
                     0
                 );
 
-
             const head =
                 document.createElement(
                     "div"
                 );
 
-
             head.className =
                 "admin-user-head";
-
 
             const identity =
                 document.createElement(
                     "div"
                 );
 
-
             const name =
                 document.createElement(
                     "div"
                 );
 
-
             name.className =
                 "admin-user-name";
-
 
             name.textContent =
                 user.name ||
                 "Utilisateur";
-
 
             const id =
                 document.createElement(
                     "div"
                 );
 
-
             id.className =
                 "admin-user-id";
 
-
             id.textContent =
                 accountId;
-
 
             const email =
                 document.createElement(
                     "div"
                 );
 
-
             email.className =
                 "admin-user-email";
-
 
             email.textContent =
                 user.email ||
                 "—";
 
-
             identity.appendChild(name);
             identity.appendChild(id);
             identity.appendChild(email);
-
 
             const status =
                 document.createElement(
                     "div"
                 );
 
-
             status.className =
                 "status";
-
 
             if(
                 user.status === "blocked"
@@ -3039,62 +2894,49 @@ function renderAdminUsers(users){
                     "Actif";
             }
 
-
             head.appendChild(identity);
             head.appendChild(status);
-
 
             const balances =
                 document.createElement(
                     "div"
                 );
 
-
             balances.className =
                 "admin-balances";
-
 
             const cdfChip =
                 document.createElement(
                     "span"
                 );
 
-
             cdfChip.className =
                 "balance-chip";
 
-
             cdfChip.textContent =
                 formatCDF(cdf);
-
 
             const usdChip =
                 document.createElement(
                     "span"
                 );
 
-
             usdChip.className =
                 "balance-chip";
-
 
             usdChip.textContent =
                 formatUSD(usd);
 
-
             balances.appendChild(cdfChip);
             balances.appendChild(usdChip);
-
 
             const actions =
                 document.createElement(
                     "div"
                 );
 
-
             actions.className =
                 "admin-user-actions";
-
 
             if(user.role !== "admin"){
 
@@ -3103,10 +2945,8 @@ function renderAdminUsers(users){
                         "button"
                     );
 
-
                 blockButton.type =
                     "button";
-
 
                 blockButton.className =
                     "block-btn " +
@@ -3116,12 +2956,10 @@ function renderAdminUsers(users){
                             : "danger"
                     );
 
-
                 blockButton.textContent =
                     user.status === "blocked"
                         ? "Débloquer"
                         : "Bloquer";
-
 
                 blockButton.addEventListener(
                     "click",
@@ -3132,17 +2970,14 @@ function renderAdminUsers(users){
                         )
                 );
 
-
                 actions.appendChild(
                     blockButton
                 );
             }
 
-
             item.appendChild(head);
             item.appendChild(balances);
             item.appendChild(actions);
-
 
             container.appendChild(
                 item
@@ -3163,12 +2998,10 @@ function filterAdminUsers(){
             "adminSearch"
         );
 
-
     const query =
         input.value
             .trim()
             .toLowerCase();
-
 
     if(!query){
 
@@ -3178,7 +3011,6 @@ function filterAdminUsers(){
 
         return;
     }
-
 
     const filtered =
         adminUsersCache.filter(
@@ -3198,13 +3030,11 @@ function filterAdminUsers(){
                     .join(" ")
                     .toLowerCase();
 
-
                 return text.includes(
                     query
                 );
             }
         );
-
 
     renderAdminUsers(
         filtered
@@ -3224,7 +3054,6 @@ async function toggleAdminBlock(
     const numericId =
         Number(userId);
 
-
     if(
         !Number.isInteger(
             numericId
@@ -3237,7 +3066,6 @@ async function toggleAdminBlock(
 
         return;
     }
-
 
     try{
 
@@ -3252,16 +3080,13 @@ async function toggleAdminBlock(
             }
         );
 
-
         showToast(
             blocked
                 ? "Utilisateur bloqué."
                 : "Utilisateur débloqué."
         );
 
-
         await loadAdminDashboard();
-
 
     }catch(error){
 
@@ -3284,14 +3109,12 @@ function openTransfer(){
     );
 }
 
-
 function openReceive(){
 
     showToast(
         "La réception sera activée à l'étape suivante."
     );
 }
-
 
 function openPayment(){
 
@@ -3312,13 +3135,11 @@ function toggleTheme(){
         .classList
         .toggle("dark");
 
-
     const dark =
         document
             .body
             .classList
             .contains("dark");
-
 
     try{
 
@@ -3342,7 +3163,6 @@ function loadTheme(){
                 "dalzon_theme"
             );
 
-
         if(theme === "dark"){
 
             document
@@ -3365,27 +3185,21 @@ function logout(){
     currentUser = null;
     adminUsersCache = [];
 
-
     hideApp();
-
 
     document
         .getElementById("passwordInput")
         .value = "";
 
-
     document
         .getElementById("nameInput")
         .value = "";
-
 
     document
         .getElementById("emailInput")
         .value = "";
 
-
     hideAuthError();
-
 
     showToast(
         "Vous êtes déconnecté."
@@ -3402,11 +3216,9 @@ function formatCDF(amount){
     const value =
         Number(amount);
 
-
     if(!Number.isFinite(value)){
         return "0 CDF";
     }
-
 
     return new Intl.NumberFormat(
         "fr-FR"
@@ -3419,11 +3231,9 @@ function formatUSD(amount){
     const value =
         Number(amount);
 
-
     if(!Number.isFinite(value)){
         return "$0.00";
     }
-
 
     return new Intl.NumberFormat(
         "en-US",
@@ -3441,10 +3251,8 @@ function formatDate(value){
         return "—";
     }
 
-
     const date =
         new Date(value);
-
 
     if(
         Number.isNaN(
@@ -3454,7 +3262,6 @@ function formatDate(value){
 
         return String(value);
     }
-
 
     return new Intl.DateTimeFormat(
         "fr-FR",
@@ -3497,12 +3304,10 @@ function showAuthError(message){
             "authError"
         );
 
-
     error.textContent =
         String(
             message || "Erreur"
         );
-
 
     error.style.display =
         "block";
@@ -3516,10 +3321,8 @@ function hideAuthError(){
             "authError"
         );
 
-
     error.textContent =
         "";
-
 
     error.style.display =
         "none";
@@ -3533,22 +3336,18 @@ function showToast(message){
             "toast"
         );
 
-
     toast.textContent =
         String(
             message || ""
         );
 
-
     toast.classList.add(
         "show"
     );
 
-
     clearTimeout(
         toastTimer
     );
-
 
     toastTimer =
         setTimeout(
@@ -3569,6 +3368,41 @@ function showToast(message){
 ========================================================= */
 
 loadTheme();
+
+
+/* =========================================================
+   PWA — AJOUT UNIQUEMENT
+========================================================= */
+
+if("serviceWorker" in navigator){
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator.serviceWorker
+                .register(
+                    "/service-worker.js"
+                )
+                .then(
+                    () => {
+                        console.log(
+                            "DALZON Wallet PWA activée."
+                        );
+                    }
+                )
+                .catch(
+                    error => {
+                        console.error(
+                            "Erreur PWA :",
+                            error
+                        );
+                    }
+                );
+
+        }
+    );
+}
 
 </script>
 
