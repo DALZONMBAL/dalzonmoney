@@ -1,66 +1,117 @@
-const CACHE_NAME = "dalzon-wallet-v1";
+const CACHE_NAME = "dalzon-wallet-v2.2";
 
-const APP_FILES = [
-  "/",
-  "/index.html",
-  "/manifest.json"
+const APP_SHELL = [
+  "./",
+  "./index.html",
+  "./manifest.json"
 ];
+
+// ===============================
+// INSTALLATION
+// ===============================
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(APP_FILES);
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
-
-  self.skipWaiting();
 });
+
+// ===============================
+// ACTIVATION
+// ===============================
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
+    caches.keys()
+      .then((keys) =>
+        Promise.all(
+          keys
+            .filter((key) => key !== CACHE_NAME)
+            .map((key) => caches.delete(key))
+        )
       )
-    )
+      .then(() => self.clients.claim())
   );
-
-  self.clients.claim();
 });
+
+// ===============================
+// REQUÊTES
+// ===============================
 
 self.addEventListener("fetch", (event) => {
   const request = event.request;
 
-  // Ne pas mettre les appels API en cache
-  if (new URL(request.url).pathname.startsWith("/api/")) {
+  // Seulement les requêtes GET
+  if (request.method !== "GET") {
     return;
   }
 
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+  const url = new URL(request.url);
 
-      return fetch(request).then((response) => {
-        if (
-          !response ||
-          response.status !== 200 ||
-          response.type === "opaque"
-        ) {
-          return response;
+  // =============================
+  // API DALZON WALLET
+  // =============================
+  // On ne met PAS l'API en cache.
+  // Les soldes et transactions doivent
+  // toujours venir du serveur.
+
+  if (url.origin === "https://dalzonmoney.onrender.com") {
+    return;
+  }
+
+  // =============================
+  // STRATÉGIE CACHE FIRST
+  // =============================
+
+  event.respondWith(
+    caches.match(request)
+      .then((cachedResponse) => {
+
+        if (cachedResponse) {
+          return cachedResponse;
         }
 
-        const responseClone = response.clone();
+        return fetch(request)
+          .then((response) => {
 
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(request, responseClone);
-        });
+            // Ne pas mettre en cache les réponses invalides
+            if (
+              !response ||
+              response.status !== 200 ||
+              response.type === "opaque"
+            ) {
+              return response;
+            }
 
-        return response;
-      });
-    })
+            const responseClone =
+              response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(request, responseClone);
+              });
+
+            return response;
+          })
+          .catch(() => {
+
+            // Si index.html est demandé hors connexion
+            if (request.mode === "navigate") {
+              return caches.match("./index.html");
+            }
+
+            return new Response(
+              "DALZON Wallet est temporairement hors connexion.",
+              {
+                status: 503,
+                headers: {
+                  "Content-Type": "text/plain; charset=utf-8"
+                }
+              }
+            );
+          });
+      })
   );
 });
