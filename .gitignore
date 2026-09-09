@@ -1,0 +1,5 @@
+node_modules/
+dalzon.db
+*.db-shm
+*.db-wal
+.env
