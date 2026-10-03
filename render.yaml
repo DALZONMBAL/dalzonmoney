@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: dalzonmoney
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_ORIGIN
+        value: https://dalzonmbal.github.io
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dalzonmoney-db
+          property: connectionString
+
+databases:
+  - name: dalzonmoney-db
+    plan: free
+    region: frankfurt
+    databaseName: dalzonmoney
