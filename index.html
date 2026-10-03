@@ -1796,7 +1796,11 @@ select:focus{
 const API_BASE =
   String(
     window.DALZON_API_URL ||
-    window.location.origin ||
+    (
+      window.location.hostname.endsWith("github.io")
+        ? "https://dalzonmoney.onrender.com"
+        : window.location.origin
+    ) ||
     ""
   ).replace(/\/$/, "");
 
