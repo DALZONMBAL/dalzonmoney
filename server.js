@@ -192,10 +192,15 @@ app.post("/api/auth/logout",auth,(req,res)=>res.json({ok:true,message:"Déconnex
 app.use((req,res)=>res.status(404).json({ok:false,message:"Route introuvable."}));
 app.use((err,req,res,next)=>{console.error("DALZON API ERROR:",err);if(res.headersSent)return next(err);res.status(500).json({ok:false,message:"Erreur interne du serveur."})});
 
-async function start(){await pool.query(SCHEMA);app.listen(PORT,"0.0.0.0",()=>console.log(`DALZON Wallet API PostgreSQL sur ${PORT}`))}
+let dbReady=null;
+async function initDb(){
+  if(!dbReady) dbReady=pool.query(SCHEMA).catch(e=>{dbReady=null;throw e});
+  return dbReady;
+}
+async function start(){await initDb();app.listen(PORT,"0.0.0.0",()=>console.log(`DALZON Wallet API PostgreSQL sur ${PORT}`))}
 if(process.env.VERCEL !== "1"){
   process.on("SIGTERM",async()=>{await pool.end();process.exit(0)});
   process.on("SIGINT",async()=>{await pool.end();process.exit(0)});
   start().catch(e=>{console.error("Démarrage impossible:",e);process.exit(1)});
 }
-module.exports=app;
+module.exports={app,initDb};
