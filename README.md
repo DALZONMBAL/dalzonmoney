@@ -5,43 +5,20 @@ DALZON Money est une simulation éducative de portefeuille CDF/USD.
 ## Architecture
 
 - Frontend : `index.html`, PWA et GitHub Pages.
-- Backend : Node.js + Express.
+- API : Node.js + Express, déployable comme fonction serverless.
 - Base de données : PostgreSQL.
 - Authentification : bcrypt + JWT.
-- Déploiement backend : Render via `render.yaml`.
+- Déploiement de l'API : Vercel.
 
-## Ce qui a été corrigé
+## Nouvelle API
 
-Le frontend détecte maintenant GitHub Pages et utilise automatiquement l'API de production :
+L'ancienne configuration Render a été retirée.
 
-`https://dalzonmoney.onrender.com`
+Le frontend GitHub Pages utilise maintenant :
 
-Le service worker a aussi reçu une nouvelle version de cache afin que les anciennes pages ne restent pas bloquées.
+`https://dalzonmoney-api.vercel.app`
 
-## Déploiement du backend
-
-Le dépôt contient un Blueprint Render. Il définit :
-
-1. un service Node.js ;
-2. une base PostgreSQL ;
-3. `DATABASE_URL` reliée automatiquement à la base ;
-4. `JWT_SECRET` généré automatiquement ;
-5. `FRONTEND_ORIGIN` pour autoriser le frontend GitHub Pages ;
-6. `/api/health` comme contrôle de santé.
-
-Dans Render, crée/synchronise le Blueprint à partir de ce dépôt. Après le déploiement, vérifie :
-
-`https://dalzonmoney.onrender.com/api/health`
-
-La réponse attendue contient `"ok": true` et `"database": "connected"`.
-
-## Premier administrateur
-
-Lorsque la base est vide, l'application affiche automatiquement l'écran de création du premier administrateur.
-
-Aucun mot de passe administrateur n'est stocké dans le dépôt.
-
-## Routes principales
+L'API expose notamment :
 
 - `GET /api/health`
 - `GET /api/setup/status`
@@ -58,9 +35,22 @@ Aucun mot de passe administrateur n'est stocké dans le dépôt.
 - `POST /api/admin/block`
 - `POST /api/admin/unblock`
 
-## Sécurité
+## Variables du serveur
 
-Les mots de passe sont hachés avec bcrypt. Les sessions utilisent des JWT. Les secrets et la connexion PostgreSQL doivent rester dans les variables d'environnement du serveur.
+Le serveur doit recevoir :
+
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `FRONTEND_ORIGIN`
+- `NODE_ENV=production`
+
+Les secrets ne doivent jamais être placés dans GitHub.
+
+## Premier administrateur
+
+Lorsque la base est vide, utilise l'écran de création du premier administrateur.
+
+Aucun mot de passe administrateur n'est stocké dans le dépôt.
 
 ## Important
 
