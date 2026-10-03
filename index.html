@@ -1796,6 +1796,7 @@ select:focus{
 const API_BASE =
   String(
     window.DALZON_API_URL ||
+    window.location.origin ||
     ""
   ).replace(/\/$/, "");
 
