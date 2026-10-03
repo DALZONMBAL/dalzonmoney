@@ -53,11 +53,10 @@ self.addEventListener("fetch", (event) => {
   // =============================
   // API DALZON WALLET
   // =============================
-  // On ne met PAS l'API en cache.
-  // Les soldes et transactions doivent
-  // toujours venir du serveur.
+  // On ne met jamais les endpoints API
+  // en cache, quel que soit l'hébergeur.
 
-  if (url.origin === "https://dalzonmoney.onrender.com") {
+  if (url.pathname.startsWith("/api/")) {
     return;
   }
 
