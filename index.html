@@ -1794,7 +1794,10 @@ select:focus{
    ========================================================= */
 
 const API_BASE =
-  "https://dalzonmoney.onrender.com";
+  String(
+    window.DALZON_API_URL ||
+    ""
+  ).replace(/\/$/, "");
 
 const TOKEN_KEY =
   "dalzon_wallet_token_v3";
