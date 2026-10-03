@@ -1,4 +1,4 @@
-const CACHE_NAME = "dalzon-wallet-v2.2";
+const CACHE_NAME = "dalzon-wallet-v2.3-api";
 
 const APP_SHELL = [
   "./",
