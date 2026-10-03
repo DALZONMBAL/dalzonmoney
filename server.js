@@ -19,6 +19,7 @@ const pool=new Pool({
 });
 
 app.use(express.json({limit:"1mb"}));
+app.use(express.static(__dirname,{extensions:["html"]}));
 app.use((req,res,next)=>{
   res.header("Access-Control-Allow-Origin",process.env.FRONTEND_ORIGIN||"*");
   res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization");
