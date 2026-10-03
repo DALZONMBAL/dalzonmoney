@@ -1,14 +1,19 @@
 {
-  "name":"dalzon-wallet",
-  "version":"4.0.0",
-  "description":"DALZON Wallet — simulation éducative de portefeuille CDF et USD",
-  "main":"server.js",
-  "scripts":{"start":"node server.js","create-admin":"node create-admin.js"},
-  "engines":{"node":">=20"},
-  "dependencies":{
-    "bcryptjs":"^2.4.3",
-    "express":"^5.1.0",
-    "jsonwebtoken":"^9.0.2",
-    "pg":"^8.16.3"
+  "name": "dalzon-wallet",
+  "version": "4.0.0",
+  "description": "DALZON Wallet — simulation éducative de portefeuille CDF et USD",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "create-admin": "node create-admin.js"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
   }
 }
